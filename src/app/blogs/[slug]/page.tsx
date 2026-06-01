@@ -110,6 +110,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                             [&>blockquote]:border-l-4 [&>blockquote]:border-brand-accent [&>blockquote]:pl-6 [&>blockquote]:italic [&>blockquote]:text-xl [&>blockquote]:my-8
                             [&>img]:w-full [&>img]:rounded-xl [&>img]:my-10
                             [&>a]:text-brand-accent [&>a]:underline [&>a]:underline-offset-4 hover:[&>a]:text-brand-black
+                            
+                            {/* NEW: Code Block Styling */}
+                            [&>pre]:bg-gray-100 [&>pre]:p-4 [&>pre]:rounded-xl [&>pre]:overflow-x-auto [&>pre]:my-6
+                            [&>pre>code]:bg-transparent [&>pre>code]:p-0 [&>pre>code]:text-sm [&>pre>code]:font-mono [&>pre>code]:text-brand-black
+                            [&>p>code]:bg-gray-100 [&>p>code]:px-1.5 [&>p>code]:py-0.5 [&>p>code]:rounded-md [&>p>code]:font-mono [&>p>code]:text-sm
                         "
                         dangerouslySetInnerHTML={{ __html: htmlContent }}
                     />
