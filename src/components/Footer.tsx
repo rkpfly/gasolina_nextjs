@@ -1,28 +1,66 @@
 import Link from "next/link";
 import { query } from '@/lib/database/db'; // Make sure this path points to your actual db.ts file
 
-// Define the shape of our fetched city data
 interface FooterCity {
   display_name: string;
   slug: string;
 }
 
+interface FooterSocial {
+  platform: string;
+  label: string;
+  href: string;
+  icon_class: string;
+}
+
+// 1. Add the interface for your new contact schema
+interface FooterContact {
+  phone1: string;
+  phone2: string;
+  email: string;
+  copy_year: number;
+}
+
 export default async function Footer() {
   let cities: FooterCity[] = [];
+  let socials: FooterSocial[] = [];
+  let contact: FooterContact | null = null;
 
   try {
-    // Directly query the database on the server
-    const result = await query(`
-      SELECT 
-        COALESCE(footer_label, title) AS display_name, 
-        slug 
-      FROM city_pages 
-      ORDER BY display_name ASC
-    `,[]);
-    cities = result.rows;
+    // 2. Add the contact query to the concurrent Promise.all array
+    const [citiesResult, socialsResult, contactResult] = await Promise.all([
+      query(`
+        SELECT 
+          COALESCE(footer_label, title) AS display_name, 
+          slug 
+        FROM city_pages 
+        ORDER BY display_name ASC
+      `, []),
+      query(`
+        SELECT platform, label, href, icon_class 
+        FROM "FooterSocials" 
+        WHERE is_active = true 
+        ORDER BY sort_order ASC
+      `, []),
+      // New query to grab the single active contact row
+      query(`
+        SELECT phone1, phone2, email, copy_year 
+        FROM "FooterContact" 
+        WHERE is_active = true 
+        ORDER BY id DESC 
+        LIMIT 1
+      `, [])
+    ]);
+    
+    cities = citiesResult.rows;
+    socials = socialsResult.rows;
+    contact = contactResult.rows[0] || null; // Safely grab the first row
   } catch (error) {
-    console.error('Failed to fetch footer cities:', error);
+    console.error('Failed to fetch footer data:', error);
   }
+
+  // Helper to safely format phone numbers for the "tel:" href (removes spaces)
+  const formatPhoneHref = (phone: string) => `tel:${phone.replace(/\s+/g, '')}`;
 
   return (
     <footer className="bg-brand-white pt-16 sm:pt-20 md:pt-24 pb-8 sm:pb-10 md:pb-12 px-4 sm:px-6 md:px-12">
@@ -37,23 +75,31 @@ export default async function Footer() {
             >
               BOLLYWOODCLUB<span className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-brand-accent rounded-full mb-2" />
             </Link>
+            
+            {/* 3. Inject dynamic contact data here */}
             <div className="flex flex-col gap-1.5 sm:gap-2 text-brand-gray text-xs sm:text-sm">
-              <a href="tel:+61483952024" className="hover:text-brand-black transition-colors">
-                +61 483952024
-              </a>
-              <a href="tel:+6531381490" className="hover:text-brand-black transition-colors">
-                +65 31381490
-              </a>
-              <a
-                href="mailto:info@bollywoodclubx.com"
-                className="hover:text-brand-black transition-colors mt-1 sm:mt-2 text-brand-black font-semibold underline underline-offset-4"
-              >
-                info@bollywoodclubx.com
-              </a>
+              {contact?.phone1 && (
+                <a href={formatPhoneHref(contact.phone1)} className="hover:text-brand-black transition-colors">
+                  {contact.phone1}
+                </a>
+              )}
+              {contact?.phone2 && (
+                <a href={formatPhoneHref(contact.phone2)} className="hover:text-brand-black transition-colors">
+                  {contact.phone2}
+                </a>
+              )}
+              {contact?.email && (
+                <a
+                  href={`mailto:${contact.email}`}
+                  className="hover:text-brand-black transition-colors mt-1 sm:mt-2 text-brand-black font-semibold underline underline-offset-4"
+                >
+                  {contact.email}
+                </a>
+              )}
             </div>
           </div>
 
-          {/* Territories (Dynamically Fetched via Server) */}
+          {/* Territories */}
           <div className="flex flex-col gap-4 sm:gap-6">
             <p className="text-[9px] sm:text-xs font-bold tracking-[0.2em] uppercase text-brand-black">Territories</p>
             <div className="grid grid-cols-2 gap-y-2 sm:gap-y-3 gap-x-3 sm:gap-x-4 text-xs sm:text-sm text-brand-gray">
@@ -87,18 +133,22 @@ export default async function Footer() {
           <div className="flex flex-col gap-4 sm:gap-6">
             <p className="text-[9px] sm:text-xs font-bold tracking-[0.2em] uppercase text-brand-black">Socials</p>
             <div className="flex gap-3 sm:gap-4 text-lg sm:text-xl text-brand-black">
-              <a href="#" aria-label="Instagram" className="hover:text-brand-accent transition-colors">
-                <i className="fa-brands fa-instagram" />
-              </a>
-              <a href="#" aria-label="Facebook" className="hover:text-brand-accent transition-colors">
-                <i className="fa-brands fa-facebook-f" />
-              </a>
-              <a href="#" aria-label="YouTube" className="hover:text-brand-accent transition-colors">
-                <i className="fa-brands fa-youtube" />
-              </a>
-              <a href="#" aria-label="Twitter" className="hover:text-brand-accent transition-colors">
-                <i className="fa-brands fa-twitter" />
-              </a>
+              {socials.length > 0 ? (
+                socials.map((social) => (
+                  <a 
+                    key={social.platform} 
+                    href={social.href} 
+                    aria-label={social.label} 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-brand-accent transition-colors"
+                  >
+                    <i className={social.icon_class} />
+                  </a>
+                ))
+              ) : (
+                <span className="text-gray-400 text-xs italic">No socials found</span>
+              )}
             </div>
           </div>
 
@@ -107,7 +157,8 @@ export default async function Footer() {
         {/* Bottom bar */}
         <div className="flex flex-col sm:flex-row justify-between items-center pt-6 sm:pt-8 border-t border-brand-border gap-3 sm:gap-4">
           <p className="text-[8px] sm:text-[9px] md:text-[10px] font-bold tracking-[0.15em] uppercase text-brand-gray text-center sm:text-left">
-            © 2024 Bollywood Club. Owned by Louder World Pty Ltd.
+            {/* 4. Inject dynamic copyright year here (with fallback to 2024 if DB fetch fails) */}
+            © {contact?.copy_year || 2024} Bollywood Club. Owned by Louder World Pty Ltd.
           </p>
           <p className="text-[8px] sm:text-[9px] md:text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black">
             Designed for Nightlife

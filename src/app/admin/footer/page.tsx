@@ -5,6 +5,8 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import Underline from '@tiptap/extension-underline';
+import { StatusBadge, Toggle } from '../components/ui/UIComponents';
+import SocialsSection from '../components/Footer/SocialsSection/page';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -74,33 +76,6 @@ function validateImage(file: File): string | null {
 function formatBytes(bytes: number): string {
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
-
-function StatusBadge({ active }: { active: boolean }) {
-  return (
-    <span className={`inline-flex items-center gap-1 text-[10px] font-bold tracking-[0.12em] uppercase px-2 py-0.5 rounded-full ${
-      active ? 'bg-emerald-950 text-emerald-400' : 'bg-gray-800 text-gray-500'
-    }`}>
-      <span className={`w-1.5 h-1.5 rounded-full ${active ? 'bg-emerald-500' : 'bg-gray-500'}`} />
-      {active ? 'Active' : 'Inactive'}
-    </span>
-  );
-}
-
-function Toggle({ value, onChange }: { value: boolean; onChange: (v: boolean) => void }) {
-  return (
-    <button
-      type="button"
-      onClick={() => onChange(!value)}
-      className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
-        value ? 'bg-emerald-600' : 'bg-gray-700'
-      }`}
-    >
-      <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
-        value ? 'translate-x-4' : 'translate-x-1'
-      }`} />
-    </button>
-  );
 }
 
 function SaveButton({ saving, onClick }: { saving: boolean; onClick: () => void }) {
@@ -198,8 +173,8 @@ function ContactSection({ data, onSaved }: {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {[
-          { key: 'phone1' as const, label: 'Phone 1', placeholder: '+61 483952024' },
-          { key: 'phone2' as const, label: 'Phone 2', placeholder: '+65 31381490' },
+          { key: 'phone1' as const, label: 'Phone 1', placeholder: '' },
+          { key: 'phone2' as const, label: 'Phone 2', placeholder: '' },
         ].map(({ key, label, placeholder }) => (
           <div key={key} className="flex flex-col gap-1.5">
             <label className="text-xs font-bold tracking-[0.12em] uppercase text-gray-500">{label}</label>
@@ -883,88 +858,6 @@ function LegalSection({ pages, onPagesChange }: {
 }
 
 // ─── Section: Social Links ────────────────────────────────────────────────────
-
-function SocialsSection({ data, onSaved }: {
-  data: Social[];
-  onSaved: (updated: Social[]) => void;
-}) {
-  const [rows, setRows]   = useState(data);
-  const [saving, setSaving] = useState<number | null>(null);
-  const [toasts, setToasts] = useState<Record<number, string>>({});
-
-  const setToast = (id: number, msg: string) => {
-    setToasts(t => ({ ...t, [id]: msg }));
-    setTimeout(() => setToasts(t => { const n = { ...t }; delete n[id]; return n; }), 3000);
-  };
-
-  const update = (id: number, key: keyof Social, value: string | boolean) =>
-    setRows(rs => rs.map(r => r.id === id ? { ...r, [key]: value } : r));
-
-  const save = async (row: Social) => {
-    setSaving(row.id);
-    try {
-      const res = await fetch('/api/admin/footer', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ section: 'social', id: row.id, href: row.href, is_active: row.is_active }),
-      });
-      if (!res.ok) throw new Error();
-      onSaved(rows);
-      setToast(row.id, 'Saved ✓');
-    } catch {
-      setToast(row.id, 'Error');
-    } finally {
-      setSaving(null);
-    }
-  };
-
-  return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-bold tracking-tight">Social Links</h2>
-
-      <div className="divide-y divide-gray-100 border border-gray-200 rounded-xl overflow-hidden">
-        {rows.map(row => (
-          <div key={row.id} className="flex flex-col sm:flex-row sm:items-center gap-3 px-4 py-3 bg-white hover:bg-gray-50 transition-colors">
-
-            {/* Icon preview */}
-            <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 shrink-0">
-              <i className={`${row.icon_class} text-base`} />
-            </div>
-
-            {/* Platform label */}
-            <span className="text-sm font-bold text-gray-700 w-24 shrink-0 capitalize">{row.platform}</span>
-
-            {/* URL */}
-            <input
-              value={row.href}
-              onChange={e => update(row.id, 'href', e.target.value)}
-              placeholder="https://"
-              className="flex-1 border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
-            />
-
-            <div className="flex items-center gap-3 shrink-0">
-              <StatusBadge active={row.is_active} />
-              <Toggle value={row.is_active} onChange={v => update(row.id, 'is_active', v)} />
-              <button
-                type="button"
-                onClick={() => save(row)}
-                disabled={saving === row.id}
-                className="px-3 py-1.5 bg-gray-900 text-white text-[10px] font-bold tracking-widest uppercase rounded-lg hover:bg-gray-700 disabled:opacity-50"
-              >
-                {saving === row.id ? '…' : 'Save'}
-              </button>
-              {toasts[row.id] && (
-                <span className="text-[10px] font-bold text-emerald-600">{toasts[row.id]}</span>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ─── Main page ────────────────────────────────────────────────────────────────
 
 export default function AdminFooterPage() {
   const [activeSection, setActiveSection] = useState<Section>('contact');
