@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { neon } from '@neondatabase/serverless';
-
-const sql = neon(process.env.DATABASE_URL!);
+import { pool } from '@/lib/database/db';
 
 // Helper to simulate future middleware auth
 // Middleware will eventually set this header if the user is a verified admin
@@ -25,26 +23,32 @@ export async function GET(req: NextRequest) {
 
     // Users only see 'active' jobs. Admins see everything.
     if (isAdmin) {
-      jobs = await sql`
-        SELECT * FROM jobs 
-        ORDER BY created_at DESC 
-        LIMIT ${limit} OFFSET ${offset}
-      `;
-      totalCountRes = await sql`SELECT COUNT(*) FROM jobs`;
+      jobs = await pool.query(
+        `
+        SELECT * FROM jobs
+        ORDER BY created_at DESC
+        LIMIT $1 OFFSET $2
+        `,
+        [limit, offset]
+      );
+      totalCountRes = await pool.query(`SELECT COUNT(*) FROM jobs`);
     } else {
-      jobs = await sql`
+      jobs = await pool.query(
+        `
         SELECT * FROM jobs 
         WHERE status = 'active' 
         ORDER BY created_at DESC 
-        LIMIT ${limit} OFFSET ${offset}
-      `;
-      totalCountRes = await sql`SELECT COUNT(*) FROM jobs WHERE status = 'active'`;
+        LIMIT $1 OFFSET $2
+        `,
+        [limit, offset]
+      );
+      totalCountRes = await pool.query(`SELECT COUNT(*) FROM jobs WHERE status = 'active'`);
     }
 
-    const totalCount = parseInt(totalCountRes[0].count, 10);
+    const totalCount = parseInt(totalCountRes.rows[0].count, 10);
 
     return NextResponse.json({
-      data: jobs,
+      data: jobs.rows,
       pagination: {
         page,
         limit,
@@ -69,24 +73,46 @@ export async function POST(req: NextRequest) {
     // Wrap the TipTap HTML string in a JSON object
     const jsonContent = JSON.stringify({ html: body.content });
 
-    const result = await sql`
+    const result = await pool.query(
+      `
       INSERT INTO jobs (
-        slug, designation, department, experience_min, experience_max, 
-        experience_label, employment_type, location, content, status, 
-        open_date, closing_date
-      ) VALUES (
-        ${body.slug}, ${body.designation}, ${body.department}, 
-        ${body.experience_min || 0}, ${body.experience_max || 0}, 
-        ${body.experience_label}, ${body.employment_type || 'full_time'}, 
-        ${body.location}, 
-        ${jsonContent}::jsonb, 
-        ${body.status || 'draft'}, 
-        ${body.open_date || null}, ${body.closing_date || null}
+        slug,
+        designation,
+        department,
+        experience_min,
+        experience_max,
+        experience_label,
+        employment_type,
+        location,
+        content,
+        status,
+        open_date,
+        closing_date
+      )
+      VALUES (
+        $1,$2,$3,$4,$5,$6,$7,$8,$9::jsonb,$10,$11,$12
       )
       RETURNING *;
-    `;
+      `,
+      [
+        body.slug,
+        body.designation,
+        body.department,
+        body.experience_min || 0,
+        body.experience_max || 0,
+        body.experience_label,
+        body.employment_type || 'full_time',
+        body.location,
+        jsonContent,
+        body.status || 'draft',
+        body.open_date || null,
+        body.closing_date || null,
+      ]
+    );
 
-    return NextResponse.json(result[0], { status: 201 });
+    return NextResponse.json(result.rows[0], {
+      status: 201,
+    });
   } catch (err: any) {
     console.error('[POST /api/jobs]', err);
     if (err.code === '23505') return NextResponse.json({ error: 'Job slug must be unique' }, { status: 409 });
@@ -108,28 +134,50 @@ export async function PATCH(req: NextRequest) {
     // Pre-format the content if it's being updated
     const jsonContent = updates.content ? JSON.stringify({ html: updates.content }) : null;
 
-    const result = await sql`
+    const result = await pool.query(
+      `
       UPDATE jobs SET
-        slug = COALESCE(${updates.slug}, slug),
-        designation = COALESCE(${updates.designation}, designation),
-        department = COALESCE(${updates.department}, department),
-        experience_min = COALESCE(${updates.experience_min}, experience_min),
-        experience_max = COALESCE(${updates.experience_max}, experience_max),
-        experience_label = COALESCE(${updates.experience_label}, experience_label),
-        employment_type = COALESCE(${updates.employment_type}, employment_type),
-        location = COALESCE(${updates.location}, location),
-        content = COALESCE(${jsonContent}::jsonb, content),
-        status = COALESCE(${updates.status}, status),
-        open_date = COALESCE(${updates.open_date}, open_date),
-        closing_date = COALESCE(${updates.closing_date}, closing_date),
+        slug = COALESCE($1, slug),
+        designation = COALESCE($2, designation),
+        department = COALESCE($3, department),
+        experience_min = COALESCE($4, experience_min),
+        experience_max = COALESCE($5, experience_max),
+        experience_label = COALESCE($6, experience_label),
+        employment_type = COALESCE($7, employment_type),
+        location = COALESCE($8, location),
+        content = COALESCE($9::jsonb, content),
+        status = COALESCE($10, status),
+        open_date = COALESCE($11, open_date),
+        closing_date = COALESCE($12, closing_date),
         updated_at = CURRENT_TIMESTAMP
-      WHERE job_id = ${job_id}
+      WHERE job_id = $13
       RETURNING *;
-    `;
+      `,
+      [
+        updates.slug ?? null,
+        updates.designation ?? null,
+        updates.department ?? null,
+        updates.experience_min ?? null,
+        updates.experience_max ?? null,
+        updates.experience_label ?? null,
+        updates.employment_type ?? null,
+        updates.location ?? null,
+        jsonContent,
+        updates.status ?? null,
+        updates.open_date ?? null,
+        updates.closing_date ?? null,
+        job_id,
+      ]
+    );
 
-    if (result.length === 0) return NextResponse.json({ error: 'Job not found' }, { status: 404 });
+    if (result.rows.length === 0) {
+      return NextResponse.json(
+        { error: 'Job not found' },
+        { status: 404 }
+      );
+    }
 
-    return NextResponse.json(result[0]);
+    return NextResponse.json(result.rows[0]);
   } catch (err: any) {
     console.error('[PATCH /api/jobs]', err);
     if (err.code === '23505') return NextResponse.json({ error: 'Job slug must be unique' }, { status: 409 });

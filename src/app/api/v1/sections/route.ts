@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { sql } from '@vercel/postgres';
-import { createSection, getSectionsByPageId } from '@/lib/database/db';
+import { createSection, getSectionsByPageId, pool } from '@/lib/database/db';
 
 export async function GET(request: Request) {
   try {
@@ -12,12 +11,13 @@ export async function GET(request: Request) {
       const sections = await getSectionsByPageId(parseInt(page_id));
       return NextResponse.json(sections);
     } else {
-      // Fallback: Fetch all sections for the main admin table view
-      const result = await sql`
+      // Use the pool to query
+      const result = await pool.query(`
         SELECT id, page_id, section_id, type, title, content, metadata, display_order, is_active, created_at, updated_at
         FROM sections
         ORDER BY page_id ASC, display_order ASC
-      `;
+      `);
+      
       return NextResponse.json(result.rows);
     }
   } catch (error) {

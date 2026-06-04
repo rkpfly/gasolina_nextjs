@@ -4,7 +4,7 @@ import { Pool } from 'pg';
 import 'server-only';
 import { PAGE_MAP, PageSlug } from '../config/page-map';
 
-const pool = new Pool({
+export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false } // Keep this if your VPS Postgres enforces SSL
 });
