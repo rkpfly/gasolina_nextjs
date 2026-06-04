@@ -2,17 +2,19 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // Added router
 import { MediaAsset } from "@/lib/media"; 
 import MediaSlot from "@/lib/media"; 
 import LeadForm from "@/components/LeadForm";
 import VIPForm from "@/components/Home/VipForm";
-import FadeUp from "@/components/FadeUp"; // Import the FadeUp component
+import FadeUp from "@/components/FadeUp"; 
 
-// Import your new reusable components
 import { EventCard } from "@/components/Events/EventCard";
 import VipModal from "@/components/Events/VIPModal"; 
 
 export default function HomePage() {
+  const router = useRouter(); // Initialize router
+
   const [media, setMedia] = useState<Record<string, MediaAsset>>({});
   const [isLoading, setIsLoading] = useState(true);
 
@@ -21,7 +23,7 @@ export default function HomePage() {
 
   const discoRef = useRef<HTMLDivElement>(null);
 
-  const [ticketModalEventId, setTicketModalEventId] = useState<string | null>(null);
+  // Removed ticket modal state, kept VIP modal state
   const [vipModal, setVipModal] = useState(false); 
   const [vipModalEvent, setVipModalEvent] = useState<any | null>(null); 
 
@@ -32,7 +34,6 @@ export default function HomePage() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        setTicketModalEventId(null);
         setVipModalEvent(null);
       }
     };
@@ -40,15 +41,15 @@ export default function HomePage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Lock body scroll when any modal is open
+  // Lock body scroll when VIP modal is open
   useEffect(() => {
-    if (ticketModalEventId || vipModalEvent) {
+    if (vipModalEvent) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
     }
     return () => { document.body.style.overflow = ""; };
-  }, [ticketModalEventId, vipModalEvent]);
+  }, [vipModalEvent]);
 
   // 1. Fetch Media from your GET Route
   useEffect(() => {
@@ -69,7 +70,7 @@ export default function HomePage() {
     fetchMedia();
   }, []);
 
-  // 2. Load animations (Removed IntersectionObserver, kept img-reveal timeout)
+  // 2. Load animations 
   useEffect(() => {
     if (isLoading) return; 
 
@@ -115,65 +116,6 @@ export default function HomePage() {
 
   return (
     <>
-      {/* ── Ticket Modal ── */}
-      {ticketModalEventId && (
-        <div
-          className="fixed inset-0 z-[999] flex items-center justify-center p-4 md:p-8"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Reserve Tickets"
-        >
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-brand-black/80 backdrop-blur-sm"
-            onClick={() => setTicketModalEventId(null)}
-          />
-
-          {/* Modal Panel */}
-          <div className="relative z-10 w-full max-w-3xl bg-brand-white rounded-2xl overflow-hidden shadow-2xl flex flex-col"
-               style={{ height: "min(85vh, 720px)" }}>
-
-            {/* Header */}
-            <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-brand-border shrink-0">
-              <span className="text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase text-brand-black">
-                Reserve Tickets
-              </span>
-              <button
-                onClick={() => setTicketModalEventId(null)}
-                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-brand-gray hover:text-brand-black hover:bg-brand-offwhite transition-colors"
-                aria-label="Close modal"
-              >
-                <i className="fa-solid fa-xmark text-base" />
-              </button>
-            </div>
-
-            {/* iFrame */}
-            <div className="flex-1 relative bg-brand-offwhite">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="flex flex-col items-center gap-3 text-brand-gray">
-                  <div className="w-8 h-8 border-2 border-brand-gray/30 border-t-brand-black rounded-full animate-spin" />
-                  <span className="text-[10px] font-bold tracking-[0.2em] uppercase">Loading</span>
-                </div>
-              </div>
-              <iframe
-                src={`https://147.79.70.30.nip.io:8444/events/frame/detail/${ticketModalEventId}`}
-                title="Reserve Tickets"
-                className="relative z-10 w-full h-full border-0"
-                allow="payment"
-              />
-            </div>
-
-            {/* Footer */}
-            <div className="px-4 sm:px-6 py-3 border-t border-brand-border shrink-0 flex items-center gap-2">
-              <i className="fa-solid fa-lock text-[10px] text-brand-gray" />
-              <span className="text-[8px] sm:text-[10px] font-bold tracking-[0.15em] uppercase text-brand-gray">
-                Secure checkout powered by Tixmojo
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* ── Specific Event VIP Modal ── */}
       {vipModalEvent && (
         <VipModal
@@ -256,7 +198,7 @@ export default function HomePage() {
                       isActive={active}
                       imgSrc={imgSrc}
                       delay={`${index * 100}ms`}
-                      onReserve={() => setTicketModalEventId(event._id)}
+                      onReserve={() => router.push(`/events/${event._id}`)}
                       onBookVIP={() => setVipModalEvent(event)} 
                     />
                   </div>
@@ -301,7 +243,6 @@ export default function HomePage() {
             </div>
           </FadeUp>
 
-          {/* Note: Passed delay as a prop to FadeUp instead of inline styles */}
           <FadeUp delay={200} className="lg:col-span-6 lg:col-start-7 flex flex-col gap-6 sm:gap-8 md:gap-12">
             {[
               {
