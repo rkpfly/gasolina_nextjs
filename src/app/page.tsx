@@ -6,10 +6,11 @@ import { MediaAsset } from "@/lib/media";
 import MediaSlot from "@/lib/media"; 
 import LeadForm from "@/components/LeadForm";
 import VIPForm from "@/components/Home/VipForm";
+import FadeUp from "@/components/FadeUp"; // Import the FadeUp component
 
 // Import your new reusable components
 import { EventCard } from "@/components/Events/EventCard";
-import VipModal from "@/components/Events/VIPModal"; // Make sure to export VipModal from its file
+import VipModal from "@/components/Events/VIPModal"; 
 
 export default function HomePage() {
   const [media, setMedia] = useState<Record<string, MediaAsset>>({});
@@ -21,8 +22,8 @@ export default function HomePage() {
   const discoRef = useRef<HTMLDivElement>(null);
 
   const [ticketModalEventId, setTicketModalEventId] = useState<string | null>(null);
-  const [vipModal, setVipModal] = useState(false); // Used for the generic VIP form
-  const [vipModalEvent, setVipModalEvent] = useState<any | null>(null); // NEW: Used for the specific event VIP booking
+  const [vipModal, setVipModal] = useState(false); 
+  const [vipModalEvent, setVipModalEvent] = useState<any | null>(null); 
 
   // Form State
   const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -68,7 +69,7 @@ export default function HomePage() {
     fetchMedia();
   }, []);
 
-  // 2. Scroll reveal animations
+  // 2. Load animations (Removed IntersectionObserver, kept img-reveal timeout)
   useEffect(() => {
     if (isLoading) return; 
 
@@ -77,26 +78,8 @@ export default function HomePage() {
       reveals.forEach((r) => r.classList.add("active"));
     }, 100);
 
-    const fadeElements = document.querySelectorAll(".fade-up");
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("active");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
-    );
-    
-    fadeElements.forEach((el) => observer.observe(el));
-
-    return () => {
-      clearTimeout(timer);
-      observer.disconnect();
-    };
-  }, [isLoading, events]); // Added events to dependency array so cards animate when loaded
+    return () => clearTimeout(timer);
+  }, [isLoading]); 
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -199,7 +182,7 @@ export default function HomePage() {
         />
       )}
 
-      {/* Generic VIPForm handles its own presence and animations natively */}
+      {/* Generic VIPForm */}
       <VIPForm vipModal={vipModal} setVipModal={setVipModal} />
 
       {/* ── Hero ── */}
@@ -214,7 +197,7 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-black/20 to-black/30" />
         </div>
 
-        <div className="relative z-10 w-full max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-end gap-4 sm:gap-6 md:gap-10 fade-up">
+        <FadeUp className="relative z-10 w-full max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-end gap-4 sm:gap-6 md:gap-10">
           <div className="pl-4 max-w-3xl w-full">
             <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl xl:text-[6vw] 
             font-display font-extrabold tracking-tighter 
@@ -241,17 +224,17 @@ export default function HomePage() {
               <span>Reserve Tickets</span>
             </Link>
           </div>
-        </div>
+        </FadeUp>
       </section>
 
-      {/* Events */}
+      {/* ── Events ── */}
       <section id="events" className="pt-12 sm:pt-16 md:pt-24 pb-16 sm:pb-20 md:pb-32 px-3 sm:px-4 md:px-6 lg:px-12">
         <div className="max-w-[1600px] mx-auto">
-          <div className="flex justify-between items-end mb-6 sm:mb-10 md:mb-16 fade-up">
+          <FadeUp className="flex justify-between items-end mb-6 sm:mb-10 md:mb-16">
             <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-display font-bold tracking-tighter uppercase">
               Upcoming Events
             </h2>
-          </div>
+          </FadeUp>
 
           <div className="flex flex-nowrap sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-4 md:gap-6 lg:gap-x-6 lg:gap-y-12 border-t border-brand-border pt-2 sm:pt-8 md:pt-10 overflow-x-auto overflow-y-hidden snap-x snap-mandatory pb-6 px-6 sm:pb-0 scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {isEventsLoading ? (
@@ -286,25 +269,27 @@ export default function HomePage() {
       
       {/* ── Cinematic Highlights ── */}
       <section className="md:mt-12 py-12 sm:py-16 md:py-24 bg-brand-black text-white px-3 sm:px-4 md:px-6 lg:px-12 overflow-hidden">
-        <div className="max-w-[1600px] mx-auto fade-up">
+        <FadeUp className="max-w-[1600px] mx-auto">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold tracking-tighter uppercase mb-6 sm:mb-8 md:mb-12">
             Cinematic Highlights
           </h2>
-        </div>
-        <div className="max-w-[1600px] mx-auto flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory hide-scroll fade-up">
+        </FadeUp>
+        
+        <FadeUp className="max-w-[1600px] mx-auto flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory hide-scroll">
           {['cinematic-1', 'cinematic-2'].map((id) => (
             <div key={id} className="snap-center shrink-0 w-[calc(90vw-1.5rem)] sm:w-[calc(90vw-2rem)] md:w-[60vw] lg:w-[45vw] aspect-video relative group cursor-pointer overflow-hidden bg-brand-offwhite/10 rounded-lg">
               <MediaSlot id={id} mediaMap={media} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
               <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 pointer-events-none" />
             </div>
           ))}
-        </div>
+        </FadeUp>
       </section>
 
       {/* ── Redefining Luxury ── */}
       <section className="py-12 sm:py-16 md:py-32 bg-brand-white px-3 sm:px-4 md:px-6 lg:px-12 border-b border-brand-border">
         <div className="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 md:gap-10 lg:gap-8">
-          <div className="lg:col-span-5 fade-up">
+          
+          <FadeUp className="lg:col-span-5">
             <div className="lg:sticky lg:top-32">
               <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-display font-extrabold tracking-tighter uppercase leading-[0.9] text-brand-black mb-2 sm:mb-3 md:mb-4 lg:mb-6">
                 Redefining<br />
@@ -314,9 +299,10 @@ export default function HomePage() {
                 The definitive Southeast Asian experience, reimagined globally.
               </p>
             </div>
-          </div>
+          </FadeUp>
 
-          <div className="lg:col-span-6 lg:col-start-7 flex flex-col gap-6 sm:gap-8 md:gap-12 fade-up" style={{ transitionDelay: "200ms" }}>
+          {/* Note: Passed delay as a prop to FadeUp instead of inline styles */}
+          <FadeUp delay={200} className="lg:col-span-6 lg:col-start-7 flex flex-col gap-6 sm:gap-8 md:gap-12">
             {[
               {
                 heading: "The Phenomenon",
@@ -337,7 +323,7 @@ export default function HomePage() {
               <p className="text-xs sm:text-sm md:text-base text-brand-gray leading-relaxed font-medium mb-3">Our distinction lies in the immersive experiences we craft. Beyond the music, Bollywood Club delivers a visual spectacle featuring captivating live performances, state-of-the-art production, and bespoke VIP services. It is an elevated sensory journey designed for the discerning individual.</p>
               <p className="text-xs sm:text-sm md:text-base text-brand-gray leading-relaxed font-medium">Join us at iconic global venues where the cinematic glamour of Bollywood meets the sophistication of premier entertainment destinations. Secure your access and become part of an exclusive community—your vibrant home away from home.</p>
             </div>
-          </div>
+          </FadeUp>
         </div>
       </section>
 
@@ -351,7 +337,7 @@ export default function HomePage() {
           />
         </div>
         
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-6 md:p-12 lg:p-24 fade-up">
+        <FadeUp className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-6 md:p-12 lg:p-24">
           <div className="w-full max-w-md">
             <h2 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-display font-bold tracking-tighter uppercase text-brand-black mb-2 sm:mb-3 md:mb-4">
               Join the Inner Circle
@@ -373,7 +359,7 @@ export default function HomePage() {
               />
             )}
           </div>
-        </div>
+        </FadeUp>
       </section>
     </>
   );

@@ -1,5 +1,6 @@
 // src/app/privacy-policy/page.tsx
 import { getLegalContentBySlug } from '@/lib/fetchLegalContent';
+import { getPageMetadata } from '@/lib/database/db'; // ✅ Added SEO import
 import { notFound } from 'next/navigation';
 
 /**
@@ -15,6 +16,13 @@ function preserveEmptyParagraphs(html: string): string {
 // Optional: Force this page to be statically generated and revalidated
 export const revalidate = 86400; // Revalidate every 24 hours
 
+// 1. Generate Metadata securely on the server
+export async function generateMetadata() {
+  // Pass the exact slug for your privacy policy page
+  return await getPageMetadata('/privacy-policy');
+}
+
+// 2. Render the Server Component
 export default async function PrivacyPolicyPage() {
   // Since this is the explicit Privacy Policy page, we hardcode the slug.
   const doc = await getLegalContentBySlug('privacy-policy');

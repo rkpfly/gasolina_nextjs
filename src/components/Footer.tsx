@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { query } from '@/lib/database/db'; // Make sure this path points to your actual db.ts file
+import { query } from '@/lib/database/db'; 
+import FadeUp from "@/components/FadeUp"; // Import the new wrapper
 
 interface FooterCity {
   display_name: string;
@@ -13,7 +14,6 @@ interface FooterSocial {
   icon_class: string;
 }
 
-// 1. Add the interface for your new contact schema
 interface FooterContact {
   phone1: string;
   phone2: string;
@@ -27,7 +27,6 @@ export default async function Footer() {
   let contact: FooterContact | null = null;
 
   try {
-    // 2. Add the contact query to the concurrent Promise.all array
     const [citiesResult, socialsResult, contactResult] = await Promise.all([
       query(`
         SELECT 
@@ -42,7 +41,6 @@ export default async function Footer() {
         WHERE is_active = true 
         ORDER BY sort_order ASC
       `, []),
-      // New query to grab the single active contact row
       query(`
         SELECT phone1, phone2, email, copy_year 
         FROM "FooterContact" 
@@ -54,17 +52,17 @@ export default async function Footer() {
     
     cities = citiesResult.rows;
     socials = socialsResult.rows;
-    contact = contactResult.rows[0] || null; // Safely grab the first row
+    contact = contactResult.rows[0] || null; 
   } catch (error) {
     console.error('Failed to fetch footer data:', error);
   }
 
-  // Helper to safely format phone numbers for the "tel:" href (removes spaces)
   const formatPhoneHref = (phone: string) => `tel:${phone.replace(/\s+/g, '')}`;
 
   return (
     <footer className="bg-brand-white pt-16 sm:pt-20 md:pt-24 pb-8 sm:pb-10 md:pb-12 px-4 sm:px-6 md:px-12">
-      <div className="max-w-[1600px] mx-auto fade-up">
+      {/* Wrapped the main container in the FadeUp component */}
+      <FadeUp className="max-w-[1600px] mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12 lg:gap-8 mb-16 sm:mb-20 md:mb-24 text-xs sm:text-sm font-medium">
 
           {/* Brand & Contact */}
@@ -76,7 +74,6 @@ export default async function Footer() {
               BOLLYWOODCLUB<span className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-brand-accent rounded-full mb-2" />
             </Link>
             
-            {/* 3. Inject dynamic contact data here */}
             <div className="flex flex-col gap-1.5 sm:gap-2 text-brand-gray text-xs sm:text-sm">
               {contact?.phone1 && (
                 <a href={formatPhoneHref(contact.phone1)} className="hover:text-brand-black transition-colors">
@@ -157,14 +154,13 @@ export default async function Footer() {
         {/* Bottom bar */}
         <div className="flex flex-col sm:flex-row justify-between items-center pt-6 sm:pt-8 border-t border-brand-border gap-3 sm:gap-4">
           <p className="text-[8px] sm:text-[9px] md:text-[10px] font-bold tracking-[0.15em] uppercase text-brand-gray text-center sm:text-left">
-            {/* 4. Inject dynamic copyright year here (with fallback to 2024 if DB fetch fails) */}
             © {contact?.copy_year || 2024} Bollywood Club. Owned by Louder World Pty Ltd.
           </p>
           <p className="text-[8px] sm:text-[9px] md:text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black">
             Designed for Nightlife
           </p>
         </div>
-      </div>
+      </FadeUp>
     </footer>
   );
 }

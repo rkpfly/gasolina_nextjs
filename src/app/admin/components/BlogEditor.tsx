@@ -7,6 +7,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
 import Placeholder from '@tiptap/extension-placeholder';
+import { RawHtml } from '@/lib/RawHtmlExtension'; // Make sure this path is correct
 
 interface BlogEditorProps {
   onSave: (content: string) => void;
@@ -34,6 +35,7 @@ export function BlogEditor({ onSave, initialContent = '', isLoading = false }: B
       Placeholder.configure({
         placeholder: 'Start writing your blog post...',
       }),
+      RawHtml
     ],
     content: initialContent,
     editorProps: {
@@ -87,6 +89,16 @@ function EditorToolbar({ editor, onSave, isLoading }: EditorToolbarProps) {
     const url = prompt('Enter image URL:');
     if (url) {
       editor.chain().focus().setImage({ src: url }).run();
+    }
+  };
+
+  const handleAddRawHtml = () => {
+    const html = prompt('Paste your raw HTML here:');
+    if (html) {
+      editor.chain().focus().insertContent({
+        type: 'rawHtml',
+        attrs: { html: html },
+      }).run();
     }
   };
 
@@ -173,6 +185,9 @@ function EditorToolbar({ editor, onSave, isLoading }: EditorToolbarProps) {
         </button>
         <button onClick={handleAddImage} className="toolbar-btn" title="Add Image">
           🖼️
+        </button>
+        <button onClick={handleAddRawHtml} className="toolbar-btn" title="Embed Raw HTML">
+          &lt;/&gt; Embed
         </button>
       </div>
 

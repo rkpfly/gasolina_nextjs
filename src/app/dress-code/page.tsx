@@ -1,5 +1,6 @@
 // src/app/dress-code/page.tsx
 import { getLegalContentBySlug } from '@/lib/fetchLegalContent';
+import { getPageMetadata } from '@/lib/database/db'; // Ensure this path matches your setup!
 import { notFound } from 'next/navigation';
 
 /**
@@ -15,6 +16,13 @@ function preserveEmptyParagraphs(html: string): string {
 // Optional: Force this page to be statically generated and revalidated
 export const revalidate = 86400; // Revalidate every 24 hours
 
+// 1. Generate Metadata securely on the server
+export async function generateMetadata() {
+  // Pass the exact slug for your dress code page
+  return await getPageMetadata('/dress-code');
+}
+
+// 2. Render the Server Component
 export default async function DressCodePage() {
   // Fetch the dress code data
   const doc = await getLegalContentBySlug('dress-code');
@@ -30,19 +38,21 @@ export default async function DressCodePage() {
       {/* LEFT COLUMN: A4 Ratio Image */}
       {/* w-full on mobile, fixed width on desktop */}
       {doc.image_url && (
-        <div className="w-full lg:w-[350px] xl:w-[500px] flex-shrink-0 mb-6 lg:mb-0">
+        <div className="w-full lg:w-[350px] xl:w-[500px] flex-shrink-0 mb-6 lg:mb-0 lg:mr-8 xl:mr-12">
         {/* aspect-[21/29.7] creates the perfect A4 ratio */}
             <div className="relative w-full aspect-[21/29.7] rounded-lg md:rounded-xl overflow-hidden shadow-xl bg-gray-100">
                 {/* Using standard <img> for external URLs. If using Next/Image, update accordingly */}
                 <img
                 src={doc.image_url}
                 alt={`${doc.label} visual reference`}
-                className="absolute inset-0 w-full h-full object-contain"
+                className="absolute inset-0 w-full h-full object-cover"
                 loading="lazy"
                 />
             </div>
         </div>
       )}
+
+      {/* RIGHT COLUMN: TipTap Content */}
       <div className="w-full flex-1">
         <header className="mb-6 sm:mb-8 md:mb-12 border-b pb-4 sm:pb-6">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900">
@@ -50,7 +60,6 @@ export default async function DressCodePage() {
             </h1>
         </header>
 
-        {/* RIGHT COLUMN: TipTap Content */}
         <article
         className="
             w-full

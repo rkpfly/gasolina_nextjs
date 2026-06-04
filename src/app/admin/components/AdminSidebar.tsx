@@ -10,10 +10,12 @@ const MENU_ITEMS = [
   { label: 'Footer', href: '/admin/footer', icon: '📝' },
   { label: 'Home Page', href: '/admin/pages/home', icon: '🏠' },
   { label: 'Images', href: '/admin/images', icon: '🖼️' },
-  { label: 'Settings', href: '/admin/settings', icon: '⚙️' },
+  // { label: 'Settings', href: '/admin/settings', icon: '⚙️' },
   { label: 'Manage Jobs', href: '/admin/jobs', icon: '💼' },
   { label: 'Manage Offers', href: '/admin/offers', icon: '🎁' },
   { label: 'Manage Cities', href: '/admin/city', icon: '🌆' },
+  { label: 'SEO Pages', href: '/admin/seo', icon: '🔍' },
+  { label: 'Page Sections', href: '/admin/pages/sections', icon: '📚' },
 ];
 
 export function AdminSidebar() {

@@ -7,7 +7,8 @@ export async function GET(request: NextRequest) {
     // We also include 'category' because your frontend UI uses it for the badge!
     const sql = `
       SELECT 
-        id, 
+        id,
+        slug, 
         offer_title, 
         short_description, 
         thumbnail_url, 

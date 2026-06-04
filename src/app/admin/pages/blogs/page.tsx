@@ -8,6 +8,7 @@ import Placeholder from '@tiptap/extension-placeholder';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import CharacterCount from '@tiptap/extension-character-count';
+import { RawHtml } from '@/lib/RawHtmlExtension';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -89,6 +90,17 @@ function EditorToolbar({ editor }: { editor: any }) {
     editor.chain().focus().setLink({ href: url }).run();
   };
 
+  // NEW: Function to handle Raw HTML insertion
+  const handleAddRawHtml = () => {
+    const html = window.prompt('Paste your raw HTML here:');
+    if (html) {
+      editor.chain().focus().insertContent({
+        type: 'rawHtml',
+        attrs: { html: html },
+      }).run();
+    }
+  };
+
   const groups = [
     {
       label: 'History',
@@ -133,6 +145,8 @@ function EditorToolbar({ editor }: { editor: any }) {
       items: [
         { title: 'Image', icon: '⌗', action: addImage, active: false },
         { title: 'Horizontal Rule', icon: '—', action: () => editor.chain().focus().setHorizontalRule().run(), active: false },
+        // NEW: Button for embedding raw HTML
+        { title: 'Raw HTML', icon: '</>', action: handleAddRawHtml, active: false }, 
       ],
     },
   ];
@@ -271,6 +285,7 @@ function BlogEditorModal({
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       CharacterCount,
       Placeholder.configure({ placeholder: 'Start writing your post…' }),
+      RawHtml
     ],
     content: (form.content as any) || '',
     editorProps: {

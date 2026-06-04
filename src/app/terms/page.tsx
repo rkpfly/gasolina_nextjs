@@ -1,5 +1,6 @@
 // src/app/terms-and-conditions/page.tsx
 import { getLegalContentBySlug } from '@/lib/fetchLegalContent';
+import { getPageMetadata } from '@/lib/database/db'; // ✅ Added SEO import
 import { notFound } from 'next/navigation';
 
 /**
@@ -15,8 +16,15 @@ function preserveEmptyParagraphs(html: string): string {
 // Optional: Force this page to be statically generated and revalidated
 export const revalidate = 86400; // Revalidate every 24 hours
 
+// 1. Generate Metadata securely on the server
+export async function generateMetadata() {
+  // Pass the exact slug for your terms and conditions page
+  return await getPageMetadata('/terms-and-conditions');
+}
+
+// 2. Render the Server Component
 export default async function TermsAndConditionsPage() {
-  // Hardcode the slug for the Terms and Conditions page
+  // Hardcode the slug for the Terms and Conditions page (fetching the content from your DB)
   const doc = await getLegalContentBySlug('terms');
 
   if (!doc) {

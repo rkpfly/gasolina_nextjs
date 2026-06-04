@@ -6,13 +6,13 @@ import StarterKit from '@tiptap/starter-kit';
 // ─── Types & Configuration ──────────────────────────────────────────────
 interface Offer {
   id?: string;
+  slug?: string;
   thumbnail_url?: string;
   offer_title: string;
   short_description?: string;
   expiry_date: string;
   start_date?: string;
   offer_code?: string;
-  // Updated to accept JSON objects from Tiptap
   description?: any;
   how_to_redeem?: any;
   terms_and_conditions?: any;
@@ -33,6 +33,10 @@ interface Offer {
   max_redemptions?: number;
   redemption_limit_per_user?: number;
   external_link?: string;
+  seo?: {
+    title?: string;
+    description?: string;
+  };
 }
 
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10 MB
@@ -47,15 +51,13 @@ function formatBytes(bytes: number): string {
 const RichTextEditor = ({ value, onChange }: { value: any, onChange: (val: any) => void }) => {
   const editor = useEditor({
     extensions: [StarterKit],
-    content: value || '', // Loads existing JSON or HTML
+    content: value || '',
     editorProps: {
       attributes: {
-        // Tailwind prose classes ensure lists and spacing look right inside the editor
         class: 'prose prose-sm prose-invert max-w-none focus:outline-none min-h-[120px] p-4 text-white',
       },
     },
     onUpdate: ({ editor }) => {
-      // Export as structured JSON for your JSONB database columns
       onChange(editor.getJSON());
     },
   });
@@ -64,7 +66,6 @@ const RichTextEditor = ({ value, onChange }: { value: any, onChange: (val: any) 
 
   return (
     <div className="w-full bg-black border border-gray-800 rounded-sm overflow-hidden flex flex-col focus-within:border-pink-500/50 transition-colors">
-      {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-1 p-2 border-b border-gray-800 bg-gray-950">
         <button type="button" onClick={() => editor.chain().focus().toggleBold().run()} className={`px-3 py-1.5 text-xs font-bold rounded-sm transition-colors ${editor.isActive('bold') ? 'bg-pink-600 text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}>B</button>
         <button type="button" onClick={() => editor.chain().focus().toggleItalic().run()} className={`px-3 py-1.5 text-xs italic font-serif rounded-sm transition-colors ${editor.isActive('italic') ? 'bg-pink-600 text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}>I</button>
@@ -72,7 +73,6 @@ const RichTextEditor = ({ value, onChange }: { value: any, onChange: (val: any) 
         <button type="button" onClick={() => editor.chain().focus().toggleBulletList().run()} className={`px-3 py-1.5 text-xs rounded-sm transition-colors flex items-center gap-1 ${editor.isActive('bulletList') ? 'bg-pink-600 text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}>• Bullet</button>
         <button type="button" onClick={() => editor.chain().focus().toggleOrderedList().run()} className={`px-3 py-1.5 text-xs rounded-sm transition-colors flex items-center gap-1 ${editor.isActive('orderedList') ? 'bg-pink-600 text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}>1. Number</button>
       </div>
-      {/* Editor Area */}
       <EditorContent editor={editor} className="bg-black text-sm cursor-text" />
     </div>
   );
@@ -98,7 +98,14 @@ export default function OffersAdmin() {
     try {
       const res = await fetch(`/api/admin/offers?sort=${sort}`);
       const data = await res.json();
-      setOffers(data);
+      
+      // Ensure seo is an object if it comes back as a stringified JSON from the database
+      const parsedOffers = data.map((offer: Offer) => ({
+        ...offer,
+        seo: typeof offer.seo === 'string' ? JSON.parse(offer.seo) : offer.seo || {}
+      }));
+      
+      setOffers(parsedOffers);
       setCurrentSort(sort);
     } catch (err) {
       console.error("Failed to fetch offers", err);
@@ -122,6 +129,16 @@ export default function OffersAdmin() {
     return new Date(dateString).toISOString().slice(0, 16);
   };
 
+  // Helper function to initialize a new offer
+  const getNewOfferTemplate = (): Offer => ({
+    is_active: true, 
+    is_featured: false, 
+    offer_title: '', 
+    slug: '',
+    expiry_date: '',
+    seo: { title: '', description: '' }
+  });
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-[#0a0a0a] to-black text-white" style={{
       backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(255,0,127,0.03) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255,0,127,0.02) 0%, transparent 50%)'
@@ -143,14 +160,12 @@ export default function OffersAdmin() {
         .modal-content { animation: fadeInScale 0.3s ease-out; }
         input:focus, textarea:focus, select:focus { outline: none; border-color: rgba(255, 0, 127, 0.5) !important; background-color: rgba(255, 0, 127, 0.02) !important; transition: all 0.2s ease; }
         
-        /* Ensures Tiptap lists render correctly inside the editor */
         .ProseMirror ul { list-style-type: disc; padding-left: 1.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem; }
         .ProseMirror ol { list-style-type: decimal; padding-left: 1.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem; }
         .ProseMirror p { margin-bottom: 0.5rem; }
       `}</style>
 
       <div className="max-w-7xl mx-auto px-6 py-12">
-        {/* Header Section */}
         <header className="mb-12 animate-in">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
             <div className="flex-1">
@@ -176,7 +191,7 @@ export default function OffersAdmin() {
             </div>
 
             <button 
-              onClick={() => setEditingOffer({ is_active: true, is_featured: false, offer_title: '', expiry_date: '' })} 
+              onClick={() => setEditingOffer(getNewOfferTemplate())} 
               className="button-primary bg-pink-600 hover:bg-pink-700 px-8 py-3 text-xs font-bold uppercase tracking-widest rounded-sm whitespace-nowrap"
             >
               Create Offer
@@ -184,7 +199,6 @@ export default function OffersAdmin() {
           </div>
         </header>
 
-        {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center py-24">
             <div className="flex gap-2">
@@ -195,14 +209,12 @@ export default function OffersAdmin() {
           </div>
         )}
 
-        {/* Offers Grid */}
         {!loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {offers.map((offer: any, idx: number) => (
               <div key={offer.id} className="card-hover animate-card group" style={{ animationDelay: `${Math.min(idx * 0.08, 0.4)}s` }}>
                 <div className="bg-gray-950 border border-gray-800 rounded-lg overflow-hidden h-full flex flex-col transition-colors duration-300">
                   
-                  {/* Image Container */}
                   <div className="relative aspect-[16/9] bg-gray-900 overflow-hidden flex-shrink-0">
                     <img src={offer.thumbnail_url} className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" alt={offer.offer_title}/>
                     <div className="absolute top-3 right-3 flex gap-2">
@@ -211,7 +223,6 @@ export default function OffersAdmin() {
                     </div>
                   </div>
 
-                  {/* Content Container */}
                   <div className="p-6 flex flex-col flex-grow">
                     <div className="flex items-center gap-2 mb-3">
                       {offer.category && <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 border border-gray-700 text-gray-400 rounded-sm">{offer.category}</span>}
@@ -221,7 +232,6 @@ export default function OffersAdmin() {
                     <h3 className="font-semibold text-lg tracking-tight mb-2 line-clamp-2 group-hover:text-pink-400 transition-colors">{offer.offer_title}</h3>
                     <p className="text-gray-500 text-xs mb-4 line-clamp-2">{offer.short_description}</p>
 
-                    {/* Stats Grid */}
                     <div className="grid grid-cols-3 gap-2 mb-6 flex-grow">
                       <div className="bg-black border border-gray-800 rounded-sm p-2 text-center">
                         <p className="text-[10px] text-gray-500 uppercase">Views</p>
@@ -237,7 +247,6 @@ export default function OffersAdmin() {
                       </div>
                     </div>
 
-                    {/* Footer / Actions */}
                     <div className="pt-4 border-t border-gray-800/50 flex flex-col gap-3">
                       <div className="flex justify-between items-center text-xs">
                         <span className="text-gray-600">Expires:</span>
@@ -257,18 +266,16 @@ export default function OffersAdmin() {
           </div>
         )}
 
-        {/* Empty State */}
         {!loading && offers.length === 0 && (
           <div className="flex flex-col items-center justify-center py-24 animate-in">
             <p className="text-gray-500 text-lg mb-6">No active offers found</p>
-            <button onClick={() => setEditingOffer({ is_active: true, is_featured: false, offer_title: '', expiry_date: '' })} className="button-primary bg-pink-600 hover:bg-pink-700 px-8 py-3 text-xs font-bold uppercase tracking-widest rounded-sm">
+            <button onClick={() => setEditingOffer(getNewOfferTemplate())} className="button-primary bg-pink-600 hover:bg-pink-700 px-8 py-3 text-xs font-bold uppercase tracking-widest rounded-sm">
               Create First Offer
             </button>
           </div>
         )}
       </div>
 
-      {/* ─── Create / Edit Modal ─────────────────────────────────────────── */}
       {editingOffer && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 modal-backdrop">
           <div className="bg-gray-950 border border-gray-800 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto modal-content shadow-2xl">
@@ -287,11 +294,8 @@ export default function OffersAdmin() {
                 try {
                   const fd = new FormData();
                   
-                  // Text & JSON Fields
                   Object.entries(editingOffer).forEach(([key, value]) => {
                     if (value !== undefined && value !== null && key !== 'thumbnail_url' && key !== 'sponsor_logo_url') {
-                      // CRITICAL: Any array or object (like Tiptap JSON) needs to be stringified 
-                      // before appending to FormData so the backend API can parse it.
                       if (typeof value === 'object') {
                         fd.append(key, JSON.stringify(value));
                       } else {
@@ -300,7 +304,6 @@ export default function OffersAdmin() {
                     }
                   });
 
-                  // Media files or fallback URLs
                   if (thumbFile) fd.append('thumbnailFile', thumbFile);
                   else if (editingOffer.thumbnail_url) fd.append('thumbnail_url', editingOffer.thumbnail_url);
 
@@ -326,9 +329,15 @@ export default function OffersAdmin() {
               {/* SECTION: Basic Info */}
               <div className="space-y-4">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-pink-500 border-b border-gray-800/60 pb-2">1. Core Information</p>
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">Offer Title <span className="text-pink-500">*</span></label>
-                  <input required className="w-full bg-black border border-gray-800 rounded-sm p-3 text-sm text-white placeholder-gray-600" placeholder="e.g. 50% Off Summer Cocktails" value={editingOffer.offer_title || ''} onChange={e => setEditingOffer({...editingOffer, offer_title: e.target.value})} />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">Offer Title <span className="text-pink-500">*</span></label>
+                    <input required className="w-full bg-black border border-gray-800 rounded-sm p-3 text-sm text-white placeholder-gray-600" placeholder="e.g. 50% Off Summer Cocktails" value={editingOffer.offer_title || ''} onChange={e => setEditingOffer({...editingOffer, offer_title: e.target.value})} />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">URL Slug <span className="text-pink-500">*</span></label>
+                    <input required className="w-full bg-black border border-gray-800 rounded-sm p-3 text-sm text-white placeholder-gray-600" placeholder="e.g. 50-off-summer-cocktails" value={editingOffer.slug || ''} onChange={e => setEditingOffer({...editingOffer, slug: e.target.value})} />
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">Short Description</label>
@@ -357,7 +366,6 @@ export default function OffersAdmin() {
                 <p className="text-[10px] font-bold uppercase tracking-widest text-pink-500 border-b border-gray-800/60 pb-2">2. Media & Branding</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   
-                  {/* Thumbnail File */}
                   <div className="space-y-2">
                     <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">Main Thumbnail <span className="text-pink-500">*</span></label>
                     <input type="file" className="hidden" ref={thumbInputRef} accept={ALLOWED_IMAGE_TYPES.join(',')} onChange={(e) => { if (e.target.files?.[0]) setThumbFile(e.target.files[0]); }}/>
@@ -378,7 +386,6 @@ export default function OffersAdmin() {
                     )}
                   </div>
 
-                  {/* Sponsor Logo File */}
                   <div className="space-y-2">
                     <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">Sponsor Logo (Optional)</label>
                     <input type="file" className="hidden" ref={sponsorLogoInputRef} accept={ALLOWED_IMAGE_TYPES.join(',')} onChange={(e) => { if (e.target.files?.[0]) setSponsorLogoFile(e.target.files[0]); }}/>
@@ -479,6 +486,29 @@ export default function OffersAdmin() {
                       onChange={(val) => setEditingOffer({...editingOffer, terms_and_conditions: val})} 
                     />
                   </div>
+                </div>
+              </div>
+
+              {/* SECTION: SEO & Meta */}
+              <div className="space-y-4">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-pink-500 border-b border-gray-800/60 pb-2">5. SEO & Meta</p>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">SEO Title</label>
+                  <input 
+                    className="w-full bg-black border border-gray-800 rounded-sm p-3 text-sm text-white placeholder-gray-600" 
+                    placeholder="Custom title for search engines (defaults to Offer Title)" 
+                    value={editingOffer.seo?.title || ''} 
+                    onChange={e => setEditingOffer({...editingOffer, seo: { ...(editingOffer.seo || {}), title: e.target.value }})} 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">SEO Description</label>
+                  <textarea 
+                    className="w-full bg-black border border-gray-800 rounded-sm p-3 text-sm text-white placeholder-gray-600 min-h-[80px]" 
+                    placeholder="Meta description for search results" 
+                    value={editingOffer.seo?.description || ''} 
+                    onChange={e => setEditingOffer({...editingOffer, seo: { ...(editingOffer.seo || {}), description: e.target.value }})} 
+                  />
                 </div>
               </div>
 
