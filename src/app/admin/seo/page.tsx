@@ -14,7 +14,31 @@ const initialFormState = {
   }
 };
 
-const ToggleSwitch = ({ label, checked, onChange }) => (
+interface SeoPage {
+  id: number;
+  slug: string;
+  title: string;
+  description?: string;
+  og_title?: string;
+  og_description?: string;
+  twitter_title?: string;
+  twitter_description?: string;
+  twitter_card?: string;
+  schema_json?: unknown;
+  config?: Record<string, boolean>;
+}
+
+type ToggleSwitchProps = {
+  label: string;
+  checked: boolean;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
+const ToggleSwitch = ({
+  label,
+  checked,
+  onChange,
+}: ToggleSwitchProps) => (
   <label className="flex items-center cursor-pointer mt-1">
     <div className="relative">
       <input type="checkbox" className="sr-only peer" checked={checked} onChange={onChange} />
@@ -26,9 +50,12 @@ const ToggleSwitch = ({ label, checked, onChange }) => (
 );
 
 export default function SeoAdminPage() {
-  const [pages, setPages] = useState([]);
-  const [form, setForm] = useState(initialFormState);
-  const [editingId, setEditingId] = useState(null);
+  const [pages, setPages] = useState<SeoPage[]>([]);
+
+  type FormState = typeof initialFormState;
+  const [form, setForm] = useState<FormState>(initialFormState);
+
+  const [editingId, setEditingId] = useState<number | null>(null);
 
   useEffect(() => { fetchPages(); }, []);
 
@@ -38,14 +65,16 @@ export default function SeoAdminPage() {
     setPages(data);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const method = editingId ? 'PUT' : 'POST';
     
     let parsedSchema = null;
     if (form.schema_json) {
       try { parsedSchema = JSON.parse(form.schema_json); } 
-      catch (error) { return alert("Invalid JSON in Schema field."); }
+      catch (error: unknown) {
+        return alert("Invalid JSON in Schema field."); 
+      }
     }
 
     const payload = { ...form, schema_json: parsedSchema, id: editingId };
@@ -59,7 +88,7 @@ export default function SeoAdminPage() {
     fetchPages(); 
   };
 
-  const handleEdit = (page) => {
+  const handleEdit = (page: SeoPage) => {
     const parsedConfig = typeof page.config === 'string' ? JSON.parse(page.config) : (page.config || initialFormState.config);
     setForm({
       ...initialFormState,
@@ -73,7 +102,7 @@ export default function SeoAdminPage() {
   };
 
   // Missing Delete Function Added Back Here
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: number) => {
     if (!confirm('Are you sure you want to delete this SEO page?')) return;
     await fetch('/api/v1/seo-pages', {
       method: 'DELETE',
@@ -83,7 +112,10 @@ export default function SeoAdminPage() {
     fetchPages();
   };
 
-  const updateConfig = (key, value) => {
+  const updateConfig = (
+    key: keyof typeof initialFormState.config,
+    value: boolean
+  ) => {
     setForm({ ...form, config: { ...form.config, [key]: value } });
   };
 
@@ -115,7 +147,7 @@ export default function SeoAdminPage() {
             </div>
             <div>
               <label className={labelClass}>Meta Description</label>
-              <textarea rows="2" className={inputClass} value={form.description} onChange={e => setForm({...form, description: e.target.value})} />
+              <textarea rows={2} className={inputClass} value={form.description} onChange={e => setForm({...form, description: e.target.value})} />
             </div>
           </section>
 
@@ -140,7 +172,7 @@ export default function SeoAdminPage() {
                   <label className="text-sm font-medium text-gray-400">OG Description</label>
                   <ToggleSwitch label="Default to Meta Description" checked={form.config.fallback_og_desc} onChange={(e) => updateConfig('fallback_og_desc', e.target.checked)} />
                 </div>
-                <textarea rows="2" disabled={form.config.fallback_og_desc} className={inputClass} value={form.config.fallback_og_desc ? form.description : form.og_description} onChange={e => setForm({...form, og_description: e.target.value})} />
+                <textarea rows={2} disabled={form.config.fallback_og_desc} className={inputClass} value={form.config.fallback_og_desc ? form.description : form.og_description} onChange={e => setForm({...form, og_description: e.target.value})} />
               </div>
             </div>
           </section>
@@ -169,7 +201,7 @@ export default function SeoAdminPage() {
                   <label className="text-sm font-medium text-gray-400">Twitter Description</label>
                   <ToggleSwitch label="Default to Meta Description" checked={form.config.fallback_twitter_desc} onChange={(e) => updateConfig('fallback_twitter_desc', e.target.checked)} />
                 </div>
-                <textarea rows="2" disabled={form.config.fallback_twitter_desc} className={inputClass} value={form.config.fallback_twitter_desc ? form.description : form.twitter_description} onChange={e => setForm({...form, twitter_description: e.target.value})} />
+                <textarea rows={2} disabled={form.config.fallback_twitter_desc} className={inputClass} value={form.config.fallback_twitter_desc ? form.description : form.twitter_description} onChange={e => setForm({...form, twitter_description: e.target.value})} />
               </div>
             </div>
           </section>
@@ -211,7 +243,7 @@ export default function SeoAdminPage() {
               ))}
               {pages.length === 0 && (
                 <tr>
-                  <td colSpan="4" className="p-8 text-center text-gray-500">
+                  <td colSpan={4} className="p-8 text-center text-gray-500">
                     No SEO pages found. Create one above.
                   </td>
                 </tr>

@@ -1,14 +1,19 @@
-import { neon } from '@neondatabase/serverless';
+import { Pool } from 'pg';
 
-const sql = neon(process.env.DATABASE_URL!);
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
 
 export async function getLegalContentBySlug(slug: string) {
-  const rows = await sql`
+  const { rows } = await pool.query(
+    `
     SELECT id, slug, label, href, content, is_active, image_url
     FROM "FooterLegal"
-    WHERE slug = ${slug}
+    WHERE slug = $1
     LIMIT 1
-  `;
+    `,
+    [slug]
+  );
 
   return rows[0] || null;
 }

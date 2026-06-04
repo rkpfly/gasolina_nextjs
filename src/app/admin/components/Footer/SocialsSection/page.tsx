@@ -23,14 +23,14 @@ const DEFAULT_NEW_SOCIAL = {
   is_active: true,
   sort_order: 0, // <-- 2. Add a default sort_order here so TS is happy
 };
-export default function SocialsSection({ 
-  data, 
-  onSaved 
+export default function SocialsSection({
+  data = [],
+  onSaved,
 }: {
-  data: Social[];
+  data?: Social[];
   onSaved: (updated: Social[]) => void;
 }) {
-  const [rows, setRows]   = useState(data);
+  const [rows, setRows] = useState<Social[]>(data);
   const [saving, setSaving] = useState<number | null>(null);
   
   // New State for Creation
@@ -123,7 +123,7 @@ export default function SocialsSection({
       <div className="divide-y divide-gray-100 border border-gray-200 rounded-xl overflow-hidden bg-white">
         
         {/* Existing Rows */}
-        {rows.map(row => (
+        {(rows ?? []).map(row => (
           <div key={row.id} className="flex flex-col sm:flex-row sm:items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
             <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 shrink-0">
               <i className={`${row.icon_class} text-base`} />
