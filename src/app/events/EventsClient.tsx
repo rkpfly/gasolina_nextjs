@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import type { Event, EventQueryParams, EventsApiResponse } from '@/types/events';
 import { EventCard } from '@/components/Events/EventCard'; 
 import VipModal from '@/components/Events/VIPModal';
@@ -77,92 +78,14 @@ function resolveImage(event: Event, fallbackIndex: number): string {
 }
 
 // ---------------------------------------------------------------------------
-// Ticket Modal
-// ---------------------------------------------------------------------------
-function TicketModal({ eventId, onClose }: { eventId: string; onClose: () => void }) {
-  // Close on Escape key
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
-
-  // Lock body scroll
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
-  }, []);
-
-  return (
-    <div
-      className="fixed inset-0 z-[999] flex items-center justify-center p-4 md:p-8"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Reserve Tickets"
-    >
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-brand-black/80 backdrop-blur-sm"
-        onClick={onClose}
-      />
-
-      {/* Modal Panel */}
-      <div
-        className="relative z-10 w-full max-w-3xl bg-brand-white rounded-2xl overflow-hidden shadow-2xl flex flex-col"
-        style={{ height: 'min(85vh, 720px)' }}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-brand-border shrink-0">
-          <span className="text-xs font-bold tracking-[0.2em] uppercase text-brand-black">
-            Reserve Tickets
-          </span>
-          <button
-            onClick={onClose}
-            className="w-9 h-9 rounded-full flex items-center justify-center text-brand-gray hover:text-brand-black hover:bg-brand-offwhite transition-colors"
-            aria-label="Close modal"
-          >
-            <i className="fa-solid fa-xmark text-base" />
-          </button>
-        </div>
-
-        {/* iFrame */}
-        <div className="flex-1 relative bg-brand-offwhite">
-          {/* Spinner shown behind the iframe while it loads */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex flex-col items-center gap-3 text-brand-gray">
-              <div className="w-8 h-8 border-2 border-brand-gray/30 border-t-brand-black rounded-full animate-spin" />
-              <span className="text-[10px] font-bold tracking-[0.2em] uppercase">Loading</span>
-            </div>
-          </div>
-          <iframe
-            src={`https://147.79.70.30.nip.io:8444/events/frame/detail/${eventId}`}
-            title="Reserve Tickets"
-            className="relative z-10 w-full h-full border-0"
-            allow="payment"
-          />
-        </div>
-
-        {/* Footer */}
-        <div className="px-6 py-3 border-t border-brand-border shrink-0 flex items-center gap-2">
-          <i className="fa-solid fa-lock text-[10px] text-brand-gray" />
-          <span className="text-[10px] font-bold tracking-[0.15em] uppercase text-brand-gray">
-            Secure checkout powered by Tixmojo
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
 // Main Page
 // ---------------------------------------------------------------------------
 
 const CITY_TABS = ['All Cities', 'Melbourne', 'Sydney', 'Singapore', 'Brisbane', 'Auckland'];
 
 export default function EventsClient() {
+  const router = useRouter(); // Initialize the Next.js router
+
   // ---------------------------------------------------------------------------
   // UI state
   // ---------------------------------------------------------------------------
@@ -173,9 +96,7 @@ export default function EventsClient() {
   const [heroSlides, setHeroSlides] = useState<any[]>([]);
   const [isLoadingEvents, setIsLoadingEvents] = useState(true);
 
-  // Modal state — null = closed, string = event ID to show
-  const [ticketModalEventId, setTicketModalEventId] = useState<string | null>(null);
-  // const [vipModalEventId, setVipModalEventId] = useState<string | null>(null);
+  // Modal state
   const [vipModalEvent, setVipModalEvent] = useState<any | null>(null);
 
   // ---------------------------------------------------------------------------
@@ -221,14 +142,12 @@ export default function EventsClient() {
   }, [events]);
 
   useEffect(() => {
-    // Don't start the interval until the slides have actually been fetched
     if (heroSlides.length === 0) return;
 
     const slideInterval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
     }, 6000);
     
-    // Add heroSlides.length as a dependency so it updates when data arrives
     return () => clearInterval(slideInterval);
   }, [heroSlides.length]);
 
@@ -239,7 +158,6 @@ export default function EventsClient() {
   useEffect(() => {
     const fetchUpcomingEvents = async () => {
       try {
-        // Hit our new local proxy route
         const res = await fetch('/api/v1/events/hero');
         
         if (res.ok) {
@@ -278,14 +196,7 @@ export default function EventsClient() {
   return (
     <main className="w-full selection:bg-brand-black selection:text-white">
 
-      {/* Ticket Modal — rendered at root level so it overlays everything */}
-      {ticketModalEventId && (
-        <TicketModal
-          eventId={ticketModalEventId}
-          onClose={() => setTicketModalEventId(null)}
-        />
-      )}
-
+      {/* VIP Modal is kept as requested */}
       {vipModalEvent && (
         <VipModal
           event={vipModalEvent}
@@ -318,7 +229,6 @@ export default function EventsClient() {
                   currentSlide === index ? 'scale-100' : 'scale-[1.15]'
                 }`}
               />
-              {/* Slightly stronger bottom gradient on mobile to ensure text readability */}
               <div className="absolute inset-0 bg-gradient-to-t from-brand-black/95 via-brand-black/50 md:via-brand-black/40 to-transparent" />
 
               <div
@@ -326,7 +236,6 @@ export default function EventsClient() {
                   currentSlide === index ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[30px]'
                 }`}
               > 
-                {/* 1. Conditionally render the line break and title2 ONLY if title2 exists */}
                 <h2 className="w-full break-words text-3xl sm:text-5xl md:text-7xl lg:text-[7vw] leading-[1] md:leading-[0.9] font-display font-extrabold uppercase tracking-tighter text-brand-white mb-6 md:mb-8">
                   {slide.title1}
                   {slide.title2 && (
@@ -341,7 +250,7 @@ export default function EventsClient() {
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                   <button
                     className="group relative overflow-hidden inline-flex items-center justify-center px-6 py-3 md:px-10 md:py-4 rounded-full text-[10px] md:text-xs font-bold tracking-[0.15em] uppercase w-fit bg-brand-white text-brand-black transition-colors duration-300"
-                    onClick={() => setTicketModalEventId(slide.id)}
+                    onClick={() => router.push(`/events/${slide.id}`)}
                   >
                     <span className="relative z-10">Get Tickets</span>
                     <span className="absolute inset-0 bg-brand-black translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-300 ease-custom" />
@@ -374,7 +283,6 @@ export default function EventsClient() {
               ))}
             </div>
             
-            {/* Slightly smaller buttons on mobile to save space */}
             <div className="flex gap-2 pointer-events-auto">
               <button onClick={prevSlide} className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-brand-black transition-all">
                 <i className="fa-solid fa-arrow-left text-sm md:text-base" />
@@ -464,7 +372,7 @@ export default function EventsClient() {
                     isActive={active}
                     imgSrc={imgSrc}
                     delay={delay}
-                    onReserve={() => setTicketModalEventId(event._id)}
+                    onReserve={() => router.push(`/events/${event._id}`)}
                     onBookVIP={() => setVipModalEvent(event)}
                   />
                 );

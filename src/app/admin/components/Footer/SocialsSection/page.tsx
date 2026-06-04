@@ -1,3 +1,5 @@
+'use client';
+
 import { StatusBadge, Toggle } from '@/app/admin/components/ui/UIComponents';
 import { useState } from 'react';
 // Assuming you have these imported based on your snippet
