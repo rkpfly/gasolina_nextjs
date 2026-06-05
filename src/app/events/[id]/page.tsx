@@ -55,7 +55,7 @@ export default async function EventTicketPage({ params }: EventPageProps) {
   // 4. Await the params here as well
   const resolvedParams = await params;
   const eventId = resolvedParams.id;
-  const iframeSrc = `https://147.79.70.30.nip.io:8444/events/frame/detail/${eventId}`;
+  const iframeSrc = `${process.env.NEXT_PUBLIC_TICKETING_FRONTEND_URL}/events/frame/detail/${eventId}`;
 
   return (
     <main className="mt-14 md:mt-22 relative w-screen h-[100dvh] bg-brand-offwhite overflow-hidden">

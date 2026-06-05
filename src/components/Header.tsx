@@ -32,7 +32,7 @@ export default function Header() {
       >
         <Link
           href="/"
-          className="absolute mx-auto md:block flex md:mx-0 items-center relative z-[60]"
+          className={`absolute mx-auto md:block flex md:mx-0 items-center relative ${isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'} transition-opacity duration-300`}
         >
           {/* The wrapper strictly dictates the space so the header height never shifts */}
           <div className="relative w-44 h-16 sm:w-40 sm:h-10 md:w-48 md:h-12 lg:w-56 lg:h-14">
