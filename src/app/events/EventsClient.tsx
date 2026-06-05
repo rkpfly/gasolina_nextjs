@@ -351,7 +351,7 @@ export default function EventsClient() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-16">
               {events.map((event, i) => {
                 const active = isEventActive(event);
-                const imgSrc = resolveImage(event, i);
+                const imgSrc = resolveImage(event);
                 const animationDelays = ['0ms', '100ms', '200ms', '300ms'];
                 const delay = animationDelays[i % animationDelays.length];
 
