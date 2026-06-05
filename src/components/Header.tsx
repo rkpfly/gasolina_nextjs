@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from 'next/image';
 import Link from "next/link";
 
 export default function Header() {
@@ -33,9 +34,18 @@ export default function Header() {
       >
         <Link
           href="/"
-          className="text-sm sm:text-base md:text-2xl lg:text-3xl font-display font-bold tracking-widest uppercase text-brand-black flex items-center gap-0.5 sm:gap-1 relative z-[60]"
+          className="flex items-center relative z-[60]"
         >
-          <span className="hidden sm:inline">BOLLYWOOD</span><span className="sm:hidden">B</span><span className="text-brand-accent">CLUB</span>
+          {/* The wrapper strictly dictates the space so the header height never shifts */}
+          <div className="relative w-32 h-8 sm:w-40 sm:h-10 md:w-48 md:h-12 lg:w-56 lg:h-14">
+            <Image 
+              src="/bclogo-black-v1.png" 
+              alt="Bollywood Club Logo" 
+              fill
+              className="object-contain object-left" 
+              priority 
+            />
+          </div>
         </Link>
         
 

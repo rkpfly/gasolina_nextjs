@@ -110,8 +110,9 @@ export default function HomePage() {
 
   const resolveImage = (event: any) => {
     const image = event.media?.coverImage || event.img;
+    const DB_SOURCE = process.env.NEXT_PUBLIC_TICKETING_BACKEND_URL;
     if (!image) return "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=800&auto=format&fit=crop";
-    return image.startsWith("http") ? image : `https://147.79.70.30.nip.io:8444/${image}`;
+    return image.startsWith("http") ? image : `${DB_SOURCE}/${image}`;
   };
 
   return (
