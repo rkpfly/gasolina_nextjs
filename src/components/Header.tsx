@@ -28,16 +28,14 @@ export default function Header() {
       <header
         id="navbar"
         ref={navbarRef}
-        className={`fixed top-0 left-0 w-full z-9999 py-3 sm:py-4 md:py-6 px-4 sm:px-6 md:px-12 flex justify-between items-center bg-white/80 backdrop-blur-md${
-          isScrolled ? " scrolled" : ""
-        }`}
+        className={`fixed top-0 left-0 w-full z-9999 sm:py-4 md:py-6 px-4 sm:px-6 md:px-12 flex justify-between items-center bg-white/80 backdrop-blur-md`}
       >
         <Link
           href="/"
-          className="flex items-center relative z-[60]"
+          className="absolute mx-auto md:block flex md:mx-0 items-center relative z-[60]"
         >
           {/* The wrapper strictly dictates the space so the header height never shifts */}
-          <div className="relative w-32 h-8 sm:w-40 sm:h-10 md:w-48 md:h-12 lg:w-56 lg:h-14">
+          <div className="relative w-44 h-16 sm:w-40 sm:h-10 md:w-48 md:h-12 lg:w-56 lg:h-14">
             <Image 
               src="/bclogo-black-v1.png" 
               alt="Bollywood Club Logo" 
