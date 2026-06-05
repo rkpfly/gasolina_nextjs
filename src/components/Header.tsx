@@ -28,24 +28,27 @@ export default function Header() {
       <header
         id="navbar"
         ref={navbarRef}
-        className={`fixed top-0 left-0 w-full z-9999 sm:py-4 md:py-6 px-4 sm:px-6 md:px-12 flex justify-between items-center bg-white/80 backdrop-blur-md`}
+        // 1. CHANGED: Added `justify-end md:justify-between` to keep hamburger on the right for mobile
+        className={`fixed top-0 left-0 w-full z-9999 py-2 sm:py-4 md:py-6 px-4 sm:px-6 md:px-12 flex justify-end md:justify-between items-center bg-white/80 backdrop-blur-md`}
       >
         <Link
           href="/"
-          className={`absolute mx-auto md:block flex md:mx-0 items-center relative ${isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'} transition-opacity duration-300`}
+          // 2. CHANGED: Cleaned up conflicting positioning. Added exact centering for mobile, static for desktop.
+          className={`absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 flex items-center ${
+            isMenuOpen ? "opacity-0 pointer-events-none" : "opacity-100 pointer-events-auto"
+          } transition-opacity duration-300`}
         >
           {/* The wrapper strictly dictates the space so the header height never shifts */}
           <div className="relative w-44 h-16 sm:w-40 sm:h-10 md:w-48 md:h-12 lg:w-56 lg:h-14">
-            <Image 
-              src="/bclogo-black-v1.png" 
-              alt="Bollywood Club Logo" 
+            <Image
+              src="/bclogo-black-v1.png"
+              alt="Bollywood Club Logo"
               fill
-              className="object-contain object-left" 
-              priority 
+              className="object-contain object-left md:object-center"
+              priority
             />
           </div>
         </Link>
-        
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex space-x-8 lg:space-x-12 items-center text-xs font-semibold tracking-[0.15em] uppercase text-brand-black">
@@ -60,11 +63,12 @@ export default function Header() {
           </Link>
         </nav>
 
+        {/* Hamburger Menu Container */}
         <div className="flex items-center gap-4 sm:gap-6 relative z-[60]">
           <button
             id="menu-btn"
             onClick={() => setIsMenuOpen((prev) => !prev)}
-            className={`w-9 h-9 sm:w-10 sm:h-10 flex flex-col justify-center items-end gap-1 sm:gap-1.5 group cursor-pointer${
+            className={`w-9 h-9 sm:w-10 sm:h-10 flex flex-col justify-center items-end gap-1 sm:gap-1.5 group cursor-pointer ${
               isMenuOpen ? " menu-open" : ""
             }`}
             aria-label="Toggle Menu"
@@ -84,12 +88,12 @@ export default function Header() {
         }`}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 w-full max-w-[1600px] mx-auto h-full items-center">
-          <div 
+          {/* <div 
             className="absolute right-4 sm:right-6 md:right-10 top-4 sm:top-6 p-1 rounded-full font-bold text-black text-4xl sm:text-5xl cursor-pointer
              hover:scale"
             onClick={closeMenu}>
             X
-          </div>
+          </div> */}
           <nav className="flex flex-col space-y-3 sm:space-y-4 md:space-y-6">
             {[
               { label: "Home", href: "/" },
