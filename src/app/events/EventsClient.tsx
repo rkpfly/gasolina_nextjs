@@ -60,22 +60,12 @@ function useEvents(params: EventQueryParams) {
 // ---------------------------------------------------------------------------
 // Helper: build a usable image URL from whatever the backend returns
 // ---------------------------------------------------------------------------
-function resolveImage(event: Event, fallbackIndex: number): string {
-  const unsplashFallbacks = [
-    '1541532713292-06987254f9f7',
-    '1514525253361-bee8a19740c1',
-    '1533174072545-7a4b6ad7a6c3',
-    '1470225620780-dba8ba36b745',
-    '1516450360452-9312f5e86fc7',
-    '1504608524841-42fe6f032b4b',
-    '1549213713-52caee0428d6',
-    '1492684223066-81342ee5ff30',
-  ];
-  const img = event.media?.coverImage?.startsWith("http") ? event.media.coverImage : `https://147.79.70.30.nip.io:8444/${event.media?.coverImage}`;
-  if (img) return img;
-  const id = unsplashFallbacks[fallbackIndex % unsplashFallbacks.length];
-  return `https://images.unsplash.com/photo-${id}?q=80&w=800&auto=format&fit=crop`;
-}
+const resolveImage = (event: any) => {
+  const image = event.media?.coverImage || event.img;
+  const DB_SOURCE = process.env.NEXT_PUBLIC_TICKETING_BACKEND_URL;
+  if (!image) return "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=800&auto=format&fit=crop";
+  return image.startsWith("http") ? image : `${DB_SOURCE}/${image}`;
+};
 
 // ---------------------------------------------------------------------------
 // Main Page
