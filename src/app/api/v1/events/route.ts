@@ -51,6 +51,7 @@ export async function GET(request: NextRequest) {
         forwardedParams.set(param, defaults[param]);
       }
     }
+    forwardedParams.set('organizerName', 'Bollywood Club');
 
     const backendUrl = `${TICKETING_BACKEND_URL}/wapi/events?${forwardedParams.toString()}`;
 

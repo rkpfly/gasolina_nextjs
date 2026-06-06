@@ -12,7 +12,7 @@ export async function GET() {
     // 2. Fetch from your ticketing backend
     // Added 'next: { revalidate: 60 }' so Next.js caches this for 60 seconds.
     // This makes your site lightning fast and protects your ticketing DB from spam.
-    const res = await fetch(`${API_URL}/wapi/events?limit=4&upcoming=true&publicOnly=true&sortBy=basicInfo.date`, {
+    const res = await fetch(`${API_URL}/wapi/events?limit=4&upcoming=true&publicOnly=true&sortBy=basicInfo.date&organizerName=Bollywood Club`, {
       next: { revalidate: 60 }
     });
 
