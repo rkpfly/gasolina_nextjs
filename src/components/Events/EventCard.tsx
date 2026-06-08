@@ -25,8 +25,6 @@ export function EventCard({ event, isActive, imgSrc, delay, onReserve, onBookVIP
   // Close on blur (mobile: tap outside)
   const handleBlur = () => setTapActive(false);
 
-  const splitVisible = isActive; // CSS handles desktop hover; tapActive handles mobile
-
   return (
     <div
       className="group flex flex-col"
@@ -38,7 +36,7 @@ export function EventCard({ event, isActive, imgSrc, delay, onReserve, onBookVIP
         ref={wrapperRef}
         onClick={handleImageTap}
         className={`
-          w-full aspect-[3/4] overflow-hidden bg-brand-offwhite mb-6 relative
+          w-full max-w-[350px] mx-auto aspect-square overflow-hidden bg-brand-offwhite mb-6 relative
           ${isActive ? 'cursor-pointer' : ''}
         `}
       >
