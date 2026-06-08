@@ -60,7 +60,7 @@ export default function OffersClient({ initialOffers }: OffersClientProps) {
   };
 
   return (
-    <section className="py-16 sm:py-8 pl-4 sm:pl-8 md:pl-12 lg:pl-16 relative overflow-hidden">
+    <section className="py-16 pb-0 sm:py-8 pl-4 sm:pl-8 md:pl-12 lg:pl-16 relative overflow-hidden">
       {offers.length === 0 ? (
         <div className="text-center py-20 pr-4 sm:pr-8 md:pr-12 lg:pr-16">
           <p className="text-brand-gray text-xs sm:text-sm tracking-widest uppercase font-bold">No active offers at the moment.</p>

@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: EventPageProps): Promise<Meta
   const eventId = resolvedParams.id;
 
   try {
-    const res = await fetch(`https://147.79.70.30.nip.io:8444/api/v1/events/${eventId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_TICKETING_BACKEND_URL}/api/v1/events/${eventId}`, {
       cache: 'no-store', 
     });
 
@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: EventPageProps): Promise<Meta
         images: event?.media?.coverImage ? [
           event.media.coverImage.startsWith('http') 
             ? event.media.coverImage 
-            : `https://147.79.70.30.nip.io:8444/${event.media.coverImage}`
+            : `${process.env.NEXT_PUBLIC_TICKETING_BACKEND_URL}/${event.media.coverImage}`
         ] : [],
       },
     };

@@ -129,8 +129,8 @@ export default function HomePage() {
       <VIPForm vipModal={vipModal} setVipModal={setVipModal} />
 
       {/* ── Hero ── */}
-      <section className="relative h-[100svh] w-full flex flex-col justify-end px-3 sm:px-4 md:px-6 lg:px-12 pb-6 sm:pb-8 md:pb-12 pt-20 sm:pt-24 md:pt-32">
-        <div className="absolute inset-0 top-[88px] bottom-6 left-3 sm:left-4 md:left-6 right-3 sm:right-4 md:right-6 rounded-t-[1rem] sm:rounded-[2rem] overflow-hidden bg-brand-offwhite img-reveal -z-10">
+      <section className="relative h-[88svh] w-full flex flex-col justify-end px-3 sm:px-4 md:px-6 lg:px-12 pb-6 sm:pb-8 md:pb-12 pt-20 sm:pt-24 md:pt-36">
+        <div className="absolute inset-0 top-[60px] md:top-[108px] bottom-6 left-3 sm:left-4 md:left-6 right-3 sm:right-4 md:right-6 rounded-t-[1rem] sm:rounded-[2rem] overflow-hidden bg-brand-offwhite img-reveal -z-10">
           <MediaSlot 
             id="hero-video" 
             mediaMap={media} 

@@ -113,8 +113,8 @@ export default function GalleryClient({
     return (
         <main className="w-full">
             {/* HERO SECTION */}
-            <section className="relative w-full px-4 md:px-8 pt-28 pb-12 flex flex-col">
-                <div className="relative w-full h-auto min-h-[500px] rounded-[2rem] overflow-hidden bg-brand-black img-reveal shadow-2xl img-wrapper">
+            <section className="relative h-[85svh] w-full px-4 md:px-8 pt-20 md:pt-28 pb-12 flex flex-col">
+                <div className="relative w-full h-full min-h-[500px] rounded-[2rem] overflow-hidden bg-brand-black img-reveal shadow-2xl img-wrapper">
                     
                     {/* Correctly Implemented Media Slot */}
                     <div className="h-48 md:h-[700px]">
@@ -127,7 +127,7 @@ export default function GalleryClient({
 
                     <div className="absolute inset-0 bg-gradient-to-t from-brand-black/95 via-brand-black/40 to-transparent"></div>
                     
-                    <div className="absolute inset-0 flex flex-col justify-start py-8 px-4 md:p-16 z-20">
+                    <div className="absolute bottom-0 md:inset-0 flex flex-col justify-between py-8 px-4 md:p-16 z-20">
                         <div className="fade-up max-w-4xl text-center mx-auto">
                             <span className="inline-block text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black bg-brand-white px-5 py-2.5 rounded-full shadow-lg mb-6">
                                 Captured Moments
@@ -147,12 +147,15 @@ export default function GalleryClient({
             </section>
 
             {/* LATEST AFTERMOVIE SECTION */}
-            <section className="pt-12 pb-24 px-6 md:px-12 bg-brand-white">
+            {/* 1. Removed px-6 md:px-12 from the section */}
+            <section className="pt-12 bg-brand-white">
                 <div className="max-w-[1600px] mx-auto fade-up">
-                    <div className="flex justify-between items-end mb-8">
+                    
+                    {/* 2. Added px-6 md:px-12 to the header to keep text aligned */}
+                    <div className="flex justify-between items-end mb-4 px-2 md:px-12">
                         <div>
                             <p className="text-xs font-bold tracking-[0.2em] uppercase text-brand-accent mb-2">Featured</p>
-                            <h2 className="text-3xl text- md:text-5xl font-display font-bold tracking-tighter uppercase text-brand-black">
+                            <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tighter uppercase text-brand-black">
                                 Latest <span className='bg-black text-white px-2'>Aftermovie</span>
                             </h2>
                         </div>
@@ -161,26 +164,30 @@ export default function GalleryClient({
                         </button>
                     </div>
 
-                    <div className="w-full aspect-video md:aspect-[21/9] rounded-2xl overflow-hidden relative group cursor-pointer bg-brand-offwhite scale-hover img-wrapper">
-                        
-                        {/* Correctly Implemented Media Slot */}
-                        <MediaSlot 
-                            id="latest-aftermovie"
-                            mediaMap={mediaSlots} 
-                            className="w-full h-full object-cover filter grayscale-[10%]" 
-                        />
-                        
-                        {/* ADDED pointer-events-none HERE */}
-                        <div className="absolute inset-0 bg-brand-black/30 group-hover:bg-brand-black/10 transition-colors duration-500 pointer-events-none"></div>
+                    {/* 3. Added a wrapper with 0 padding on mobile, and md:px-12 for desktop */}
+                    <div className="px-0 md:px-12">
+                        {/* 4. Changed rounded-2xl to rounded-none md:rounded-2xl */}
+                        <div className="w-full aspect-video md:aspect-[21/9] rounded-none md:rounded-2xl overflow-hidden relative group cursor-pointer bg-brand-offwhite scale-hover img-wrapper">
+                            
+                            {/* Correctly Implemented Media Slot */}
+                            <MediaSlot 
+                                id="latest-aftermovie"
+                                mediaMap={mediaSlots} 
+                                className="w-full h-full object-cover filter grayscale-[10%]" 
+                            />
+                            
+                            {/* ADDED pointer-events-none HERE */}
+                            <div className="absolute inset-0 bg-brand-black/30 group-hover:bg-brand-black/10 transition-colors duration-500 pointer-events-none"></div>
+                        </div>
                     </div>
                 </div>
             </section>
 
             {/* DYNAMIC ARCHIVES SECTION */}
-            <section id="all-media" className="pb-32 px-6 md:px-12 bg-brand-white border-t border-brand-border pt-24">
+            <section id="all-media" className="pb-32 px-6 md:px-12 bg-brand-white border-t border-brand-border pt-12 md:pt-24">
                 <div className="max-w-[1600px] mx-auto">
                     
-                    <div className="flex flex-col xl:flex-row justify-between items-end mb-12 fade-up">
+                    <div className="flex flex-col xl:flex-row justify-between items-end mb-4 fade-up">
                         <div className="mb-8 xl:mb-0">
                             <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tighter uppercase text-brand-black">The Archives</h2>
                         </div>

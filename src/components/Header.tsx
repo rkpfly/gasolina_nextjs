@@ -87,13 +87,7 @@ export default function Header() {
           isMenuOpen ? " open" : ""
         }`}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 w-full max-w-[1600px] mx-auto h-full items-center">
-          {/* <div 
-            className="absolute right-4 sm:right-6 md:right-10 top-4 sm:top-6 p-1 rounded-full font-bold text-black text-4xl sm:text-5xl cursor-pointer
-             hover:scale"
-            onClick={closeMenu}>
-            X
-          </div> */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 sm:gap-8 sm:gap-12 w-full max-w-[1600px] mx-auto h-full items-center">
           <nav className="flex flex-col space-y-3 sm:space-y-4 md:space-y-6">
             {[
               { label: "Home", href: "/" },
@@ -113,7 +107,7 @@ export default function Header() {
             ))}
           </nav>
 
-          <nav className="flex flex-col space-y-4 md:space-y-6 border-t md:border-t-0 md:border-l border-brand-border pt-8 md:pt-0 md:pl-12">
+          <nav className="flex flex-col space-y-4 md:space-y-6 border-t md:border-t-0 md:border-l border-brand-border pt-0 md:pt-0 md:pl-12">
             {[
               { label: "Offers", href: "/offers", delay: "0.3s" },
               { label: "Birthday", href: "/birthday", delay: "0.3s" },

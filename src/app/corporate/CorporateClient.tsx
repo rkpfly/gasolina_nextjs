@@ -94,9 +94,9 @@ export default function CorporateClient() {
         <main className="w-full selection:bg-brand-black selection:text-white">
             
             {/* ── HERO SECTION ── */}
-            <section className="relative h-[65svh] sm:h-[70svh] md:h-[75svh] min-h-[400px] sm:min-h-[450px] w-full px-3 sm:px-4 md:px-6 lg:px-12 pt-20 sm:pt-24 md:pt-28 pb-6 sm:pb-8 md:pb-12 flex flex-col">
+            <section className="relative h-[88svh] md:h-[100svh] min-h-[400px] sm:min-h-[450px] w-full md:px-6 lg:px-12 pt-16 sm:pt-24 md:pt-28 pb-6 sm:pb-8 md:pb-12 flex flex-col">
                 <div 
-                    className={`relative w-full h-full rounded-lg md:rounded-[2rem] overflow-hidden bg-brand-black shadow-xl transition-[clip-path] duration-[1200ms] ease-custom ${
+                    className={`relative w-full h-full md:rounded-[2rem] overflow-hidden bg-brand-black shadow-xl transition-[clip-path] duration-[1200ms] ease-custom ${
                         isRevealed ? '[clip-path:polygon(0_0,_100%_0,_100%_100%,_0_100%)]' : '[clip-path:polygon(0_100%,_100%_100%,_100%_100%,_0_100%)]'
                     }`}
                 >
@@ -110,7 +110,7 @@ export default function CorporateClient() {
                     
                     <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/40 to-transparent"></div>
                     
-                    <div className="absolute inset-0 flex flex-col justify-end pb-8 sm:pb-12 md:pb-16 px-2 sm:px-8 md:px-16 lg:px-24 z-20">
+                    <div className="absolute inset-0 flex flex-col justify-end pb-8 sm:pb-12 md:pb-8 px-4 md:px-8 z-20">
                         <div className="fade-up">
                             <span className="inline-block text-[8px] sm:text-[9px] md:text-[10px] font-bold tracking-[0.2em] uppercase text-brand-white bg-brand-accent px-3 sm:px-4 py-1.5 sm:py-2 rounded-full mb-4 sm:mb-6">
                                 Unforgettable Experiences

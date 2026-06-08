@@ -110,13 +110,8 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
         <main className="w-full">
             
             {/* HERO SECTION */}
-            <section className="relative w-full px-3 sm:px-4 md:px-6 lg:px-8 pt-20 sm:pt-24 md:pt-28 pb-0 flex flex-col">
-                <div className="relative w-full h-[40svh] sm:h-[45svh] md:h-[50svh] min-h-[300px] sm:min-h-[350px] rounded-t-xl md:rounded-t-[2rem] overflow-hidden bg-brand-black img-reveal shadow-2xl img-wrapper flex items-center justify-center text-center">
-                    <img 
-                        src="https://images.unsplash.com/photo-1549213713-52caee0428d6?q=80&w=1600&auto=format&fit=crop" 
-                        className="hero-img-anim absolute inset-0 w-full h-full object-cover filter grayscale-[40%] opacity-60" 
-                        alt="Journal Background" 
-                    />
+            <section className="relative w-full px-3 sm:px-4 md:px-6 lg:px-8 pt-16 sm:pt-24 md:pt-28 pb-0 flex flex-col">
+                <div className="relative w-full h-[30svh] sm:h-[45svh] md:h-[50svh] min-h-[300px] sm:min-h-[350px] rounded-t-xl md:rounded-t-[2rem] overflow-hidden bg-brand-black img-reveal shadow-2xl img-wrapper flex items-center justify-center text-center">
                     <div className="absolute inset-0 bg-brand-black/40"></div>
                     
                     <div className="relative z-20 fade-up px-3 sm:px-4 w-full flex flex-col items-center mt-6 sm:mt-8">
@@ -150,10 +145,10 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
                     </div>
                     ))}
                 </div>
-                </div>
+            </div>
 
             {/* DYNAMIC EDITOR'S PICK SECTION */}
-            <section className="py-12 sm:py-16 md:py-24 px-3 sm:px-4 md:px-6 lg:px-12 bg-brand-white border-b border-brand-border">
+            <section className="pt-4 md:py-12 sm:py-16 md:py-24 px-3 sm:px-4 md:px-6 lg:px-12 bg-brand-white border-b border-brand-border">
                 <div className="max-w-[1600px] mx-auto">
                     
                     <div className="mb-6 sm:mb-8 md:mb-12 fade-up">

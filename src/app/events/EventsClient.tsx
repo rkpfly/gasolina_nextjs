@@ -197,7 +197,7 @@ export default function EventsClient() {
       {/* ------------------------------------------------------------------ */}
       {/* HERO SLIDER SECTION                                                */}
       {/* ------------------------------------------------------------------ */}
-      <section className="relative h-[85svh] min-h-[500px] md:min-h-[600px] w-full px-3 sm:px-6 md:px-12 pt-24 md:pt-28 pb-6 md:pb-12 flex flex-col">
+      <section className="relative h-[85svh] min-h-[500px] md:min-h-[600px] w-full px-3 sm:px-6 md:px-12 pt-16 md:pt-28 pb-6 md:pb-12 flex flex-col">
         <div
           className={`relative w-full h-full rounded-[1.25rem] md:rounded-[2rem] overflow-hidden bg-brand-black shadow-2xl transition-[clip-path] duration-[1200ms] ease-custom ${
             isRevealed

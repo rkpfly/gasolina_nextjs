@@ -346,7 +346,7 @@ export default function CareersClient() {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-brand-black/60 to-transparent"></div>
                         
-                        <div className="absolute bottom-8 sm:bottom-10 md:bottom-12 left-4 sm:left-8 md:left-12 mix-blend-difference text-brand-white z-10 pr-4 sm:pr-6 md:pr-8">
+                        <div className="absolute bottom-8 sm:bottom-10 md:bottom-12 left-4 sm:left-8 md:left-12 text-brand-white z-10 pr-4 sm:pr-6 md:pr-8">
                             <h3 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-display font-extrabold uppercase tracking-tighter leading-none mb-2 sm:mb-3 md:mb-4">
                                 Join The <br /> <span className="text-brand-accent">Team</span>
                             </h3>

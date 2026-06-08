@@ -60,9 +60,9 @@ export default function VipClient() {
         <main className="w-full selection:bg-brand-black selection:text-white">
             
             {/* ── HERO SECTION ── */}
-            <section className="relative h-[75svh] min-h-[500px] w-full px-6 md:px-12 pt-28 pb-12 flex flex-col">
+            <section className="relative h-[92svh] md:h-[100svh] min-h-[500px] w-full md:px-3 pt-16 md:pt-28 pb-4 md:pb-12 flex flex-col">
                 <div 
-                    className={`relative w-full h-full rounded-[2rem] overflow-hidden bg-brand-black shadow-xl transition-[clip-path] duration-[1200ms] ease-custom ${
+                    className={`relative w-full h-full md:rounded-sm overflow-hidden bg-brand-black shadow-xl transition-[clip-path] duration-[1200ms] ease-custom ${
                         isRevealed ? '[clip-path:polygon(0_0,_100%_0,_100%_100%,_0_100%)]' : '[clip-path:polygon(0_100%,_100%_100%,_100%_100%,_0_100%)]'
                     }`}
                 >
@@ -89,7 +89,7 @@ export default function VipClient() {
             </section>
 
             {/* ── INTRO TEXT SECTION ── */}
-            <section className="py-20 px-6 md:px-12 bg-brand-white text-center">
+            <section className="pb-12 pt-8 md:py-20 px-6 md:px-12 bg-brand-white text-center">
                 <div className="max-w-4xl mx-auto fade-up">
                     <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tighter uppercase text-brand-black mb-6">
                         Elevate Your Nightlife <br />
@@ -103,23 +103,28 @@ export default function VipClient() {
             </section>
 
             {/* ── BOOKING FORM SECTION ── */}
-            <section className="py-12 px-6 md:px-12 bg-brand-white border-t border-brand-border">
-                <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-12 lg:gap-16 items-stretch">
+            <section className="py-12 px-3 md:px-12 bg-brand-white border-t border-brand-border">
+                <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-4 lg:gap-16 items-stretch">
                     
+                    {/* 1. Added 'bg-brand-black' here so the box itself is always black */}
                     <div 
-                        className={`w-full lg:w-1/2 relative rounded-[2rem] overflow-hidden min-h-[400px] md:min-h-[600px] transition-[clip-path] duration-[1200ms] ease-custom ${
+                        className={`w-full lg:w-1/2 relative bg-brand-black rounded-sm overflow-hidden min-h-[300px] md:min-h-[600px] transition-[clip-path] duration-[1200ms] ease-custom ${
                             isRevealed ? '[clip-path:polygon(0_0,_100%_0,_100%_100%,_0_100%)]' : '[clip-path:polygon(0_100%,_100%_100%,_100%_100%,_0_100%)]'
                         }`}
                     >
+                        {/* 2. Hidden on mobile, covers the black background on desktop */}
                         <MediaSlot 
                             id="form-media" 
                             mediaMap={media} 
-                            className="absolute inset-0 w-full h-[100px] md:h-full object-cover filter grayscale-[10%]" 
+                            className="hidden md:block absolute inset-0 w-full h-[85svh] md:h-full object-cover filter grayscale-[10%]" 
                         />
-                        <div className="absolute inset-0 bg-brand-black/20"></div>
                         
-                        <div className="absolute bottom-12 left-12 mix-blend-difference text-brand-white z-10">
-                            <h3 className="text-3xl md:text-8xl font-display font-extrabold uppercase tracking-tighter leading-none">
+                        {/* Overlay only needed when the image is showing */}
+                        <div className="hidden md:block absolute inset-0 bg-brand-black/20"></div>
+                        
+                        {/* 3. Text is visible ONLY on mobile, resting on the black background */}
+                        <div className="absolute bottom-2 left-2 text-brand-white z-10 md:hidden">
+                            <h3 className="text-5xl font-display font-extrabold uppercase tracking-tighter leading-none">
                                 The <br /> Inner <br /> <span className="text-brand-accent">Circle</span>
                             </h3>
                         </div>
@@ -131,9 +136,9 @@ export default function VipClient() {
                             <p className="text-xs font-bold tracking-[0.15em] uppercase text-brand-gray mb-12">Secure your premium access.</p>
                             
                             <LeadForm 
-                              formType="vip_table_request"
-                              fields={['f_name', 'l_name', 'email', 'phone', 'city', 'dob', 'total_guests']}
-                              buttonText="Request Table"
+                                formType="vip_table_request"
+                                fields={['f_name', 'l_name', 'email', 'phone', 'city', 'dob', 'total_guests']}
+                                buttonText="Request Table"
                             />
                         </div>
                     </div>
@@ -145,7 +150,7 @@ export default function VipClient() {
             <section className="py-24 px-6 md:px-12 bg-brand-offwhite">
                 <div className="max-w-[1600px] mx-auto">
                     
-                    <div className="flex flex-col md:flex-row justify-between items-end mb-16 fade-up">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 fade-up">
                         <div className="max-w-2xl">
                             <h3 className="text-sm font-bold tracking-[0.2em] uppercase text-brand-gray mb-4">The VIP Standard</h3>
                             <h2 className="text-4xl md:text-6xl font-display font-bold tracking-tighter uppercase text-brand-black leading-[0.9]">
