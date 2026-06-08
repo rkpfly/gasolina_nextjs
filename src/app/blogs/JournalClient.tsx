@@ -1,5 +1,6 @@
 "use client";
 
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 // Define the shape of our mapped blog posts
@@ -159,7 +160,7 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
 
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
                         {featuredPost && (
-                            <a href={`/blogs/${featuredPost.slug}`} className="editorial-card lg:col-span-8 flex flex-col group fade-up">
+                            <Link href={`/blogs/${featuredPost.slug}`} className="editorial-card lg:col-span-8 flex flex-col group fade-up">
                                 <div className="relative w-full aspect-video md:aspect-[16/9] lg:aspect-auto lg:h-[600px] rounded-xl sm:rounded-2xl bg-brand-offwhite img-wrapper mb-4 sm:mb-6">
                                     <img src={featuredPost.coverImage} alt={featuredPost.title} className="absolute inset-0 w-full h-full object-cover filter grayscale-[100%]" />
                                     <div className="absolute top-6 left-6 z-10">
@@ -180,12 +181,12 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
                                         Read Full Article <i className="fa-solid fa-arrow-right ml-2 arrow-icon text-lg"></i>
                                     </div>
                                 </div>
-                            </a>
+                            </Link>
                         )}
 
                         <div className="lg:col-span-4 flex flex-col gap-6 sm:gap-8 md:gap-12 lg:gap-0 lg:justify-between fade-up mt-6 lg:mt-0" style={{ transitionDelay: '200ms' }}>
                             {sidePosts.map((post, idx) => (
-                                <a href={`/blogs/${post.slug}`} key={post._id} className="editorial-card flex flex-col group">
+                                <Link href={`/blogs/${post.slug}`} key={post._id} className="editorial-card flex flex-col group">
                                     <div className="relative w-full aspect-video rounded-xl bg-brand-offwhite img-wrapper mb-4 md:mb-5">
                                         <img src={post.coverImage} alt={post.title} className="absolute inset-0 w-full h-full object-cover filter grayscale-[100%]" />
                                         <div className="absolute top-4 left-4 z-10">
@@ -205,7 +206,7 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
                                             Read <i className="fa-solid fa-arrow-right ml-2 arrow-icon"></i>
                                         </div>
                                     </div>
-                                </a>
+                                </Link>
                             ))}
                         </div>
                     </div>
@@ -239,7 +240,7 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-y-16">
                         {archivePosts.length > 0 ? (
                             archivePosts.map((post, i) => (
-                                <a href={`/blogs/${post.slug}`} key={post._id} className="editorial-card flex flex-col group fade-up" style={{ transitionDelay: `${(i % 3) * 100}ms` }}>
+                                <Link href={`/blogs/${post.slug}`} key={post._id} className="editorial-card flex flex-col group fade-up" style={{ transitionDelay: `${(i % 3) * 100}ms` }}>
                                     <div className="relative w-full aspect-[4/3] rounded-xl bg-brand-white img-wrapper mb-5">
                                         <img src={post.coverImage} className="absolute inset-0 w-full h-full object-cover filter grayscale-[100%]" alt={post.title} />
                                         <div className="absolute top-4 left-4 z-10">
@@ -262,7 +263,7 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
                                             Read Article <i className="fa-solid fa-arrow-right ml-2 arrow-icon"></i>
                                         </div>
                                     </div>
-                                </a>
+                                </Link>
                             ))
                         ) : (
                             <div className="col-span-full py-12 text-center text-brand-gray font-bold tracking-widest uppercase text-sm">
