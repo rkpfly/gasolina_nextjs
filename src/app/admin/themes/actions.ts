@@ -16,8 +16,10 @@ function normalizeData(data: {
   title: string;
   short_description: string;
   description: string;
+  detailed_content: Record<string, unknown>;
   hero_image: string;
   thumbnail_url: string;
+  gallery: unknown[];
   template_name: string;
   seo_title: string;
   seo_description: string;
@@ -37,8 +39,10 @@ export async function createTheme(data: {
   title: string;
   short_description: string;
   description: string;
+  detailed_content: Record<string, unknown>;
   hero_image: string;
   thumbnail_url: string;
+  gallery: unknown[];
   template_name: string;
   seo_title: string;
   seo_description: string;
@@ -54,8 +58,10 @@ export async function updateTheme(
     title: string;
     short_description: string;
     description: string;
+    detailed_content: Record<string, unknown>;
     hero_image: string;
     thumbnail_url: string;
+    gallery: unknown[];
     template_name: string;
     seo_title: string;
     seo_description: string;
