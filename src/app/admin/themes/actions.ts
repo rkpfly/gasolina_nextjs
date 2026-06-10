@@ -23,14 +23,14 @@ function normalizeData(data: {
   template_name: string;
   seo_title: string;
   seo_description: string;
-  seo_keywords: string;
+  seo_keywords: string | string[];
 }) {
+  const keywords = Array.isArray(data.seo_keywords)
+    ? data.seo_keywords
+    : data.seo_keywords.split(',');
   return {
     ...data,
-    seo_keywords: data.seo_keywords
-      .split(',')
-      .map((k) => k.trim())
-      .filter(Boolean),
+    seo_keywords: keywords.map((k) => k.trim()).filter(Boolean),
   };
 }
 

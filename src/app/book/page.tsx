@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import FadeUp from "@/components/FadeUp";
+import VipModal from "@/components/Events/VIPModal";
+import JsonRenderer from "@/components/JSONRenderer";
 import { fetchThemeDetailsAction } from "@/app/actions/themes";
 
 export default function ThemePage() {
@@ -153,7 +155,7 @@ export default function ThemePage() {
                         : 'TBA';
 
                         return (
-                        <option key={event.id} value={event.id} className="bg-brand-black text-white py-2">
+                        <option key={event._id} value={event._id} className="bg-brand-black text-white py-2">
                             {formattedDate}
                         </option>
                         );
@@ -208,29 +210,18 @@ export default function ThemePage() {
             <h2 className="text-2xl md:text-4xl font-display font-bold uppercase tracking-tighter mb-6 border-b border-brand-border pb-4">
               The Experience
             </h2>
-            <p className="text-brand-gray leading-relaxed text-sm md:text-base font-medium whitespace-pre-line">
-              {themeData.description}
-            </p>
+            <JsonRenderer content={themeData.description} tone="light" />
           </div>
         </div>
       </section>
 
 
-      {/* Placeholder for your VIP Form Modal */}
-      {isVipFormOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-           <div className="bg-brand-black border border-white/20 p-8 w-full max-w-lg text-white">
-              <h3 className="text-2xl font-display uppercase tracking-wider mb-4">VIP Request</h3>
-              <p className="text-sm text-white/70 mb-6">Requesting table for event: {selectedEventId}</p>
-              {/* Inject your form component here */}
-              <button 
-                onClick={() => setIsVipFormOpen(false)}
-                className="w-full py-3 border border-white/30 uppercase tracking-widest text-sm hover:bg-white hover:text-black transition-colors"
-              >
-                Close
-              </button>
-           </div>
-        </div>
+      {/* VIP Form Modal */}
+      {isVipFormOpen && selectedEvent && (
+        <VipModal
+          event={selectedEvent}
+          onClose={() => setIsVipFormOpen(false)}
+        />
       )}
     </div>
   );

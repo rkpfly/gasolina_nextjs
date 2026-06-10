@@ -7,6 +7,7 @@ import {
   updateTheme,
   deleteTheme,
 } from './actions';
+import RichTextEditor from '@/components/RichTextEditor';
 
 type Theme = {
   id: string;
@@ -21,7 +22,7 @@ type Theme = {
   template_name: string;
   seo_title: string;
   seo_description: string;
-  seo_keywords: string;
+  seo_keywords: string | string[];
   is_active: boolean;
   created_at: string;
 };
@@ -83,10 +84,9 @@ function ThemeForm({
           />
         </Field>
         <Field label="Description" className="sm:col-span-2">
-          <textarea
+          <RichTextEditor
             value={form.description}
-            onChange={set('description')}
-            rows={3}
+            onChange={(val) => setForm((f) => ({ ...f, description: val }))}
             placeholder="Detailed description of the theme…"
           />
         </Field>
@@ -219,7 +219,9 @@ export default function ThemesListPage() {
     template_name: t.template_name,
     seo_title: t.seo_title ?? '',
     seo_description: t.seo_description ?? '',
-    seo_keywords: t.seo_keywords ?? '',
+    seo_keywords: Array.isArray(t.seo_keywords)
+      ? t.seo_keywords.join(', ')
+      : (t.seo_keywords ?? ''),
   });
 
   return (

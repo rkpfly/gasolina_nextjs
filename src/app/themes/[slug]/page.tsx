@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import FadeUp from "@/components/FadeUp";
-import { EventCard } from "@/components/Events/EventCard"; 
+import { EventCard } from "@/components/Events/EventCard";
+import JsonRenderer from "@/components/JSONRenderer";
 import { fetchThemeDetailsAction } from "@/app/actions/themes";
 
 export default function ThemePage() {
@@ -92,10 +93,7 @@ export default function ThemePage() {
             <h2 className="text-2xl md:text-4xl font-display font-bold uppercase tracking-tighter mb-6 border-b border-brand-border pb-4">
               The Experience
             </h2>
-            <p className="text-brand-gray leading-relaxed text-sm md:text-base font-medium whitespace-pre-line">
-              {/* Handles line breaks stored in your detailed_content JSON correctly */}
-              {themeData.description}
-            </p>
+            <JsonRenderer content={themeData.description} tone="light" />
           </div>
         </div>
       </section>
