@@ -16,6 +16,7 @@ const MENU_ITEMS = [
   { label: 'Manage Cities', href: '/admin/city', icon: '🌆' },
   { label: 'SEO Pages', href: '/admin/seo', icon: '🔍' },
   { label: 'Page Sections', href: '/admin/pages/sections', icon: '📚' },
+  { label: 'Themes', href: '/admin/themes', icon: '🎨' },
 ];
 
 export function AdminSidebar() {

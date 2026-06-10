@@ -127,10 +127,10 @@ export function EventCard({ event, isActive, imgSrc, delay, onReserve, onBookVIP
       </div>
 
       {/* ── Card body (unchanged) ── */}
-      <div className={`flex flex-col flex-1 ${!isActive ? 'opacity-60' : ''}`}>
+      <div className={`flex flex-col flex-1 text-white mix-blend-difference`}>
         <SmartMarqueeTitle title={event.basicInfo?.name ?? 'Event'} />
 
-        <p className={`text-xs font-bold tracking-[0.15em] uppercase mb-1 ${isActive ? 'text-brand-black' : 'text-brand-gray'}`}>
+        <p className={`text-xs font-bold tracking-[0.15em] uppercase mb-1`}>
           {event.basicInfo?.date
             ? new Date(event.basicInfo.date).toLocaleDateString('en-AU', {
                 day: 'numeric', month: 'long', year: 'numeric',
@@ -140,7 +140,7 @@ export function EventCard({ event, isActive, imgSrc, delay, onReserve, onBookVIP
         <p className="text-[10px] font-bold tracking-[0.15em] uppercase text-brand-gray mb-4">
           {event.basicInfo?.city ?? event.basicInfo?.location}
         </p>
-        <p className={`text-sm font-medium mb-6 flex-1 ${isActive ? 'text-brand-black' : 'text-brand-gray'}`}>
+        <p className={`text-sm font-medium mb-6 flex-1`}>
           {event.basicInfo?.venue}
         </p>
 
@@ -154,7 +154,7 @@ export function EventCard({ event, isActive, imgSrc, delay, onReserve, onBookVIP
             </button>
             <button
               onClick={onBookVIP}
-              className="relative inline-flex items-center justify-center w-full py-3 rounded-full text-xs font-bold tracking-[0.15em] uppercase text-center bg-transparent text-brand-black border border-brand-black hover:bg-brand-offwhite transition-all duration-300"
+              className="relative inline-flex items-center justify-center w-full py-3 rounded-full text-xs font-bold tracking-[0.15em] uppercase text-center bg-transparent text-brand-white border border-brand-white hover:bg-brand-offwhite transition-all duration-300"
             >
               Book VIP
             </button>

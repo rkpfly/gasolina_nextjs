@@ -48,15 +48,15 @@ export default function SmartMarqueeTitle ({ title }: { title: string }) {
       {/* RENDER LOGIC (Always uses text-brand-black now) */}
       {isOverflowing ? (
         <div className="flex whitespace-nowrap animate-marquee group-hover:[animation-play-state:paused]">
-          <h3 className="text-2xl font-display font-bold uppercase tracking-tighter pr-8 flex-shrink-0 text-brand-black">
+          <h3 className="text-2xl font-display font-bold uppercase tracking-tighter pr-8 flex-shrink-0 text-brand-white mix-blend-difference">
             {title}
           </h3>
-          <h3 className="text-2xl font-display font-bold uppercase tracking-tighter pr-8 flex-shrink-0 text-brand-black" aria-hidden="true">
+          <h3 className="text-2xl font-display font-bold uppercase tracking-tighter pr-8 flex-shrink-0 text-brand-white mix-blend-difference" aria-hidden="true">
             {title}
           </h3>
         </div>
       ) : (
-        <h3 className="text-2xl font-display font-bold uppercase tracking-tighter truncate text-brand-black">
+        <h3 className="text-2xl font-display font-bold uppercase tracking-tighter truncate text-brand-white mix-blend-difference">
           {title}
         </h3>
       )}

@@ -38,13 +38,14 @@ export default function Header() {
             isMenuOpen ? "opacity-0 pointer-events-none" : "opacity-100 pointer-events-auto"
           } transition-opacity duration-300`}
         >
-          {/* The wrapper strictly dictates the space so the header height never shifts */}
-          <div className="relative w-44 h-16 sm:w-40 sm:h-10 md:w-48 md:h-12 lg:w-56 lg:h-14">
+          {/* UPDATED: Width and height values are now identical for a square (1:1) aspect ratio */}
+          <div className="relative w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16">
             <Image
-              src="/bclogo-black-v1.png"
-              alt="Bollywood Club Logo"
+              src="/dc-logo-black-v1.png"
+              alt="Dami Club Logo"
               fill
-              className="object-contain object-left md:object-center"
+              // UPDATED: Removed object-left since the wrapper is now perfectly square
+              className="object-contain" 
               priority
             />
           </div>
@@ -52,8 +53,8 @@ export default function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex space-x-8 lg:space-x-12 items-center text-xs font-semibold tracking-[0.15em] uppercase text-brand-black">
-          <Link href="/events" className="hover:text-brand-accent transition-colors">
-            Events
+          <Link href="/book" className="hover:text-brand-accent transition-colors">
+            Book
           </Link>
           <Link href="/gallery" className="hover:text-brand-accent transition-colors">
             Gallery
@@ -91,7 +92,7 @@ export default function Header() {
           <nav className="flex flex-col space-y-3 sm:space-y-4 md:space-y-6">
             {[
               { label: "Home", href: "/" },
-              { label: "Events", href: "/events" },
+              // { label: "Themes", href: "/themes" },
               { label: "Gallery", href: "/gallery" },
               { label: "Blogs", href: "/blogs" },
             ].map((item, i) => (
@@ -111,6 +112,7 @@ export default function Header() {
             {[
               { label: "Offers", href: "/offers", delay: "0.3s" },
               { label: "Birthday", href: "/birthday", delay: "0.3s" },
+              // { label: "Events", href: "/events", delay: "0.5s" },
               { label: "VIP Reservations", href: "/vip", delay: "0.35s" },
               { label: "Corporate Galas", href: "/corporate", delay: "0.4s" },
               { label: "Careers", href: "/careers", delay: "0.45s" },

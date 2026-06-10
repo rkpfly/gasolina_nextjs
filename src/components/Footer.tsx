@@ -71,7 +71,7 @@ export default async function Footer() {
               href="/"
               className="text-lg sm:text-xl md:text-2xl font-display font-bold tracking-tighter uppercase text-brand-black flex items-center gap-1"
             >
-              BOLLYWOODCLUB<span className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-brand-accent rounded-full mb-2" />
+              DAMI CLUB<span className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-brand-accent rounded-full mb-2" />
             </Link>
             
             <div className="flex flex-col gap-1.5 sm:gap-2 text-brand-gray text-xs sm:text-sm">
@@ -154,7 +154,7 @@ export default async function Footer() {
         {/* Bottom bar */}
         <div className="flex flex-col sm:flex-row justify-between items-center pt-6 sm:pt-8 border-t border-brand-border gap-3 sm:gap-4">
           <p className="text-[8px] sm:text-[9px] md:text-[10px] font-bold tracking-[0.15em] uppercase text-brand-gray text-center sm:text-left">
-            © {contact?.copy_year || 2024} Bollywood Club. Owned by Louder World Pty Ltd.
+            © {contact?.copy_year || 2026} DamiBollywood Club. Owned by Louder World Pty Ltd.
           </p>
           <p className="text-[8px] sm:text-[9px] md:text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black">
             Designed for Nightlife

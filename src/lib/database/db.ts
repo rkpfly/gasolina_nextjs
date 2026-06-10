@@ -490,3 +490,60 @@ export async function getOfferBySlug(slug: string) {
   `, [slug]);
   return result.rows[0];
 }
+
+// ============================================
+// THEMES
+// ============================================
+
+export async function getThemes() {
+  const result = await query(`SELECT * FROM themes ORDER BY created_at DESC`);
+  return result.rows;
+}
+
+export async function getThemeById(id: string) {
+  const result = await query(`SELECT * FROM themes WHERE id = $1`, [id]);
+  return result.rows[0];
+}
+
+export async function createTheme(data: any) {
+  const result = await query(`
+    INSERT INTO themes (id, slug, title, short_description, description, detailed_content, hero_image, thumbnail_url, gallery, template_name, seo_title, seo_description, seo_keywords, created_at)
+    VALUES (gen_random_uuid(), $1, $2, $3, $4, $5::jsonb, $6, $7, $8::jsonb, $9, $10, $11, $12, CURRENT_TIMESTAMP)
+    RETURNING *
+  `, [
+    data.slug, data.title, data.short_description, data.description, JSON.stringify(data.detailed_content || {}),
+    data.hero_image, data.thumbnail_url, JSON.stringify(data.gallery || []), data.template_name,
+    data.seo_title, data.seo_description, data.seo_keywords
+  ]);
+  return result.rows[0];
+}
+
+export async function updateTheme(id: string, data: any) {
+  const result = await query(`
+    UPDATE themes
+    SET slug = $1, title = $2, short_description = $3, description = $4, detailed_content = $5::jsonb, 
+        hero_image = $6, thumbnail_url = $7, gallery = $8::jsonb, template_name = $9, 
+        seo_title = $10, seo_description = $11, seo_keywords = $12
+    WHERE id = $13
+    RETURNING *
+  `, [
+    data.slug, data.title, data.short_description, data.description, JSON.stringify(data.detailed_content),
+    data.hero_image, data.thumbnail_url, JSON.stringify(data.gallery), data.template_name,
+    data.seo_title, data.seo_description, data.seo_keywords, id
+  ]);
+  return result.rows[0];
+}
+
+export async function deleteTheme(id: string) {
+  await query(`DELETE FROM themes WHERE id = $1`, [id]);
+}
+
+export async function getThemeBySlug(slug: string) {
+  const result = await query(`
+    SELECT id, slug, title, short_description, description, detailed_content, hero_image, thumbnail_url, template_name
+    FROM themes
+    WHERE slug = $1 AND is_active = true
+  `, [slug]);
+  
+  return result.rows[0] || null;
+}
