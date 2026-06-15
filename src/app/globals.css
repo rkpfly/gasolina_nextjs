@@ -8,6 +8,7 @@
   --color-brand-gray:     #86868B;
   --color-brand-border:   #E5E5E5;
   --color-brand-accent:   #FF2E93;
+  --color-brand-lime:     #C8F23C;
 
   /* Fonts */
   --font-sans:    var(--font-inter);
@@ -23,6 +24,10 @@
 html, body {
   transition: background-color 0.1s linear;
 }
+
+/* Screen-by-screen scroll snapping (scoped via a class toggled on <html>) */
+html.snap-home,
+html.snap-sections { scroll-snap-type: y proximity; }
 
 body {
   background: var(--color-brand-white);
@@ -126,14 +131,31 @@ body {
 #menu-overlay.open {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 }
-.menu-item {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.5s ease;
-}
+/* Staggered entrance via keyframes (delay set inline per item).
+   On close the links stay put — the panel wipe hides them, no fade-out. */
+.menu-item { opacity: 1; }
 #menu-overlay.open .menu-item {
-  opacity: 1;
-  transform: translateY(0);
+  animation: menuItemIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+@keyframes menuItemIn {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Menu link hover treatments (dark / lime) */
+#menu-overlay .menu-primary {
+  transition: color 0.35s ease, -webkit-text-stroke 0.35s ease;
+}
+#menu-overlay .menu-primary:hover {
+  color: transparent;
+  -webkit-text-stroke: 1.5px #C8F23C;
+}
+#menu-overlay .menu-secondary {
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+#menu-overlay .menu-secondary:hover {
+  color: #FFFFFF;
+  transform: translateX(6px);
 }
 
 /* Hamburger Animation */
@@ -235,7 +257,7 @@ body {
 .editorial-card img { transition: transform 0.8s cubic-bezier(0.83, 0, 0.17, 1), filter 0.8s ease; }
 .editorial-card:hover img { transform: scale(1.05); filter: grayscale(0%) !important; }
 .editorial-card .arrow-icon { transition: transform 0.4s cubic-bezier(0.83, 0, 0.17, 1), color 0.3s ease; }
-.editorial-card:hover .arrow-icon { transform: translateX(8px); color: #FF2E93; }
+.editorial-card:hover .arrow-icon { transform: translateX(8px); color: #C8F23C; }
 
 /* Custom Buttons (If you haven't added this one yet) */
 .btn-monumental {

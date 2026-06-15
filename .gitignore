@@ -42,3 +42,6 @@ next-env.d.ts
 
 .vercel
 .env*
+
+# design sandbox (local mockups, not shipped)
+/sandbox

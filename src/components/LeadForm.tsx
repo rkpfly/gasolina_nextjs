@@ -12,6 +12,7 @@ interface LeadFormProps {
   formType: string;
   fields: FormField[];
   buttonText?: string;
+  tone?: 'light' | 'dark';
 }
 
 // ─── Country code data ───────────────────────────────────────────────────────
@@ -199,9 +200,10 @@ const COUNTRY_CODES = [
 interface CountryCodePickerProps {
   value: string;
   onChange: (code: string) => void;
+  dark?: boolean;
 }
 
-function CountryCodePicker({ value, onChange }: CountryCodePickerProps) {
+function CountryCodePicker({ value, onChange, dark = false }: CountryCodePickerProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
@@ -239,14 +241,14 @@ function CountryCodePicker({ value, onChange }: CountryCodePickerProps) {
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        className="bg-transparent text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-black focus:outline-none cursor-pointer pr-4 flex items-center gap-1"
+        className={`bg-transparent text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase focus:outline-none cursor-pointer pr-4 flex items-center gap-1 ${dark ? 'text-white' : 'text-brand-black'}`}
       >
         <span>{selected.flag}</span>
         <span>{selected.code}</span>
       </button>
 
       {/* Custom chevron (same as before) */}
-      <i className="fa-solid fa-chevron-down absolute right-0 text-[8px] pointer-events-none text-brand-black" />
+      <i className={`fa-solid fa-chevron-down absolute right-0 text-[8px] pointer-events-none ${dark ? 'text-white' : 'text-brand-black'}`} />
 
       {/* Dropdown panel */}
       {open && (
@@ -297,7 +299,8 @@ function CountryCodePicker({ value, onChange }: CountryCodePickerProps) {
 }
 
 // ─── Main LeadForm ───────────────────────────────────────────────────────────
-export default function LeadForm({ formType, fields, buttonText = "Subscribe" }: LeadFormProps) {
+export default function LeadForm({ formType, fields, buttonText = "Subscribe", tone = 'light' }: LeadFormProps) {
+  const dark = tone === 'dark';
   const [formData, setFormData] = useState<Record<string, string>>({
     f_name: '', l_name: '', email: '', phone: '', city: '',
     region: '', country: '', dob: '', total_guests: '',
@@ -351,8 +354,8 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe" }:
     }
   };
 
-  const inputClass = "w-full bg-transparent text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase placeholder-brand-gray focus:outline-none";
-  const wrapperClass = "border-b border-brand-black pb-2";
+  const inputClass = `w-full bg-transparent text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase placeholder-brand-gray focus:outline-none ${dark ? 'text-white' : 'text-brand-black'}`;
+  const wrapperClass = `pb-2 border-b ${dark ? 'border-white/30' : 'border-brand-black'}`;
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-6 md:gap-8">
@@ -392,7 +395,7 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe" }:
             return (
               <div key={field} className={`${wrapperClass} flex items-center gap-3 sm:gap-4`}>
                 {/* ← swapped: CountryCodePicker replaces the old <select> */}
-                <CountryCodePicker value={countryCode} onChange={setCountryCode} />
+                <CountryCodePicker value={countryCode} onChange={setCountryCode} dark={dark} />
 
                 <input
                   type="tel"
@@ -413,16 +416,16 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe" }:
                     value={citySelection}
                     onChange={(e) => setCitySelection(e.target.value)}
                     required
-                    className={`w-full bg-transparent text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase focus:outline-none appearance-none cursor-pointer ${citySelection === "" ? 'text-brand-gray' : 'text-brand-black'}`}
+                    className={`w-full bg-transparent text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase focus:outline-none appearance-none cursor-pointer ${citySelection === "" ? 'text-brand-gray' : (dark ? 'text-white' : 'text-brand-black')}`}
                   >
-                    <option value="" disabled className="text-brand-gray">SELECT CITY *</option>
-                    <option value="Melbourne">Melbourne</option>
-                    <option value="Sydney">Sydney</option>
-                    <option value="Perth">Perth</option>
-                    <option value="Adelaide">Adelaide</option>
-                    <option value="Brisbane">Brisbane</option>
-                    <option value="Singapore">Singapore</option>
-                    <option value="Other">Other</option>
+                    <option value="" disabled className="text-brand-gray bg-brand-black">SELECT CITY *</option>
+                    <option className="text-brand-black" value="Melbourne">Melbourne</option>
+                    <option className="text-brand-black" value="Sydney">Sydney</option>
+                    <option className="text-brand-black" value="Perth">Perth</option>
+                    <option className="text-brand-black" value="Adelaide">Adelaide</option>
+                    <option className="text-brand-black" value="Brisbane">Brisbane</option>
+                    <option className="text-brand-black" value="Singapore">Singapore</option>
+                    <option className="text-brand-black" value="Other">Other</option>
                   </select>
                 </div>
                 {citySelection === 'Other' && (
@@ -461,13 +464,23 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe" }:
         }
       })}
 
-      <button
-        type="submit"
-        disabled={formStatus === 'loading'}
-        className="btn-monumental w-full py-3 sm:py-4 md:py-5 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase mt-2 sm:mt-4 disabled:opacity-50"
-      >
-        <span>{formStatus === 'loading' ? 'Submitting...' : buttonText}</span>
-      </button>
+      {dark ? (
+        <button
+          type="submit"
+          disabled={formStatus === 'loading'}
+          className="w-full py-3 sm:py-4 md:py-5 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase mt-2 sm:mt-4 rounded-full bg-brand-lime text-brand-black hover:bg-brand-white transition-colors duration-300 disabled:opacity-50"
+        >
+          {formStatus === 'loading' ? 'Submitting...' : buttonText}
+        </button>
+      ) : (
+        <button
+          type="submit"
+          disabled={formStatus === 'loading'}
+          className="btn-monumental w-full py-3 sm:py-4 md:py-5 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase mt-2 sm:mt-4 disabled:opacity-50"
+        >
+          <span>{formStatus === 'loading' ? 'Submitting...' : buttonText}</span>
+        </button>
+      )}
     </form>
   );
 }

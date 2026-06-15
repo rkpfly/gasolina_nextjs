@@ -1,19 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { MediaAsset } from "@/lib/media"; 
-import MediaSlot from "@/lib/media"; 
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { MediaAsset } from "@/lib/media";
+import MediaSlot from "@/lib/media";
 import LeadForm from "@/components/LeadForm";
 import VIPForm from "@/components/Home/VipForm";
-import FadeUp from "@/components/FadeUp"; 
-import VipModal from "@/components/Events/VIPModal"; 
+import FadeUp from "@/components/FadeUp";
 
-// Import the Server Action
 import { fetchActiveThemes } from "@/app/actions/themes";
 
-// Define a type for your theme data
 interface Theme {
   id: string;
   slug: string;
@@ -23,54 +20,50 @@ interface Theme {
   thumbnail_url?: string;
 }
 
-export default function HomePage() {
-  const router = useRouter();
+// Left-to-right fade so the poster melts into the black hero
+const POSTER_MASK =
+  "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.3) 38%, #000 85%)";
 
+const GRAIN =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
+
+export default function HomePage() {
   const [media, setMedia] = useState<Record<string, MediaAsset>>({});
-  // Add state for themes
   const [themes, setThemes] = useState<Theme[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [vipModal, setVipModal] = useState(false);
 
-  const [vipModal, setVipModal] = useState(false); 
-  const [vipModalEvent, setVipModalEvent] = useState<any | null>(null); 
-  const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const sectionRef = useRef(null);
 
-  // Close modal on Escape key
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setVipModalEvent(null);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  // 1. Track the scroll progress of this specific section
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    // "start end" = top of section hits bottom of screen (just entered)
+    // "center center" = middle of section hits middle of screen (fully in view)
+    offset: ["start end", "center center"] 
+  });
 
-  // Lock body scroll when VIP modal is open
-  useEffect(() => {
-    if (vipModalEvent) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => { document.body.style.overflow = ""; };
-  }, [vipModalEvent]);
+  // 2. Map scroll progress (0 to 1) to opacity (0.9 to 0)
+  // When it enters, opacity is 0.9. When fully in view, opacity is 0.
+  // const overlayOpacity = useTransform(scrollYProgress, [0, 1], [0.94, 0.75]);
 
-  // Fetch Media AND Themes simultaneously
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30, // Higher number = more delay/friction
+    restDelta: 0.001
+  });
+
+  // 👇 Use the smoothProgress here instead of the raw scrollYProgress
+  const overlayOpacity = useTransform(smoothProgress, [0, 1], [0.9, 0.70]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Run both fetches in parallel for better performance
         const [mediaRes, themesData] = await Promise.all([
-          fetch('/api/media?page=/home'),
-          fetchActiveThemes()
+          fetch("/api/media?page=/home"),
+          fetchActiveThemes(),
         ]);
-
-        if (mediaRes.ok) {
-          const mediaData = await mediaRes.json();
-          setMedia(mediaData);
-        }
-        
+        if (mediaRes.ok) setMedia(await mediaRes.json());
         setThemes(themesData);
       } catch (error) {
         console.error("Failed to fetch page data:", error);
@@ -78,213 +71,344 @@ export default function HomePage() {
         setIsLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
-  // Load animations 
+  // Screen-by-screen scroll snapping, scoped to the home page only.
   useEffect(() => {
-    if (isLoading) return; 
+    const html = document.documentElement;
+    html.classList.add("snap-home");
+    return () => html.classList.remove("snap-home");
+  }, []);
 
-    const reveals = document.querySelectorAll(".img-reveal");
-    const timer = setTimeout(() => {
-      reveals.forEach((r) => r.classList.add("active"));
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [isLoading]); 
+  const featured = themes[0];
 
   return (
     <>
-      {vipModalEvent && (
-        <VipModal
-          event={vipModalEvent}
-          onClose={() => setVipModalEvent(null)}
-        />
-      )}
-
       <VIPForm vipModal={vipModal} setVipModal={setVipModal} />
 
-      {/* ── Hero ── */}
-      <section className="relative h-[88svh] w-full flex flex-col justify-end px-3 sm:px-4 md:px-6 lg:px-12 pb-6 sm:pb-8 md:pb-12 pt-20 sm:pt-24 md:pt-36">
-        <div className="absolute inset-0 top-[60px] md:top-[108px] bottom-6 left-3 sm:left-4 md:left-6 right-3 sm:right-4 md:right-6 rounded-t-[1rem] sm:rounded-[2rem] overflow-hidden bg-brand-offwhite img-reveal -z-10">
-          <MediaSlot 
-            id="hero-video" 
-            mediaMap={media} 
-            className="w-full h-full object-cover opacity-100 mix-blend-multiply"
-            autoPlayVideo={true} 
+      {/* ════════════════ HERO ════════════════ */}
+      <section className="relative min-h-screen w-full flex flex-col bg-brand-black overflow-hidden snap-start px-4 sm:px-6 md:px-12 pt-28 md:pt-32 pb-10 md:pb-16">
+        {/* Hero visual (CMS-driven) — full section height, fading to black toward the left */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute top-0 right-0 h-full w-full sm:w-[64%] md:w-[58%] max-w-[720px] z-0"
+          style={{ WebkitMaskImage: POSTER_MASK, maskImage: POSTER_MASK }}
+        >
+          <MediaSlot
+            id="hero-video"
+            mediaMap={media}
+            autoPlayVideo
+            className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-black/20 to-black/30" />
         </div>
+        {/* Grain */}
+        <div
+          className="pointer-events-none absolute inset-0 z-0 opacity-[0.06] mix-blend-overlay"
+          style={{ backgroundImage: GRAIN }}
+        />
 
-        <FadeUp className="relative z-10 w-full max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-end gap-4 sm:gap-6 md:gap-10">
-          <div className="pl-4 max-w-3xl w-full">
-            <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl xl:text-[6vw] 
-            font-display font-extrabold tracking-tighter 
-            leading-[1.15] sm:leading-[1.05] lg:leading-[0.9] 
-            text-brand-white uppercase mb-2 sm:mb-3 md:mb-4 lg:mb-6">
-              <span className='flex-grow'>Redefine</span><br />
-              <span>The</span><br />
-              <span className="text-outline">Ultimate</span><br />
-              <span className="text-gray-900">Celebration.</span>
-            </h1>
-            <p className="text-[9px] sm:text-xs md:text-sm lg:text-base font-semibold tracking-[0.2em] uppercase text-brand-black/80">
-              Crafting Global Bollywood Nightlife for the Elite.
-            </p>
+        {/* Kicker banner (top) */}
+        <span className="relative z-10 self-start bg-brand-lime text-brand-black font-bold uppercase tracking-[0.18em] text-[10px] sm:text-xs md:text-sm px-4 py-2">
+          A New Nepali Clubbing Era Begins
+        </span>
+
+        {/* Title block (bottom) */}
+        <FadeUp className="relative z-10 mt-auto w-full max-w-[1600px] mx-auto">
+          <h1 className="font-display font-extrabold uppercase tracking-tighter text-brand-white leading-[0.82] text-[22vw] sm:text-[17vw] md:text-[13vw] lg:text-[12rem]">
+            Dami<br />Club
+          </h1>
+          <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+            {["Nepali Bangers", "R&B", "Hip Hop"].map((g, i) => (
+              <span key={g} className="flex items-center gap-5">
+                {i > 0 && <span className="w-1.5 h-1.5 rounded-full bg-brand-lime" />}
+                <span className="text-[11px] sm:text-sm font-semibold tracking-[0.22em] uppercase text-brand-offwhite">
+                  {g}
+                </span>
+              </span>
+            ))}
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 md:gap-4 w-full md:w-auto mt-3 md:mt-0 px-2 pb-2 md:pb-0">
-            <button 
+          <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
+            <button
               onClick={() => setVipModal(true)}
-              className="bg-white border-1 sm:border-1 sm:bg-transparent sm:border-0  px-4 sm:px-6 md:px-10 py-2 sm:py-3 md:py-4 rounded-lg sm:rounded-full text-[12px] sm:text-[9px] md:text-xs lg:text-sm font-bold tracking-[0.15em] uppercase w-full sm:w-auto text-center cursor-pointer"
+              className="bg-brand-lime text-brand-black px-8 md:px-10 py-4 rounded-full text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-center cursor-pointer hover:bg-brand-white transition-colors duration-300 w-full sm:w-auto"
             >
-              <span className="">Reserve VIP</span>
+              Reserve VIP
             </button>
-            <Link href="#themes" className="btn-monumental px-4 sm:px-6 md:px-10 py-2 sm:py-3 md:py-4 rounded-lg sm:rounded-full text-[12px] sm:text-[9px] md:text-xs lg:text-sm font-bold tracking-[0.15em] uppercase w-full sm:w-auto text-center">
-              <span>Discover Themes</span>
+            <Link
+              href="#residency"
+              className="border border-brand-white/40 text-brand-white px-8 md:px-10 py-4 rounded-full text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-center hover:bg-brand-white hover:text-brand-black transition-colors duration-300 w-full sm:w-auto"
+            >
+              The Residency
             </Link>
           </div>
         </FadeUp>
       </section>
 
-      {/* ── Signature Themes (Single Full-Width) ── */}
-      <section id="themes" className="w-full bg-brand-black">
-        {themes.length === 0 && !isLoading ? (
-          <div className="w-full py-24 flex items-center justify-center text-white">
-            <p className="tracking-widest uppercase text-sm font-bold opacity-50">No themes currently active.</p>
-          </div>
-        ) : themes.length > 0 && (
-          <FadeUp className="w-full">
-            <div className="group relative w-full h-[60vh] md:h-[75vh] lg:h-[85vh] flex flex-col justify-end overflow-hidden cursor-pointer border-y border-white/5">
-              
-              {/* Background Image with slow, cinematic zoom */}
-              <div 
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-[2s] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105"
-                style={{ backgroundImage: `url(${themes[0].hero_image})` }}
-              />
-              
-              {/* Layered Overlays for depth and text legibility */}
-              <div className="absolute inset-0 bg-brand-black/40 group-hover:bg-brand-black/20 transition-colors duration-1000" />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/60 md:via-brand-black/40 to-transparent opacity-90" />
-              
-              {/* Content Container */}
-              <div className="relative z-10 w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-12 pb-12 md:pb-24 flex flex-col items-start text-left">
-                
-                {/* Micro-interaction: Text slides slightly right on hover */}
-                <div className="transform transition-transform duration-1000 ease-out group-hover:translate-x-2 md:group-hover:translate-x-4">
-                  <p className="text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase text-brand-accent mb-4 md:mb-6">
-                    Featured Experience
-                  </p>
-                  
-                  <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-[7vw] font-display font-extrabold tracking-tighter leading-[0.9] uppercase text-white mb-4 sm:mb-6">
-                    {themes[0].title}
-                  </h2>
-                  
-                  <p className="text-sm md:text-base lg:text-lg font-medium text-white/80 max-w-2xl mb-8 md:mb-12 line-clamp-3">
-                    {themes[0].short_description}
-                  </p>
-                  
-                  {/* Action Buttons */}
-                  <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-                    <Link 
-                      href="/book" 
-                      className="bg-white text-brand-black px-6 md:px-12 py-3 md:py-4 rounded-full text-xs md:text-sm font-bold tracking-[0.15em] uppercase w-full sm:w-auto text-center hover:bg-white/90 transition-colors"
-                    >
-                      Book Tickets
-                    </Link>
-                    
-                    <button 
-                      onClick={(e) => {
-                        e.preventDefault(); // Prevent Link wrapper from hijacking if they click the button
-                        setVipModal(true);
-                      }}
-                      className="bg-transparent border border-white text-white px-6 md:px-12 py-3 md:py-4 rounded-full text-xs md:text-sm font-bold tracking-[0.15em] uppercase w-full sm:w-auto text-center hover:bg-white/10 transition-colors"
-                    >
-                      Request VIP
-                    </button>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </FadeUp>
-        )}
-      </section>
-      
-      {/* ── Remaining Sections (Cinematic, Luxury, Subscribe) Remain Identical ── */}
-      <section className="py-12 sm:py-16 md:py-24 bg-brand-black text-white px-3 sm:px-4 md:px-6 lg:px-12 overflow-hidden">
-        <FadeUp className="max-w-[1600px] mx-auto">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold tracking-tighter uppercase mb-6 sm:mb-8 md:mb-12">
-            Cinematic Highlights
-          </h2>
-        </FadeUp>
-        
-        <FadeUp className="max-w-[1600px] mx-auto flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory hide-scroll">
-          {['cinematic-1', 'cinematic-2'].map((id) => (
-            <div key={id} className="snap-center shrink-0 w-[calc(90vw-1.5rem)] sm:w-[calc(90vw-2rem)] md:w-[60vw] lg:w-[45vw] aspect-video relative group cursor-pointer overflow-hidden bg-brand-offwhite/10 rounded-lg">
-              <MediaSlot id={id} mediaMap={media} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
-              <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 pointer-events-none" />
+      {/* ════════════════ MARQUEE ════════════════ */}
+      <div className="bg-brand-lime border-y border-brand-black overflow-hidden whitespace-nowrap">
+        <div className="flex w-max animate-marquee">
+          {[0, 1, 2].map((g) => (
+            <div key={g} className="flex items-center gap-8 py-3 pr-8 text-brand-black">
+              <MarqueeSet />
             </div>
           ))}
-        </FadeUp>
-      </section>
+        </div>
+      </div>
 
-      <section className="py-12 sm:py-16 md:py-32 bg-brand-white px-3 sm:px-4 md:px-6 lg:px-12 border-b border-brand-border">
-        <div className="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 md:gap-10 lg:gap-8">
-          <FadeUp className="lg:col-span-5">
-            <div className="lg:sticky lg:top-32">
-              <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-display font-extrabold tracking-tighter uppercase leading-[0.9] text-brand-black mb-2 sm:mb-3 md:mb-4 lg:mb-6">
-                Redefining<br />
-                <span className="text-outline">Luxury</span>
-              </h2>
-              <p className="text-[8px] sm:text-[9px] md:text-sm lg:text-base font-bold tracking-[0.2em] uppercase text-brand-gray mb-6 sm:mb-8 md:mb-10">
-                The definitive Southeast Asian experience, reimagined globally.
-              </p>
-            </div>
+      {/* ════════════════ STATEMENT ════════════════ */}
+      <section className="min-h-screen flex flex-col justify-center bg-brand-offwhite text-brand-black snap-start px-4 sm:px-6 md:px-12 py-20">
+        <div className="max-w-[1600px] mx-auto w-full">
+          <FadeUp>
+            <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-gray mb-8 md:mb-12">
+              (01) — The Movement
+            </p>
           </FadeUp>
-
-          <FadeUp delay={200} className="lg:col-span-6 lg:col-start-7 flex flex-col gap-6 sm:gap-8 md:gap-12">
-             <div>
-              <h3 className="text-base sm:text-lg md:text-2xl lg:text-2xl font-display font-bold uppercase tracking-tighter mb-2 sm:mb-3 md:mb-4 border-b border-brand-border pb-2 sm:pb-3 md:pb-4">The Phenomenon</h3>
-              <p className="text-xs sm:text-sm md:text-base text-brand-gray leading-relaxed font-medium">Step into the premier world of Bollywood Club—the ultimate destination for luxury Bollywood nightlife...</p>
+          <FadeUp delay={120}>
+            <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[1.02] text-[7vw] md:text-[4.6vw] max-w-[18ch]">
+              Melbourne&apos;s home for{" "}
+              <span className="bg-brand-lime px-1.5">Nepali</span> sound, late
+              nights &amp; the diaspora that runs it.
+            </h2>
+          </FadeUp>
+          <FadeUp delay={200}>
+            <div className="mt-12 md:mt-16 flex flex-wrap gap-8 md:gap-14 border-t border-brand-border pt-8">
+              {[
+                ["Residency", "Weekly"],
+                ["Floor", "L3 Nightclubs"],
+                ["Sound", "Nepali · R&B · Hip Hop"],
+                ["City", "Melbourne"],
+              ].map(([k, v]) => (
+                <div key={k}>
+                  <span className="text-[11px] tracking-[0.12em] uppercase text-brand-gray">
+                    {k}
+                  </span>
+                  <span className="block font-display font-bold uppercase tracking-tight text-xl md:text-2xl mt-1">
+                    {v}
+                  </span>
+                </div>
+              ))}
             </div>
           </FadeUp>
         </div>
       </section>
 
-      <section className="py-0 flex flex-col lg:flex-row bg-brand-white border-b border-brand-border">
-        <div className="w-full lg:w-1/2 aspect-square lg:aspect-auto relative img-reveal">
-          <img
-            src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1200&auto=format&fit=crop"
-            className="w-full h-full object-cover filter grayscale-[20%]"
-            alt="Subscribe"
+      {/* ════════════════ RESIDENCY ════════════════ */}
+      <section
+        id="residency"
+        className="min-h-screen flex items-center bg-brand-black text-brand-white snap-start px-4 sm:px-6 md:px-12 py-20"
+      >
+        <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center">
+          <FadeUp>
+            <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-lime mb-6">
+              (02) — The Residency
+            </p>
+            <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-[16vw] md:text-[7rem] mb-6">
+              Every
+              <br />
+              <span className="text-transparent [-webkit-text-stroke:1.5px_white]">
+                Friday
+              </span>
+            </h2>
+            <p className="text-brand-gray leading-relaxed max-w-[44ch] text-sm md:text-base">
+              {featured?.short_description ??
+                "One night, every week. A curated floor of Nepali bangers cut with R&B and hip hop — built for the people who never had a room of their own. Reserve a table or walk the door."}
+            </p>
+          </FadeUp>
+
+          <FadeUp delay={150}>
+            <div className="relative border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent p-8">
+              <span className="absolute top-0 left-0 w-full h-1 bg-brand-lime" />
+              {[
+                ["Event", featured?.title ?? "Dami Club", false],
+                ["When", "Every Friday · 10PM", true],
+                ["Venue", "The Loft · L3 Nightclubs", false],
+                ["Location", "Crown, Melbourne", false],
+                ["Dress", "Smart / Statement", false],
+              ].map(([label, value, accent]) => (
+                <div
+                  key={label as string}
+                  className="flex justify-between items-baseline gap-4 py-4 border-b border-dashed border-white/10 last:border-0"
+                >
+                  <span className="text-[11px] tracking-[0.16em] uppercase text-brand-gray">
+                    {label}
+                  </span>
+                  <span
+                    className={`font-display font-bold uppercase tracking-tight text-right text-base md:text-lg ${
+                      accent ? "text-brand-lime" : "text-brand-white"
+                    }`}
+                  >
+                    {value}
+                  </span>
+                </div>
+              ))}
+              <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                <Link
+                  href="/book"
+                  className="flex-1 bg-brand-lime text-brand-black text-center py-4 text-xs font-bold tracking-[0.16em] uppercase hover:bg-brand-white transition-colors"
+                >
+                  Book Tickets
+                </Link>
+                <button
+                  onClick={() => setVipModal(true)}
+                  className="flex-1 border border-white/30 text-brand-white text-center py-4 text-xs font-bold tracking-[0.16em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors cursor-pointer"
+                >
+                  Request VIP
+                </button>
+              </div>
+            </div>
+          </FadeUp>
+        </div>
+      </section>
+
+      {/* ════════════════ GALLERY / THE NIGHTS ════════════════ */}
+      <section className="min-h-screen flex flex-col justify-center bg-[#0f0f10] text-brand-white snap-start px-4 sm:px-6 md:px-12 py-20">
+        <div className="max-w-[1600px] mx-auto w-full">
+          <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-10">
+            <div>
+              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-lime mb-3">
+                (03) — The Nights
+              </p>
+              <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-5xl md:text-7xl">
+                Inside the Room
+              </h2>
+            </div>
+            <Link
+              href="/gallery"
+              className="bg-brand-lime text-brand-black px-6 py-3 rounded-full text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white transition-colors"
+            >
+              Full Gallery →
+            </Link>
+          </FadeUp>
+
+          <FadeUp delay={150} className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+            {["cinematic-1", "cinematic-2"].map((id) => (
+              <div
+                key={id}
+                className="group relative aspect-video overflow-hidden bg-white/5"
+              >
+                <MediaSlot
+                  id={id}
+                  mediaMap={media}
+                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              </div>
+            ))}
+          </FadeUp>
+        </div>
+      </section>
+
+      {/* ════════════════ INNER CIRCLE (newsletter) ════════════════ */}
+      <section className="flex flex-col lg:flex-row bg-brand-white border-y border-brand-border">
+        <div className="w-full lg:w-1/2 aspect-square lg:aspect-auto relative overflow-hidden">
+          <MediaSlot
+            id="newsletter-visual"
+            mediaMap={media}
+            autoPlayVideo
+            className="w-full h-full object-cover"
           />
         </div>
-        
-        <FadeUp className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-6 md:p-12 lg:p-24">
+        <FadeUp className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-10 md:p-16 lg:p-24">
           <div className="w-full max-w-md">
-            <h2 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-display font-bold tracking-tighter uppercase text-brand-black mb-2 sm:mb-3 md:mb-4">
-              Join the Inner Circle
-            </h2>
-            <p className="text-brand-gray font-medium text-[9px] sm:text-xs md:text-sm mb-6 sm:mb-8 md:mb-12">
-              Receive priority access to ticket drops, exclusive VIP offers, and secret venue reveals delivered directly to your inbox.
+            <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-gray mb-4">
+              (04) — Inner Circle
             </p>
-
-            {formStatus === 'success' ? (
-              <div className="bg-brand-black text-white p-4 sm:p-6 md:p-8 text-center rounded-xl animate-in fade-in zoom-in duration-500">
-                <h3 className="text-lg sm:text-xl md:text-2xl font-display font-bold tracking-tighter uppercase mb-1 sm:mb-2">Welcome to the Club</h3>
-                <p className="text-[8px] sm:text-xs md:text-sm tracking-[0.1em] uppercase text-brand-gray">We'll be in touch soon.</p>
-              </div>
-            ) : (
-              <LeadForm
-                formType="home_newsletter" 
-                fields={['f_name', 'l_name', 'email', 'phone', 'city']} 
-                buttonText="Subscribe" 
-              />
-            )}
+            <h2 className="font-display font-extrabold uppercase tracking-tighter text-brand-black text-3xl sm:text-4xl md:text-5xl mb-3">
+              Get on the List
+            </h2>
+            <p className="text-brand-gray font-medium text-xs sm:text-sm mb-8 md:mb-10">
+              Priority access to ticket drops, VIP tables, and the next Dami
+              Club night — straight to your inbox.
+            </p>
+            <LeadForm
+              formType="home_newsletter"
+              fields={["f_name", "l_name", "email", "phone", "city"]}
+              buttonText="Join the Club"
+            />
           </div>
         </FadeUp>
       </section>
+
+      {/* ════════════════ CTA ════════════════ */}
+      {/* <section className="min-h-screen flex flex-col items-center justify-center text-center bg-brand-lime text-brand-black snap-start px-4 py-20">
+        <FadeUp className="flex flex-col items-center">
+          <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-black/60 mb-6">
+            Doors open every Friday
+          </p>
+          <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.84] text-[14vw] md:text-[10rem]">
+            See You
+            <br />
+            On The Floor
+          </h2>
+          <button
+            onClick={() => setVipModal(true)}
+            className="mt-10 bg-brand-black text-brand-white px-12 py-4 rounded-full text-sm font-bold tracking-[0.16em] uppercase hover:-translate-y-1 transition-transform duration-300 cursor-pointer"
+          >
+            Reserve Your Spot
+          </button>
+        </FadeUp>
+      </section> */}
+      <section 
+        ref={sectionRef} 
+        className="relative min-h-screen flex flex-col items-center justify-center text-center text-brand-black snap-start px-4 py-20 overflow-hidden"
+      >
+        
+        {/* Background Video Layer */}
+        <motion.video
+          autoPlay
+          loop
+          muted
+          playsInline
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, amount: 0.2 }}
+          className="absolute inset-0 w-full h-full object-cover -z-20"
+        >
+          <source src="/bg-animate-home.mp4" type="video/mp4" />
+        </motion.video>
+
+        {/* Dynamic Opacity Color Overlay Layer */}
+        <motion.div 
+          style={{ opacity: overlayOpacity }} // Opacity controlled by scroll
+          className="absolute inset-0 bg-brand-lime -z-10 pointer-events-none"
+        ></motion.div>
+
+        {/* Foreground Content */}
+        <FadeUp className="relative z-10 flex flex-col items-center">
+          <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-black/60 mb-6">
+            Doors open every Friday
+          </p>
+          <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.84] text-[14vw] md:text-[10rem]">
+            See You
+            <br />
+            On The Floor
+          </h2>
+          <button
+            onClick={() => setVipModal(true)}
+            className="mt-10 bg-brand-black text-brand-white px-12 py-4 rounded-full text-sm font-bold tracking-[0.16em] uppercase hover:-translate-y-1 transition-transform duration-300 cursor-pointer"
+          >
+            Reserve Your Spot
+          </button>
+        </FadeUp>
+      </section>
+    </>
+  );
+}
+
+function MarqueeSet() {
+  const items = ["Every Friday", "The Loft · L3 Nightclubs", "Crown, Melbourne"];
+  return (
+    <>
+      {items.map((t) => (
+        <span key={t} className="flex items-center gap-8">
+          <span className="font-display font-extrabold uppercase tracking-wide text-lg">
+            {t}
+          </span>
+          <span className="opacity-40">✦</span>
+        </span>
+      ))}
     </>
   );
 }

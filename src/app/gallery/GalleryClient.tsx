@@ -18,33 +18,28 @@ const layoutClasses = [
 const GalleryItemCard = ({ post, index }: { post: GalleryPost, index: number }) => {
     const layoutClass = layoutClasses[index % layoutClasses.length];
     const isVideo = post.type?.toLowerCase() === 'video';
-    console.log('Rendering GalleryItemCard for post:', post); // Debug log
 
     return (
-        <div 
-            // Added dynamic cursor-pointer if a link exists
-            className={`gallery-item relative overflow-hidden bg-brand-offwhite group scale-hover img-wrapper rounded-xl ${layoutClass} ${post.redirect_link ? 'cursor-pointer' : ''}`}
+        <div
+            className={`gallery-item relative overflow-hidden bg-white/5 group scale-hover img-wrapper rounded-xl ${layoutClass} ${post.redirect_link ? 'cursor-pointer' : ''}`}
             onClick={() => {
-                // FIXED: Changed redirect_url to redirect_link
                 if (post.redirect_link) {
                     window.open(post.redirect_link, '_blank');
                 }
             }}
         >
-            <img 
-                src={post.thumbnail_url || post.media_url} 
-                alt={post.title} 
-                className="w-full h-full object-cover"
+            <img
+                src={post.thumbnail_url || post.media_url}
+                alt={post.title}
+                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
             />
-            {/* You don't actually need the onClick on the overlay since the parent div already has it, 
-                but if you keep it, make sure to fix the property name here too. */}
-            <div 
+            <div
                 className="absolute inset-0 bg-gradient-to-t from-brand-black/90 via-transparent to-transparent gallery-overlay"
             >
             </div>
-            
+
             <div className="absolute top-6 left-6 z-20">
-                <span className={`${isVideo ? 'bg-brand-accent text-brand-white' : 'bg-brand-white text-brand-black'} text-[9px] font-bold px-3 py-1.5 uppercase tracking-widest rounded-full`}>
+                <span className={`${isVideo ? 'bg-brand-lime text-brand-black' : 'bg-brand-white text-brand-black'} text-[9px] font-bold px-3 py-1.5 uppercase tracking-widest rounded-full`}>
                     {post.category || (isVideo ? 'Video Recap' : 'Photo Album')}
                 </span>
             </div>
@@ -61,7 +56,7 @@ const GalleryItemCard = ({ post, index }: { post: GalleryPost, index: number }) 
                 <h3 className="text-xl md:text-3xl font-display font-bold text-white uppercase tracking-tighter mb-1 truncate">
                     {post.title}
                 </h3>
-                <p className="text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-accent truncate">
+                <p className="text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-lime truncate">
                     {post.location || 'Location TBA'} {post.caption && `• ${post.caption}`}
                 </p>
             </div>
@@ -69,12 +64,12 @@ const GalleryItemCard = ({ post, index }: { post: GalleryPost, index: number }) 
     );
 };
 
-export default function GalleryClient({ 
-    initialPosts, 
-    mediaSlots 
-}: { 
-    initialPosts: GalleryPost[], 
-    mediaSlots: Record<string, MediaAsset> 
+export default function GalleryClient({
+    initialPosts,
+    mediaSlots
+}: {
+    initialPosts: GalleryPost[],
+    mediaSlots: Record<string, MediaAsset>
 }) {
     const [activeTab, setActiveTab] = useState('All Media');
     const tabs = ['All Media', 'Photos', 'Videos', 'Melbourne', 'Sydney', 'Singapore'];
@@ -110,36 +105,43 @@ export default function GalleryClient({
         };
     }, [filteredPosts]);
 
+    // Section-focused scroll snapping, scoped to this page only.
+    useEffect(() => {
+        const html = document.documentElement;
+        html.classList.add('snap-sections');
+        return () => html.classList.remove('snap-sections');
+    }, []);
+
     return (
-        <main className="w-full">
+        <main className="w-full bg-brand-black text-brand-white">
             {/* HERO SECTION */}
-            <section className="relative h-[85svh] w-full px-4 md:px-8 pt-20 md:pt-28 pb-12 flex flex-col">
+            <section className="relative h-[85svh] w-full px-4 md:px-8 pt-20 md:pt-28 pb-12 flex flex-col snap-start">
                 <div className="relative w-full h-full min-h-[500px] rounded-[2rem] overflow-hidden bg-brand-black img-reveal shadow-2xl img-wrapper">
-                    
+
                     {/* Correctly Implemented Media Slot */}
                     <div className="h-48 md:h-[700px]">
-                        <MediaSlot 
+                        <MediaSlot
                             id="hero-video"
-                            mediaMap={mediaSlots} 
-                            className="hero-img-anim absolute inset-0 w-full h-full object-fit filter grayscale-[20%] opacity-60" 
+                            mediaMap={mediaSlots}
+                            className="hero-img-anim absolute inset-0 w-full h-full object-fit filter grayscale opacity-50"
                         />
                     </div>
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-brand-black/95 via-brand-black/40 to-transparent"></div>
-                    
+                    <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/40 to-transparent"></div>
+
                     <div className="absolute bottom-0 md:inset-0 flex flex-col justify-between py-8 px-4 md:p-16 z-20">
                         <div className="fade-up max-w-4xl text-center mx-auto">
-                            <span className="inline-block text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black bg-brand-white px-5 py-2.5 rounded-full shadow-lg mb-6">
+                            <span className="inline-block text-[10px] md:text-xs font-display font-extrabold tracking-[0.2em] uppercase text-brand-black bg-brand-lime px-5 py-2.5 rounded-full shadow-lg mb-6">
                                 Captured Moments
                             </span>
                             <h1 className="text-5xl md:text-7xl lg:text-[7.5vw] leading-[1.1] font-display font-extrabold uppercase tracking-tighter text-brand-white py-2">
-                                Relive The <br className="md:hidden" /> 
+                                Relive The <br className="md:hidden" />
                                 <span className="text-transparent [-webkit-text-stroke:1.5px_#FFFFFF] py-[0.15em] inline-block">
-                                    Magic
+                                    Nights
                                 </span>
                             </h1>
                             <p className="mt-4 text-brand-white/80 text-sm md:text-base font-medium max-w-lg mx-auto leading-relaxed">
-                                Immerse yourself in the ultimate Bollywood nightlife experience.
+                                The floor, the sound, the people — every Dami Club night, captured.
                             </p>
                         </div>
                     </div>
@@ -147,36 +149,31 @@ export default function GalleryClient({
             </section>
 
             {/* LATEST AFTERMOVIE SECTION */}
-            {/* 1. Removed px-6 md:px-12 from the section */}
-            <section className="pt-12 bg-brand-white">
+            <section className="pt-12 bg-brand-black snap-start">
                 <div className="max-w-[1600px] mx-auto fade-up">
-                    
-                    {/* 2. Added px-6 md:px-12 to the header to keep text aligned */}
+
                     <div className="flex justify-between items-end mb-4 px-2 md:px-12">
                         <div>
-                            <p className="text-xs font-bold tracking-[0.2em] uppercase text-brand-accent mb-2">Featured</p>
-                            <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tighter uppercase text-brand-black">
-                                Latest <span className='bg-black text-white px-2'>Aftermovie</span>
+                            <p className="text-xs font-bold tracking-[0.2em] uppercase text-brand-lime mb-2">Featured</p>
+                            <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tighter uppercase text-brand-white">
+                                Latest <span className='bg-brand-lime text-brand-black px-2'>Aftermovie</span>
                             </h2>
                         </div>
-                        <button className="hidden md:flex items-center gap-2 text-xs font-bold tracking-[0.15em] uppercase text-brand-gray hover:text-brand-black transition-colors">
+                        <button className="hidden md:flex items-center gap-2 text-xs font-bold tracking-[0.15em] uppercase text-brand-gray hover:text-brand-white transition-colors">
                             View All <i className="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
 
-                    {/* 3. Added a wrapper with 0 padding on mobile, and md:px-12 for desktop */}
                     <div className="px-0 md:px-12">
-                        {/* 4. Changed rounded-2xl to rounded-none md:rounded-2xl */}
-                        <div className="w-full aspect-video md:aspect-[21/9] rounded-none md:rounded-2xl overflow-hidden relative group cursor-pointer bg-brand-offwhite scale-hover img-wrapper">
-                            
+                        <div className="w-full aspect-video md:aspect-[21/9] rounded-none md:rounded-2xl overflow-hidden relative group cursor-pointer bg-white/5 scale-hover img-wrapper">
+
                             {/* Correctly Implemented Media Slot */}
-                            <MediaSlot 
+                            <MediaSlot
                                 id="latest-aftermovie"
-                                mediaMap={mediaSlots} 
-                                className="w-full h-full object-cover filter grayscale-[10%]" 
+                                mediaMap={mediaSlots}
+                                className="w-full h-full object-cover filter grayscale-[10%]"
                             />
-                            
-                            {/* ADDED pointer-events-none HERE */}
+
                             <div className="absolute inset-0 bg-brand-black/30 group-hover:bg-brand-black/10 transition-colors duration-500 pointer-events-none"></div>
                         </div>
                     </div>
@@ -184,21 +181,21 @@ export default function GalleryClient({
             </section>
 
             {/* DYNAMIC ARCHIVES SECTION */}
-            <section id="all-media" className="pb-32 px-6 md:px-12 bg-brand-white border-t border-brand-border pt-12 md:pt-24">
+            <section id="all-media" className="pb-32 px-6 md:px-12 bg-brand-black border-t border-white/10 pt-12 md:pt-24 snap-start">
                 <div className="max-w-[1600px] mx-auto">
-                    
+
                     <div className="flex flex-col xl:flex-row justify-between items-end mb-4 fade-up">
                         <div className="mb-8 xl:mb-0">
-                            <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tighter uppercase text-brand-black">The Archives</h2>
+                            <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tighter uppercase text-brand-white">The Archives</h2>
                         </div>
-                        
-                        <div className="flex space-x-8 overflow-x-auto w-full xl:w-auto pb-4 hide-scroll text-[11px] font-bold tracking-[0.15em] uppercase text-brand-gray border-b border-brand-border">
+
+                        <div className="flex space-x-8 overflow-x-auto w-full xl:w-auto pb-4 hide-scroll text-[11px] font-bold tracking-[0.15em] uppercase text-brand-gray border-b border-white/10">
                             {tabs.map((tab) => (
-                                <button 
+                                <button
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
-                                    className={`filter-tab pb-4 whitespace-nowrap transition-colors hover:text-brand-black ${
-                                        activeTab === tab ? 'active text-brand-black border-b-2 border-brand-black' : 'border-b-2 border-transparent'
+                                    className={`filter-tab pb-4 whitespace-nowrap transition-colors hover:text-brand-white ${
+                                        activeTab === tab ? 'active text-brand-white border-b-2 border-brand-lime' : 'border-b-2 border-transparent'
                                     }`}
                                 >
                                     {tab}
@@ -221,7 +218,7 @@ export default function GalleryClient({
                     </div>
 
                     <div className="mt-20 text-center fade-up">
-                        <button className="btn-outline px-12 py-5 rounded-full text-xs font-bold tracking-[0.15em] uppercase">
+                        <button className="border border-white/30 text-brand-white hover:bg-brand-lime hover:text-brand-black hover:border-brand-lime px-12 py-5 rounded-full text-xs font-bold tracking-[0.15em] uppercase transition-colors duration-300">
                             Load More Memories
                         </button>
                     </div>
@@ -229,43 +226,35 @@ export default function GalleryClient({
             </section>
 
             {/* FOLLOW THE VIBE SECTION */}
-            <section className="py-24 bg-brand-black text-brand-white px-6 md:px-12 border-t border-brand-border/20">
+            <section className="py-24 bg-[#0f0f10] text-brand-white px-6 md:px-12 border-t border-white/10 snap-start">
                 <div className="max-w-[1600px] mx-auto">
                     <div className="flex flex-col md:flex-row justify-between items-end mb-12 fade-up">
                         <div>
                             <h2 className="text-4xl md:text-6xl font-display font-bold tracking-tighter uppercase mb-2">Follow The Vibe</h2>
-                            <p className="text-sm font-medium text-brand-gray">Tag @BollywoodClub to be featured.</p>
+                            <p className="text-sm font-medium text-brand-gray">Tag @damiclub to be featured.</p>
                         </div>
-                        <a href="#" className="mt-6 md:mt-0 flex items-center gap-3 text-xs font-bold tracking-[0.15em] uppercase text-brand-accent hover:text-white transition-colors">
+                        <a href="#" className="mt-6 md:mt-0 flex items-center gap-3 text-xs font-bold tracking-[0.15em] uppercase text-brand-lime hover:text-white transition-colors">
                             <i className="fa-brands fa-instagram text-lg"></i> Follow Us
                         </a>
                     </div>
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 fade-up">
-                        <div className="aspect-square bg-brand-offwhite/10 rounded-lg overflow-hidden group cursor-pointer relative">
-                            <img src="https://images.unsplash.com/photo-1545128485-c400e7702796?q=80&w=600&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Instagram 1" />
-                            <div className="absolute inset-0 bg-brand-accent/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-3xl">
-                                <i className="fa-brands fa-instagram"></i>
+                        {[
+                            "https://images.unsplash.com/photo-1545128485-c400e7702796?q=80&w=600&auto=format&fit=crop",
+                            "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=600&auto=format&fit=crop",
+                            "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=600&auto=format&fit=crop",
+                            "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=600&auto=format&fit=crop",
+                        ].map((src, i) => (
+                            <div
+                                key={src}
+                                className={`aspect-square bg-white/5 rounded-lg overflow-hidden group cursor-pointer relative ${i > 1 ? 'hidden md:block' : ''}`}
+                            >
+                                <img src={src} className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700" alt={`Dami Club social ${i + 1}`} />
+                                <div className="absolute inset-0 bg-brand-lime/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-brand-black text-3xl">
+                                    <i className="fa-brands fa-instagram"></i>
+                                </div>
                             </div>
-                        </div>
-                        <div className="aspect-square bg-brand-offwhite/10 rounded-lg overflow-hidden group cursor-pointer relative">
-                            <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=600&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Instagram 2" />
-                            <div className="absolute inset-0 bg-brand-accent/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-3xl">
-                                <i className="fa-brands fa-instagram"></i>
-                            </div>
-                        </div>
-                        <div className="aspect-square bg-brand-offwhite/10 rounded-lg overflow-hidden group cursor-pointer relative hidden md:block">
-                            <img src="https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=600&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Instagram 3" />
-                            <div className="absolute inset-0 bg-brand-accent/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-3xl">
-                                <i className="fa-brands fa-instagram"></i>
-                            </div>
-                        </div>
-                        <div className="aspect-square bg-brand-offwhite/10 rounded-lg overflow-hidden group cursor-pointer relative hidden md:block">
-                            <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=600&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Instagram 4" />
-                            <div className="absolute inset-0 bg-brand-accent/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-3xl">
-                                <i className="fa-brands fa-instagram"></i>
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </section>
