@@ -37,11 +37,20 @@ export default function CareersClient() {
     // Form State for Country Code
     const [countryCode, setCountryCode] = useState('+61');
 
-    // Hardcoded Roster Array
+    // Role autofilled when a roster card is clicked
+    const [selectedRole, setSelectedRole] = useState('');
+
+    const handleRoleSelect = (value: string) => {
+        setSelectedRole(value);
+        document.getElementById('apply')?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    // Hardcoded Roster Array (value maps to the application form's role <select>)
     const roles = [
         {
             id: "role-1",
             title: "Promoters",
+            value: "promoter",
             icon: "fa-solid fa-bullhorn",
             desc: "Expand our reach. Bring the energy to the streets and pack the club with your network.",
             cols: "lg:col-span-2",
@@ -50,6 +59,7 @@ export default function CareersClient() {
         {
             id: "role-2",
             title: "Influencers",
+            value: "influencer",
             icon: "fa-solid fa-camera-retro",
             desc: "Shape the culture. Share the vibe and capture the definitive moments of our events online.",
             cols: "lg:col-span-2",
@@ -58,6 +68,7 @@ export default function CareersClient() {
         {
             id: "role-3",
             title: "DJs & Artists",
+            value: "artist",
             icon: "fa-solid fa-compact-disc",
             desc: "Control the rhythm. Bring your unique sound and keep the dancefloor alive until dawn.",
             cols: "lg:col-span-2",
@@ -66,6 +77,7 @@ export default function CareersClient() {
         {
             id: "role-4",
             title: "Live Musicians",
+            value: "musician",
             icon: "fa-solid fa-guitar",
             desc: "Elevate the live experience. Blend classical elements with modern, high-energy club tracks.",
             cols: "lg:col-span-3",
@@ -74,6 +86,7 @@ export default function CareersClient() {
         {
             id: "role-5",
             title: "Vocalists",
+            value: "vocalist",
             icon: "fa-solid fa-microphone-lines",
             desc: "Command the crowd. Deliver powerful performances that act as the centerpiece of our shows.",
             cols: "lg:col-span-3",
@@ -210,15 +223,18 @@ export default function CareersClient() {
                         {roles.map((role) => (
                             <div
                                 key={role.id}
+                                onClick={() => handleRoleSelect(role.value)}
                                 className={`${role.cols} group bg-white/5 border border-white/10 py-6 sm:p-8 md:p-10 flex flex-col min-h-[300px] sm:min-h-[320px] md:min-h-[350px] rounded-lg md:rounded-2xl cursor-pointer transition-all duration-[400ms] ease-custom hover:bg-white/10 hover:border-white/20 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)] fade-up`}
                                 style={{ transitionDelay: role.delay }}
                             >
-                                <div className="w-full h-28 sm:h-32 md:h-40 mb-4 sm:mb-5 md:mb-6 overflow-hidden rounded-lg bg-white/5">
+                                <div className="relative w-full h-28 sm:h-32 md:h-40 mb-4 sm:mb-5 md:mb-6 overflow-hidden rounded-lg bg-white/5">
                                     <MediaSlot
                                         id={role.id}
                                         mediaMap={media}
                                         className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500"
                                     />
+                                    {/* Transparent cover: blocks the media lightbox so the card click drives the action */}
+                                    <div className="absolute inset-0 z-10" aria-hidden="true" />
                                 </div>
                                 <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
                                     <div className="text-base sm:text-lg md:text-2xl text-brand-white transition-colors duration-300 group-hover:text-brand-lime flex-shrink-0">
@@ -330,7 +346,7 @@ export default function CareersClient() {
             </section>
 
             {/* ── APPLICATION FORM SECTION ── */}
-            <section className="py-10 sm:py-12 md:py-16 lg:py-20 px-3 sm:px-4 md:px-6 lg:px-12 bg-[#0f0f10] border-t border-white/10">
+            <section id="apply" className="scroll-mt-24 py-10 sm:py-12 md:py-16 lg:py-20 px-3 sm:px-4 md:px-6 lg:px-12 bg-[#0f0f10] border-t border-white/10">
                 <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-8 sm:gap-10 md:gap-12 lg:gap-16 items-stretch">
 
                     {/* Left Image Reveal */}
@@ -407,7 +423,7 @@ export default function CareersClient() {
 
                                 <div>
                                     <div className="relative">
-                                        <select required defaultValue="" className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-lime text-white appearance-none cursor-pointer pr-6 sm:pr-7 md:pr-8 rounded-none">
+                                        <select required value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)} className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-lime text-white appearance-none cursor-pointer pr-6 sm:pr-7 md:pr-8 rounded-none">
                                             <option className="text-brand-black" value="" disabled>SELECT ROLE *</option>
                                             <option className="text-brand-black" value="promoter">Promoter</option>
                                             <option className="text-brand-black" value="influencer">Influencer</option>

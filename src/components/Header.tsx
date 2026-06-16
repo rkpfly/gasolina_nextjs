@@ -53,13 +53,16 @@ export default function Header() {
           <Link href="/gallery" className="hover:text-brand-lime transition-colors">
             Gallery
           </Link>
-          <Link href="/blogs" className="hover:text-brand-lime transition-colors">
-            Blogs
+          <Link href="/offers" className="hover:text-brand-lime transition-colors">
+            Offers
+          </Link>
+          <Link href="/careers#apply" className="hover:text-brand-lime transition-colors">
+            Party & Earn
           </Link>
         </nav>
 
-        {/* Right cluster: Reserve + hamburger */}
-        <div className="flex items-center gap-4 sm:gap-6 relative z-[60]">
+        {/* Right cluster: Party & Earn + Reserve + hamburger */}
+        <div className="flex items-center gap-3 sm:gap-4 relative z-[60]">
           <Link
             href="/book"
             className={`hidden md:inline-flex items-center bg-brand-lime text-brand-black text-xs font-bold tracking-[0.14em] uppercase px-5 py-2.5 rounded-full hover:bg-brand-black hover:text-white transition-all duration-500 ${revealOnClose}`}
@@ -96,6 +99,7 @@ export default function Header() {
               { label: "Book", href: "/book" },
               { label: "Gallery", href: "/gallery" },
               { label: "Blogs", href: "/blogs" },
+              { label: "Party & Earn", href: "/careers#apply" },
             ].map((item, i) => (
               <Link
                 key={item.label}
