@@ -45,3 +45,6 @@ next-env.d.ts
 
 # design sandbox (local mockups, not shipped)
 /sandbox
+
+# internal docs (not shipped)
+/docs/admin-auth.md

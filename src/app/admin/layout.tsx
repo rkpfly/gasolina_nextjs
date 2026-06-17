@@ -1,6 +1,7 @@
 // app/admin/layout.tsx
 import React from 'react';
 import { AdminSidebar } from './components/AdminSidebar';
+import { LogoutButton } from './components/LogoutButton';
 
 export const metadata = {
   title: 'Admin Panel',
@@ -30,6 +31,7 @@ export default function AdminLayout({
             <span className="flex items-center gap-2 text-sm text-slate-300 px-3 py-1.5 md:px-4 md:py-2 bg-emerald-500/10 rounded-md border border-emerald-500/30">
               <span className="text-emerald-500 text-[10px]">●</span> Live
             </span>
+            <LogoutButton />
           </div>
         </header>
         
