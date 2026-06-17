@@ -18,6 +18,7 @@ const HOME_SLOTS = [
   { id: 'hero-video',  label: '🎬 Hero Video',   description: 'Main background video at the top', folder: 'home' },
   { id: 'cinematic-1', label: '✨ Highlight 1',   description: 'First cinematic showcase',        folder: 'home' },
   { id: 'cinematic-2', label: '✨ Highlight 2',   description: 'Second cinematic showcase',       folder: 'home' },
+  { id: 'newsletter-visual', label: '📰 Newsletter Visual',   description: 'Visual for the newsletter section',       folder: 'home' },
 ];
 
 const MAX_IMAGE_SIZE = 30 * 1024 * 1024;  // 30 MB

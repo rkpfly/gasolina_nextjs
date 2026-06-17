@@ -101,7 +101,7 @@ function TipTapToolbar({ editor }: { editor: ReturnType<typeof useEditor> }) {
       type="button"
       onClick={action}
       className={`px-2 py-1 rounded text-xs font-bold transition-colors ${
-        active ? 'bg-gray-900 text-white' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+        active ? 'bg-gray-100 text-gray-900' : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700'
       }`}
     >
       {label}
@@ -109,20 +109,20 @@ function TipTapToolbar({ editor }: { editor: ReturnType<typeof useEditor> }) {
   );
 
   return (
-    <div className="flex flex-wrap gap-1 p-2 border border-gray-200 rounded-t-lg bg-gray-50">
+    <div className="flex flex-wrap gap-1 p-2 border-b border-gray-800 rounded-t-lg bg-gray-950">
       {btn(() => editor.chain().focus().toggleBold().run(),      'B',  editor.isActive('bold'))}
       {btn(() => editor.chain().focus().toggleItalic().run(),    'I',  editor.isActive('italic'))}
       {btn(() => editor.chain().focus().toggleUnderline().run(), 'U',  editor.isActive('underline'))}
-      <div className="w-px bg-gray-200 mx-1" />
+      <div className="w-px bg-gray-700 mx-1" />
       {btn(() => editor.chain().focus().toggleHeading({ level: 2 }).run(), 'H2', editor.isActive('heading', { level: 2 }))}
       {btn(() => editor.chain().focus().toggleHeading({ level: 3 }).run(), 'H3', editor.isActive('heading', { level: 3 }))}
-      <div className="w-px bg-gray-200 mx-1" />
+      <div className="w-px bg-gray-700 mx-1" />
       {btn(() => editor.chain().focus().toggleBulletList().run(),  '• List',  editor.isActive('bulletList'))}
       {btn(() => editor.chain().focus().toggleOrderedList().run(), '1. List', editor.isActive('orderedList'))}
-      <div className="w-px bg-gray-200 mx-1" />
+      <div className="w-px bg-gray-700 mx-1" />
       {btn(() => editor.chain().focus().toggleBlockquote().run(), '❝', editor.isActive('blockquote'))}
       {btn(() => editor.chain().focus().setHorizontalRule().run(), '─')}
-      <div className="w-px bg-gray-200 mx-1" />
+      <div className="w-px bg-gray-700 mx-1" />
       {btn(() => editor.chain().focus().undo().run(), '↩')}
       {btn(() => editor.chain().focus().redo().run(), '↪')}
     </div>
@@ -182,7 +182,7 @@ function ContactSection({ data, onSaved }: {
               value={form[key] as string}
               onChange={e => set(key, e.target.value)}
               placeholder={placeholder}
-              className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+              className="bg-gray-800 text-gray-100 placeholder-gray-500 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-600"
             />
           </div>
         ))}
@@ -193,7 +193,7 @@ function ContactSection({ data, onSaved }: {
             type="email"
             value={form.email}
             onChange={e => set('email', e.target.value)}
-            className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+            className="bg-gray-800 text-gray-100 placeholder-gray-500 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-600"
           />
         </div>
 
@@ -205,7 +205,7 @@ function ContactSection({ data, onSaved }: {
             max={2099}
             value={form.copy_year}
             onChange={e => set('copy_year', parseInt(e.target.value))}
-            className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 w-32"
+            className="bg-gray-800 text-gray-100 placeholder-gray-500 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-600 w-32"
           />
         </div>
       </div>
@@ -259,22 +259,22 @@ function TerritoriesSection({ data, onSaved }: {
       <h2 className="text-lg font-bold tracking-tight">Territories</h2>
       <p className="text-xs text-gray-500">Toggle a city inactive to hide it from the footer without deleting it.</p>
 
-      <div className="divide-y divide-gray-100 border border-gray-200 rounded-xl overflow-hidden">
+      <div className="divide-y divide-gray-800 border border-gray-800 rounded-xl overflow-hidden">
         {rows.map(row => (
-          <div key={row.id} className="flex flex-col sm:flex-row sm:items-center gap-3 px-4 py-3 bg-white hover:bg-gray-50 transition-colors">
+          <div key={row.id} className="flex flex-col sm:flex-row sm:items-center gap-3 px-4 py-3 bg-gray-900 hover:bg-gray-800/60 transition-colors">
             {/* Order */}
             <input
               type="number"
               value={row.sort_order}
               onChange={e => update(row.id, 'sort_order', parseInt(e.target.value))}
-              className="w-14 border border-gray-200 rounded px-2 py-1 text-xs text-center focus:outline-none focus:ring-1 focus:ring-gray-900"
+              className="w-14 bg-gray-800 text-gray-100 border border-gray-700 rounded px-2 py-1 text-xs text-center focus:outline-none focus:ring-1 focus:ring-pink-600"
             />
 
             {/* City name */}
             <input
               value={row.city}
               onChange={e => update(row.id, 'city', e.target.value)}
-              className="flex-1 border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+              className="flex-1 bg-gray-800 text-gray-100 placeholder-gray-500 border border-gray-700 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-600"
             />
 
             {/* Link */}
@@ -282,7 +282,7 @@ function TerritoriesSection({ data, onSaved }: {
               value={row.href}
               onChange={e => update(row.id, 'href', e.target.value)}
               placeholder="/"
-              className="flex-1 border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900"
+              className="flex-1 bg-gray-800 text-gray-400 placeholder-gray-600 border border-gray-700 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-600"
             />
 
             <div className="flex items-center gap-3 shrink-0">
@@ -292,7 +292,7 @@ function TerritoriesSection({ data, onSaved }: {
                 type="button"
                 onClick={() => save(row)}
                 disabled={saving === row.id}
-                className="px-3 py-1.5 bg-gray-900 text-white text-[10px] font-bold tracking-widest uppercase rounded-lg hover:bg-gray-700 disabled:opacity-50"
+                className="px-3 py-1.5 bg-gray-100 text-gray-900 text-[10px] font-bold tracking-widest uppercase rounded-lg hover:bg-white disabled:opacity-50"
               >
                 {saving === row.id ? '…' : 'Save'}
               </button>
@@ -327,7 +327,7 @@ function TerritoriesSection({ data, onSaved }: {
 //     content: '',
 //     editorProps: {
 //       attributes: {
-//         class: 'prose prose-sm max-w-none p-4 min-h-[320px] focus:outline-none',
+//         class: 'prose prose-sm prose-invert max-w-none p-4 min-h-[320px] focus:outline-none text-gray-100',
 //       },
 //     },
 //   });
@@ -496,21 +496,21 @@ function A4ImageUploader({ initialUrl, onUrlChange, onFileStage }: A4ImageUpload
   const currentPreview = stagedPreview || initialUrl;
 
   return (
-    <div className="md:col-span-2 space-y-3 bg-gray-50 border border-gray-200 rounded-xl p-4">
+    <div className="md:col-span-2 space-y-3 bg-gray-950 border border-gray-800 rounded-xl p-4">
       <div className="flex justify-between items-center">
         <label className="text-xs font-bold tracking-[0.12em] uppercase text-gray-500">
           Side Image (A4 Ratio)
         </label>
-        
+
         {/* File vs URL Toggle */}
-        <div className="flex gap-1 bg-gray-200 rounded-md p-0.5">
+        <div className="flex gap-1 bg-gray-800 rounded-md p-0.5">
           {(['file', 'url'] as UploadMode[]).map((m) => (
             <button
               key={m}
               type="button"
               onClick={() => { setMode(m); clearStaged(); }}
               className={`px-3 py-1 text-xs font-medium rounded transition ${
-                mode === m ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                mode === m ? 'bg-gray-100 text-gray-900 shadow-sm' : 'text-gray-400 hover:text-gray-200'
               }`}
             >
               {m === 'file' ? 'Upload' : 'URL'}
@@ -527,7 +527,7 @@ function A4ImageUploader({ initialUrl, onUrlChange, onFileStage }: A4ImageUpload
               value={initialUrl}
               onChange={(e) => onUrlChange(e.target.value)}
               placeholder="https://..."
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 bg-white"
+              className="w-full border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-600 bg-gray-800 text-gray-100 placeholder-gray-500"
             />
           ) : (
             <>
@@ -541,8 +541,8 @@ function A4ImageUploader({ initialUrl, onUrlChange, onFileStage }: A4ImageUpload
               
               {!stagedFile ? (
                 <div
-                  className={`border-2 border-dashed rounded-lg py-6 px-4 text-center cursor-pointer transition-all bg-white ${
-                    dragging ? 'border-pink-500 bg-pink-50' : 'border-gray-300 hover:border-gray-400'
+                  className={`border-2 border-dashed rounded-lg py-6 px-4 text-center cursor-pointer transition-all bg-gray-900 ${
+                    dragging ? 'border-pink-500 bg-pink-950/40' : 'border-gray-700 hover:border-gray-500'
                   }`}
                   onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
                   onDragLeave={() => setDragging(false)}
@@ -554,17 +554,17 @@ function A4ImageUploader({ initialUrl, onUrlChange, onFileStage }: A4ImageUpload
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <div className="text-2xl mb-2">{dragging ? '📂' : '☁️'}</div>
-                  <p className="text-gray-700 text-sm font-medium mb-1">Browse or drop image</p>
-                  <p className="text-gray-400 text-xs font-mono">Max: 10MB • Recommended: 21:29.7 ratio</p>
+                  <p className="text-gray-200 text-sm font-medium mb-1">Browse or drop image</p>
+                  <p className="text-gray-500 text-xs font-mono">Max: 10MB • Recommended: 21:29.7 ratio</p>
                 </div>
               ) : (
-                <div className="flex items-center gap-3 px-3 py-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                <div className="flex items-center gap-3 px-3 py-4 bg-gray-900 border border-gray-800 rounded-lg shadow-sm">
                   <span className="text-2xl">🖼️</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-gray-900 truncate font-medium">{stagedFile.name}</p>
+                    <p className="text-sm text-gray-100 truncate font-medium">{stagedFile.name}</p>
                     <p className="text-xs text-gray-500 font-mono">{formatBytes(stagedFile.size)}</p>
                   </div>
-                  <button type="button" onClick={clearStaged} className="text-gray-400 hover:text-red-500 transition px-2">✕</button>
+                  <button type="button" onClick={clearStaged} className="text-gray-500 hover:text-red-500 transition px-2">✕</button>
                 </div>
               )}
               {error && <p className="mt-2 text-xs text-red-500 font-medium">{error}</p>}
@@ -575,7 +575,7 @@ function A4ImageUploader({ initialUrl, onUrlChange, onFileStage }: A4ImageUpload
         {/* Live Preview Pane */}
         {currentPreview && (
           <div className="w-full md:w-32 flex-shrink-0">
-             <div className="w-full aspect-[21/29.7] rounded-lg overflow-hidden border border-gray-200 shadow-sm relative bg-gray-100">
+             <div className="w-full aspect-[21/29.7] rounded-lg overflow-hidden border border-gray-800 shadow-sm relative bg-gray-800">
                <img src={currentPreview} alt="Preview" className="absolute inset-0 w-full h-full object-cover" />
              </div>
           </div>
@@ -612,7 +612,7 @@ function LegalSection({ pages, onPagesChange }: {
     content: '',
     editorProps: {
       attributes: {
-        class: 'prose prose-sm max-w-none p-4 min-h-[320px] focus:outline-none',
+        class: 'prose prose-sm prose-invert max-w-none p-4 min-h-[320px] focus:outline-none text-gray-100',
       },
     },
   });
@@ -791,8 +791,8 @@ function LegalSection({ pages, onPagesChange }: {
       )}
 
       {(selected || isCreating) && (
-        <div className="space-y-4 bg-white text-gray-900 p-6 rounded-xl mt-6">
-          <div className="flex items-center justify-between border-b pb-4">
+        <div className="space-y-4 bg-gray-950 text-gray-100 border border-gray-800 p-6 rounded-xl mt-6">
+          <div className="flex items-center justify-between border-b border-gray-800 pb-4">
             <h3 className="text-base font-bold">
               {isCreating ? 'Create New Legal Page' : `Editing: ${selected?.slug}`}
             </h3>
@@ -811,7 +811,7 @@ function LegalSection({ pages, onPagesChange }: {
                   value={slug}
                   onChange={e => setSlug(e.target.value)}
                   placeholder="e.g. refund-policy"
-                  className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+                  className="bg-gray-800 text-gray-100 placeholder-gray-500 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-600"
                 />
               </div>
             )}
@@ -822,7 +822,7 @@ function LegalSection({ pages, onPagesChange }: {
                 value={label}
                 onChange={e => setLabel(e.target.value)}
                 placeholder="e.g. Refund Policy"
-                className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+                className="bg-gray-800 text-gray-100 placeholder-gray-500 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-600"
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -831,7 +831,7 @@ function LegalSection({ pages, onPagesChange }: {
                 value={href}
                 onChange={e => setHref(e.target.value)}
                 placeholder="e.g. /refund-policy"
-                className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+                className="bg-gray-800 text-gray-100 placeholder-gray-500 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-600"
               />
             </div>
             <A4ImageUploader 
@@ -842,7 +842,7 @@ function LegalSection({ pages, onPagesChange }: {
           </div>
 
           {/* TipTap editor */}
-          <div className="border border-gray-200 rounded-xl overflow-hidden bg-white">
+          <div className="border border-gray-800 rounded-xl overflow-hidden bg-gray-900">
             <TipTapToolbar editor={editor} />
             <EditorContent editor={editor} />
           </div>
@@ -890,7 +890,7 @@ export default function AdminFooterPage() {
         </div>
       </div>
 
-      <div className="px-6 md:px-10 py-8 max-w-4xl">
+      <div className="px-6 md:px-10 py-8 max-w-6xl">
         <div className="mb-8">
           <label className="block text-xs font-bold tracking-[0.15em] uppercase text-gray-500 mb-2">
             Editing section

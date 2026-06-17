@@ -32,7 +32,8 @@ export default function SocialsSection({
 }) {
   const [rows, setRows] = useState<Social[]>(data);
   const [saving, setSaving] = useState<number | null>(null);
-  
+  const [deleting, setDeleting] = useState<number | null>(null);
+
   // New State for Creation
   const [isAdding, setIsAdding] = useState(false);
   const [creating, setCreating] = useState(false);
@@ -55,7 +56,7 @@ export default function SocialsSection({
       const res = await fetch('/api/admin/footer', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ section: 'social', id: row.id, href: row.href, is_active: row.is_active }),
+        body: JSON.stringify({ section: 'social', id: row.id, href: row.href, is_active: row.is_active, icon_class: row.icon_class }),
       });
       if (!res.ok) throw new Error();
       onSaved(rows);
@@ -64,6 +65,27 @@ export default function SocialsSection({
       setToast(row.id, 'Error');
     } finally {
       setSaving(null);
+    }
+  };
+
+  // --- Delete Function ---
+  const remove = async (row: Social) => {
+    if (!confirm(`Delete the "${row.platform}" social link? This cannot be undone.`)) return;
+    setDeleting(row.id);
+    try {
+      const res = await fetch('/api/admin/footer', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ section: 'social', id: row.id }),
+      });
+      if (!res.ok) throw new Error();
+      const updatedRows = rows.filter(r => r.id !== row.id);
+      setRows(updatedRows);
+      onSaved(updatedRows);
+    } catch {
+      setToast(row.id, 'Error');
+    } finally {
+      setDeleting(null);
     }
   };
 
@@ -113,27 +135,33 @@ export default function SocialsSection({
         {!isAdding && (
           <button
             onClick={() => setIsAdding(true)}
-            className="px-3 py-1.5 bg-gray-900 text-white text-[10px] font-bold tracking-widest uppercase rounded-lg hover:bg-gray-700 transition-colors"
+            className="px-3 py-1.5 bg-gray-100 text-gray-900 text-[10px] font-bold tracking-widest uppercase rounded-lg hover:bg-white transition-colors"
           >
             + Add Social
           </button>
         )}
       </div>
 
-      <div className="divide-y divide-gray-100 border border-gray-200 rounded-xl overflow-hidden bg-white">
-        
+      <div className="divide-y divide-gray-800 border border-gray-800 rounded-xl overflow-hidden bg-gray-900">
+
         {/* Existing Rows */}
         {(rows ?? []).map(row => (
-          <div key={row.id} className="flex flex-col sm:flex-row sm:items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
-            <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 shrink-0">
+          <div key={row.id} className="flex flex-col sm:flex-row sm:items-center gap-3 px-4 py-3 hover:bg-gray-800/60 transition-colors">
+            <div className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-300 shrink-0">
               <i className={`${row.icon_class} text-base`} />
             </div>
-            <span className="text-sm font-bold text-gray-700 w-24 shrink-0 capitalize">{row.platform}</span>
+            <span className="text-sm font-bold text-gray-200 w-20 shrink-0 capitalize">{row.platform}</span>
+            <input
+              value={row.icon_class}
+              onChange={e => update(row.id, 'icon_class', e.target.value)}
+              placeholder="fa-brands fa-instagram"
+              className="w-full sm:w-52 shrink-0 bg-gray-800 text-gray-100 placeholder-gray-500 border border-gray-700 rounded-lg px-3 py-1.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-pink-600"
+            />
             <input
               value={row.href}
               onChange={e => update(row.id, 'href', e.target.value)}
               placeholder="https://"
-              className="flex-1 border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+              className="flex-1 bg-gray-800 text-gray-100 placeholder-gray-500 border border-gray-700 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-600"
             />
             <div className="flex items-center gap-3 shrink-0">
               <StatusBadge active={row.is_active} />
@@ -142,9 +170,19 @@ export default function SocialsSection({
                 type="button"
                 onClick={() => save(row)}
                 disabled={saving === row.id}
-                className="px-3 py-1.5 bg-gray-900 text-white text-[10px] font-bold tracking-widest uppercase rounded-lg hover:bg-gray-700 disabled:opacity-50 min-w-[60px]"
+                className="px-3 py-1.5 bg-gray-100 text-gray-900 text-[10px] font-bold tracking-widest uppercase rounded-lg hover:bg-white disabled:opacity-50 min-w-[60px]"
               >
                 {saving === row.id ? '…' : 'Save'}
+              </button>
+              <button
+                type="button"
+                onClick={() => remove(row)}
+                disabled={deleting === row.id}
+                aria-label={`Delete ${row.platform}`}
+                title="Delete"
+                className="px-2.5 py-1.5 bg-gray-800 text-gray-400 border border-gray-700 text-xs rounded-lg hover:bg-red-950 hover:text-red-400 hover:border-red-800 disabled:opacity-50 transition-colors"
+              >
+                {deleting === row.id ? '…' : '🗑'}
               </button>
               {toasts[row.id] && (
                 <span className="text-[10px] font-bold text-emerald-600 absolute right-[-50px]">{toasts[row.id]}</span>
@@ -155,34 +193,34 @@ export default function SocialsSection({
 
         {/* New Item Form Row */}
         {isAdding && (
-          <div className="flex flex-col gap-3 px-4 py-4 bg-gray-50 border-t-2 border-dashed border-gray-200">
+          <div className="flex flex-col gap-3 px-4 py-4 bg-gray-950 border-t-2 border-dashed border-gray-800">
             <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Create New Link</p>
-            
+
             <div className="flex flex-col sm:flex-row gap-3">
               <input
                 value={newSocial.platform}
                 onChange={e => setNewSocial(s => ({ ...s, platform: e.target.value }))}
                 placeholder="Platform (e.g. instagram)"
-                className="w-full sm:w-1/4 border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+                className="w-full sm:w-1/4 bg-gray-800 text-gray-100 placeholder-gray-500 border border-gray-700 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-600"
               />
               <input
                 value={newSocial.icon_class}
                 onChange={e => setNewSocial(s => ({ ...s, icon_class: e.target.value }))}
                 placeholder="Icon Class (e.g. fa-brands fa-instagram)"
-                className="w-full sm:w-1/3 border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+                className="w-full sm:w-1/3 bg-gray-800 text-gray-100 placeholder-gray-500 border border-gray-700 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-600"
               />
               <input
                 value={newSocial.href}
                 onChange={e => setNewSocial(s => ({ ...s, href: e.target.value }))}
                 placeholder="https://"
-                className="flex-1 border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+                className="flex-1 bg-gray-800 text-gray-100 placeholder-gray-500 border border-gray-700 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-600"
               />
             </div>
 
             <div className="flex justify-end items-center gap-3 mt-2">
               <button
                 onClick={() => setIsAdding(false)}
-                className="px-3 py-1.5 text-[10px] font-bold tracking-widest uppercase text-gray-500 hover:text-gray-900"
+                className="px-3 py-1.5 text-[10px] font-bold tracking-widest uppercase text-gray-400 hover:text-white"
               >
                 Cancel
               </button>

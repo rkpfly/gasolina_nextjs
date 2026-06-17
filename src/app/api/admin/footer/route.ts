@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { query } from '@/lib/database/db'; // Update to your DB utility path
 
 // GET: Fetch all initial data for the admin footer page
@@ -41,6 +42,10 @@ export async function PATCH(request: NextRequest) {
     if (!section) {
       return NextResponse.json({ error: 'Section is required' }, { status: 400 });
     }
+
+    // Footer renders in the root layout, so purge the whole layout's cache
+    // to surface this edit on the next request.
+    revalidatePath('/', 'layout');
 
     if (section === 'contact') {
       const sql = `
@@ -87,11 +92,11 @@ export async function PATCH(request: NextRequest) {
 
     if (section === 'social') {
       const sql = `
-        UPDATE "FooterSocials" 
-        SET href = $1, is_active = $2, updated_at = CURRENT_TIMESTAMP
-        WHERE id = $3 RETURNING *
+        UPDATE "FooterSocials"
+        SET href = $1, is_active = $2, icon_class = $3, updated_at = CURRENT_TIMESTAMP
+        WHERE id = $4 RETURNING *
       `;
-      const values = [data.href, data.is_active, data.id];
+      const values = [data.href, data.is_active, data.icon_class, data.id];
       const result = await query(sql, values);
       return NextResponse.json(result.rows[0]);
     }
@@ -108,6 +113,10 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
 
+    // Footer renders in the root layout, so purge the whole layout's cache
+    // to surface this new entry on the next request.
+    revalidatePath('/', 'layout');
+
     if (data.section === 'legal') {
       const sql = `
         INSERT INTO "FooterLegal" (slug, label, href, content, is_active, image_url)
@@ -117,14 +126,57 @@ export async function POST(req: NextRequest) {
       const values = [data.slug, data.label, data.href, data.content, data.is_active, data.image_url];
       
       // Execute your query here (adjust based on how you call your DB)
-      const result = await query(sql, values); 
-      
+      const result = await query(sql, values);
+
       return NextResponse.json({ success: true, id: result.rows[0].id });
+    }
+
+    if (data.section === 'social') {
+      const sql = `
+        INSERT INTO "FooterSocials" (platform, label, href, icon_class, is_active, sort_order)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING *;
+      `;
+      const values = [
+        data.platform,
+        data.label,
+        data.href,
+        data.icon_class,
+        data.is_active ?? true,
+        data.sort_order ?? 0,
+      ];
+
+      const result = await query(sql, values);
+
+      return NextResponse.json({ success: true, data: result.rows[0] });
     }
 
     return NextResponse.json({ error: 'Invalid section' }, { status: 400 });
   } catch (error) {
     console.error('POST Error:', error);
     return NextResponse.json({ error: 'Failed to create' }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const { section, id } = await req.json();
+
+    if (!section || !id) {
+      return NextResponse.json({ error: 'Section and id are required' }, { status: 400 });
+    }
+
+    // Footer renders in the root layout, so purge the whole layout's cache.
+    revalidatePath('/', 'layout');
+
+    if (section === 'social') {
+      await query(`DELETE FROM "FooterSocials" WHERE id = $1`, [id]);
+      return NextResponse.json({ success: true });
+    }
+
+    return NextResponse.json({ error: 'Invalid section' }, { status: 400 });
+  } catch (error) {
+    console.error('[DELETE /api/admin/footer]', error);
+    return NextResponse.json({ error: 'Failed to delete' }, { status: 500 });
   }
 }
