@@ -1,23 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import QRCode from 'qrcode';
 import { ALLOWED_CITIES, type CheckinCity } from '@/app/checkin/cities';
 
+// Fixed production origin for the public check-in links.
+const BASE_URL = 'https://damiclub.com.au';
+
 export default function CheckinQrPage() {
-  // Base origin for the public check-in links. Pre-filled from the configured
-  // app URL (or the current origin) and editable in case you want prod links
-  // while developing locally.
-  const [base, setBase] = useState('');
   const [qr, setQr] = useState<Record<string, string>>({});
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    const fromEnv = process.env.NEXT_PUBLIC_APP_URL;
-    setBase((fromEnv || window.location.origin).replace(/\/$/, ''));
-  }, []);
-
-  const linkFor = (city: CheckinCity) => `${base}/checkin?place=${encodeURIComponent(city)}`;
+  const linkFor = (city: CheckinCity) => `${BASE_URL}/checkin?place=${encodeURIComponent(city)}`;
 
   const generate = async (city: CheckinCity) => {
     setError('');
@@ -48,26 +42,23 @@ export default function CheckinQrPage() {
         </p>
       </div>
 
-      {/* Base URL control */}
-      <label className="mb-6 block">
-        <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
-          Base URL
-        </span>
-        <div className="flex flex-wrap items-center gap-3">
-          <input
-            value={base}
-            onChange={(e) => setBase(e.target.value.replace(/\/$/, ''))}
-            placeholder="https://damiclub.com"
-            className="flex-1 min-w-[240px] rounded-md border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-100 focus:border-blue-500 focus:outline-none"
-          />
-          <button
-            onClick={generateAll}
-            className="rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-600"
-          >
-            Generate all
-          </button>
+      {/* Fixed base URL + generate-all action */}
+      <div className="mb-6 flex flex-wrap items-center gap-3">
+        <div className="flex-1 min-w-60">
+          <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+            Base URL
+          </span>
+          <code className="block rounded-md border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-300">
+            {BASE_URL}
+          </code>
         </div>
-      </label>
+        <button
+          onClick={generateAll}
+          className="self-end rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-600"
+        >
+          Generate all
+        </button>
+      </div>
 
       {error && (
         <div className="mb-4 rounded-md border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm text-red-300">
