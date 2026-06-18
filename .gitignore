@@ -47,4 +47,4 @@ next-env.d.ts
 /sandbox
 
 # internal docs (not shipped)
-/docs/admin-auth.md
+/docs/

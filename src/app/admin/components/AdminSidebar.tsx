@@ -15,6 +15,7 @@ const MENU_ITEMS = [
   { label: 'Manage Offers', href: '/admin/offers', icon: '🎁' },
   { label: 'Manage Cities', href: '/admin/city', icon: '🌆' },
   { label: 'SEO Pages', href: '/admin/seo', icon: '🔍' },
+  { label: 'Check-in QR', href: '/admin/checkin', icon: '📲' },
   { label: 'Page Sections', href: '/admin/pages/sections', icon: '📚' },
   { label: 'Themes', href: '/admin/themes', icon: '🎨' },
 ];

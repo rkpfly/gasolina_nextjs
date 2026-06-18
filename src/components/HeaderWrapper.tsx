@@ -6,9 +6,10 @@ import Header from "./Header";
 export default function HeaderWrapper() {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
+  const isCheckin = pathname.startsWith("/checkin");
 
-  // If we are on an admin page, don't render the header at all
-  if (isAdmin) return null;
+  // Admin and the kiosk check-in flow render without the public header.
+  if (isAdmin || isCheckin) return null;
 
   // Otherwise, render the normal Header
   return <Header />;
