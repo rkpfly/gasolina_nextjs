@@ -1,7 +1,10 @@
 import { Metadata } from "next";
-import { getPageMetadata, getSectionsForPage } from "@/lib/database/db"; 
-import LeadForm from "@/components/LeadForm"; 
+import { getPageMetadata, getSectionsForPage, getActiveOffers } from "@/lib/database/db";
+import LeadForm from "@/components/LeadForm";
 import OffersClient from "./OffersClient";
+
+// Refresh the offers listing at most once a minute (ISR).
+export const revalidate = 60;
 
 // 1. Generate Metadata dynamically from your SEO DB
 export async function generateMetadata(): Promise<Metadata> {
@@ -12,21 +15,16 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function OffersPage() {
   // 2. Fetch layout sections from the database via your fixed map
   const sections = await getSectionsForPage("offers");
-  
+
   const preOffersSection = sections.find((s) => s.section_id === "pre-offers-section");
   const postOffersSection = sections.find((s) => s.section_id === "post-offers-section");
 
-  // 3. Fetch the initial lightweight offers server-side
-  // Adjust this absolute URL based on your environment if needed
+  // 3. Read active offers straight from the DB (same source as GET /api/offers).
+  // This keeps the listing in step with the database instead of depending on a
+  // self-referential HTTP fetch that can be cached empty at build time.
   let initialOffers = [];
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/offers`, { 
-      next: { revalidate: 60 } // Optional: caches the offers for 60s
-    });
-    if (res.ok) {
-      initialOffers = await res.json();
-      console.log("Fetched initial offers:", initialOffers);
-    }
+    initialOffers = await getActiveOffers();
   } catch (error) {
     console.error("Failed to fetch initial offers:", error);
   }

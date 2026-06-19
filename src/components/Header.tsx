@@ -56,6 +56,12 @@ export default function Header() {
           <Link href="/offers" className="hover:text-brand-lime transition-colors">
             Offers
           </Link>
+          <Link href="/offers/birthday" className="hover:text-brand-lime transition-colors">
+            Birthday
+          </Link>
+          <Link href="/offers/hens" className="hover:text-brand-lime transition-colors">
+            Hens
+          </Link>
           <Link href="/careers#apply" className="hover:text-brand-lime transition-colors">
             Party & Earn
           </Link>
@@ -99,7 +105,7 @@ export default function Header() {
               { label: "Book", href: "/book" },
               { label: "Gallery", href: "/gallery" },
               { label: "Blogs", href: "/blogs" },
-              { label: "Party & Earn", href: "/careers#apply" },
+              // { label: "Party & Earn", href: "/careers#apply" },
             ].map((item, i) => (
               <Link
                 key={item.label}
@@ -119,11 +125,13 @@ export default function Header() {
             </span>
             {[
               { label: "Offers", href: "/offers", delay: "0.3s" },
-              { label: "Private Events", href: "/private-events", delay: "0.35s" },
-              { label: "VIP Reservations", href: "/vip", delay: "0.4s" },
-              { label: "Corporate Galas", href: "/corporate", delay: "0.45s" },
-              { label: "Careers", href: "/careers", delay: "0.5s" },
-              { label: "Contact Us", href: "/contact", delay: "0.55s" },
+              { label: "Birthday", href: "/offers/birthday", delay: "0.35s" },
+              { label: "Hens", href: "/offers/hens", delay: "0.4s" },
+              { label: "Private Events", href: "/private-events", delay: "0.45s" },
+              { label: "VIP Reservations", href: "/vip", delay: "0.5s" },
+              { label: "Corporate Galas", href: "/corporate", delay: "0.55s" },
+              { label: "Careers", href: "/careers", delay: "0.6s" },
+              { label: "Contact Us", href: "/contact", delay: "0.65s" },
             ].map((item) => (
               <Link
                 key={item.label}

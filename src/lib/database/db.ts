@@ -481,14 +481,30 @@ export async function getSectionsForPage(slug: string) {
 
 export async function getOfferBySlug(slug: string) {
   const result = await query(`
-    SELECT 
-      id, slug, offer_title, short_description, thumbnail_url, 
-      category, expiry_date, description, how_to_redeem, 
+    SELECT
+      id, slug, offer_title, short_description, thumbnail_url,
+      category, expiry_date, description, how_to_redeem,
       terms_and_conditions, offer_code, offer_type, seo
     FROM offers
     WHERE slug = $1
   `, [slug]);
   return result.rows[0];
+}
+
+// Active offers for the public /offers listing. Mirrors GET /api/offers so the
+// page can read the DB directly instead of HTTP-fetching its own API.
+export async function getActiveOffers() {
+  const result = await query(`
+    SELECT
+      id, slug, offer_title, short_description, thumbnail_url, category, expiry_date
+    FROM offers
+    WHERE is_active = TRUE
+    ORDER BY
+      is_featured DESC,
+      priority DESC,
+      created_at DESC
+  `);
+  return result.rows;
 }
 
 // ============================================
