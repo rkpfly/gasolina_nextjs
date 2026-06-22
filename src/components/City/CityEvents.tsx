@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { EventCard } from "@/components/Events/EventCard";
 import VipModal from "@/components/Events/VIPModal";
+import { EqLoader } from "@/components/Loader";
 
 // Updated to match your exact API response structure
 interface EventData {
@@ -91,7 +92,7 @@ export default function CityEvents({ cityName }: { cityName: string }) {
     fetchCityEvents();
   }, [cityName]);
 
-  if (loading) return <div className="py-12 text-center text-brand-gray tracking-widest uppercase text-sm font-bold">Loading Events...</div>;
+  if (loading) return <div className="py-12 flex items-center justify-center gap-2 text-brand-gray tracking-widest uppercase text-sm font-bold"><EqLoader tone="black" bars={4} /> Loading Events...</div>;
   if (error) return null; 
   if (events.length === 0) return null; 
 
@@ -121,7 +122,7 @@ export default function CityEvents({ cityName }: { cityName: string }) {
             <div className="flex-1 relative bg-brand-offwhite">
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="flex flex-col items-center gap-3 text-brand-gray">
-                  <div className="w-8 h-8 border-2 border-brand-gray/30 border-t-brand-black rounded-full animate-spin" />
+                  <EqLoader tone="black" bars={4} />
                   <span className="text-[10px] font-bold tracking-[0.2em] uppercase">Loading</span>
                 </div>
               </div>

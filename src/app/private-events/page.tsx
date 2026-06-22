@@ -16,7 +16,7 @@ const OCCASIONS = [
   {
     num: "01",
     title: "Birthdays",
-    desc: "Turn your night into the main event. Private booths, bottle service, and a floor that plays your sound — Nepali bangers, R&B and hip hop.",
+    desc: "Turn your night into the main event. Private booths, bottle service, and a floor that plays your sound — club bangers, R&B and hip hop.",
   },
   {
     num: "02",
@@ -38,7 +38,7 @@ const OCCASIONS = [
 const INCLUSIONS = [
   "Dedicated event host & coordinator",
   "Private booth or roped-off section",
-  "Custom playlist — Nepali · R&B · Hip Hop",
+  "Custom playlist — Club · R&B · Hip Hop",
   "Premium bar & bottle packages",
   "In-house photographer on request",
   "Priority entry for your guest list",
@@ -58,14 +58,14 @@ export default function PrivateEventsPage() {
       <section className="relative min-h-screen w-full flex flex-col justify-end bg-brand-black overflow-hidden px-4 sm:px-6 md:px-12 pt-28 md:pt-32 pb-10 md:pb-16">
         {/* Ambient glow + grain */}
         <div className="pointer-events-none absolute inset-0 z-0">
-          <div className="absolute -top-1/4 right-0 w-[60vw] h-[60vw] max-w-[700px] max-h-[700px] rounded-full bg-brand-lime/10 blur-[120px]" />
+          <div className="absolute -top-1/4 right-0 w-[60vw] h-[60vw] max-w-[700px] max-h-[700px] rounded-full bg-brand-blue/10 blur-[120px]" />
         </div>
         <div
           className="pointer-events-none absolute inset-0 z-0 opacity-[0.06] mix-blend-overlay"
           style={{ backgroundImage: GRAIN }}
         />
 
-        <span className="relative z-10 self-start bg-brand-lime text-brand-black font-bold uppercase tracking-[0.18em] text-[10px] sm:text-xs md:text-sm px-4 py-2">
+        <span className="relative z-10 self-start bg-brand-blue text-brand-white font-bold uppercase tracking-[0.18em] text-[10px] sm:text-xs md:text-sm px-4 py-2">
           Private Hire · The Loft, Crown
         </span>
 
@@ -85,9 +85,9 @@ export default function PrivateEventsPage() {
           <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
             <Link
               href="#inquire"
-              className="bg-brand-lime text-brand-black px-8 md:px-10 py-4 rounded-full text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-center hover:bg-brand-white transition-colors duration-300 w-full sm:w-auto"
+              className="btn-glow bg-brand-blue text-brand-white px-8 md:px-10 py-4 rounded-full text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-center hover:bg-brand-white hover:text-brand-black transition-colors duration-300 w-full sm:w-auto"
             >
-              Plan Your Event
+              <span>Plan Your Event</span>
             </Link>
             <Link
               href="#occasions"
@@ -110,7 +110,7 @@ export default function PrivateEventsPage() {
           <FadeUp delay={120}>
             <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[1.02] text-[7vw] md:text-[4.4vw] max-w-[20ch]">
               A room built for the night you&apos;ve been{" "}
-              <span className="bg-brand-lime px-1.5">planning</span> in your head.
+              <span className="bg-brand-blue text-brand-white px-1.5">planning</span> in your head.
             </h2>
           </FadeUp>
           <FadeUp delay={200}>
@@ -118,7 +118,7 @@ export default function PrivateEventsPage() {
               Whether it&apos;s twenty close friends or a full venue takeover, our
               team handles the booth, the bar and the playlist so you can stay on
               the floor. One point of contact, premium service, and a sound
-              system tuned for Nepali, R&amp;B and hip hop.
+              system tuned for club, R&amp;B and hip hop.
             </p>
           </FadeUp>
         </div>
@@ -131,7 +131,7 @@ export default function PrivateEventsPage() {
       >
         <div className="max-w-[1600px] mx-auto w-full">
           <FadeUp>
-            <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-lime mb-3">
+            <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-blue mb-3">
               (02) — Occasions
             </p>
             <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-4xl md:text-6xl mb-12 md:mb-16">
@@ -146,7 +146,7 @@ export default function PrivateEventsPage() {
                 delay={i * 90}
                 className="group bg-brand-black p-8 md:p-10 hover:bg-[#121214] transition-colors duration-500"
               >
-                <span className="block text-3xl md:text-4xl font-display font-bold text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.3)] group-hover:[-webkit-text-stroke:1px_#C8F23C] transition-all duration-300 mb-6">
+                <span className="block text-3xl md:text-4xl font-display font-bold text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.3)] group-hover:[-webkit-text-stroke:1px_#3E6FF5] transition-all duration-300 mb-6">
                   {o.num}
                 </span>
                 <h3 className="text-xl md:text-2xl font-display font-bold uppercase tracking-tighter text-brand-white mb-3">
@@ -165,7 +165,7 @@ export default function PrivateEventsPage() {
       <section className="bg-[#0f0f10] text-brand-white px-4 sm:px-6 md:px-12 py-20 md:py-28">
         <div className="max-w-[1600px] mx-auto w-full grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-12 lg:gap-20">
           <FadeUp>
-            <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-lime mb-3">
+            <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-blue mb-3">
               (03) — The Package
             </p>
             <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-4xl md:text-6xl mb-10">
@@ -177,7 +177,7 @@ export default function PrivateEventsPage() {
                   key={item}
                   className="flex items-start gap-3 text-sm md:text-base text-brand-offwhite/85 font-medium border-b border-white/10 pb-5"
                 >
-                  <span className="mt-1.5 w-2 h-2 rounded-full bg-brand-lime shrink-0" />
+                  <span className="mt-1.5 w-2 h-2 rounded-full bg-brand-blue shrink-0" />
                   {item}
                 </li>
               ))}
@@ -186,8 +186,8 @@ export default function PrivateEventsPage() {
 
           <FadeUp delay={150}>
             <div className="relative border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent p-8 h-full">
-              <span className="absolute top-0 left-0 w-full h-1 bg-brand-lime" />
-              <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-brand-lime mb-6">
+              <span className="absolute top-0 left-0 w-full h-1 bg-brand-blue" />
+              <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-brand-blue mb-6">
                 The Details
               </p>
               {DETAILS.map(([label, value]) => (
@@ -205,9 +205,9 @@ export default function PrivateEventsPage() {
               ))}
               <Link
                 href="#inquire"
-                className="mt-6 block bg-brand-lime text-brand-black text-center py-4 text-xs font-bold tracking-[0.16em] uppercase hover:bg-brand-white transition-colors"
+                className="btn-glow mt-6 block bg-brand-blue text-brand-white text-center py-4 text-xs font-bold tracking-[0.16em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
               >
-                Check Availability
+                <span>Check Availability</span>
               </Link>
             </div>
           </FadeUp>

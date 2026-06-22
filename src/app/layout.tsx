@@ -36,7 +36,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} ${syne.variable} font-sans selection:bg-brand-black selection:text-white bg-white text-brand-black antialiased`}
+        className={`${inter.variable} ${syne.variable} font-sans selection:bg-brand-blue selection:text-brand-white bg-white text-brand-black antialiased`}
       >
         {/* The Client Wrapper handles the logic of showing/hiding the header */}
         <HeaderWrapper />

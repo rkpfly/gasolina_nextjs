@@ -109,19 +109,19 @@ export default function HomePage() {
         />
 
         {/* Kicker banner (top) */}
-        <span className="relative z-10 self-start bg-brand-lime text-brand-black font-bold uppercase tracking-[0.18em] text-[10px] sm:text-xs md:text-sm px-4 py-2">
-          A New Nepali Clubbing Era Begins
+        <span className="relative z-10 self-start bg-brand-blue text-brand-white font-bold uppercase tracking-[0.18em] text-[10px] sm:text-xs md:text-sm px-4 py-2 glow-blue">
+          A New Clubbing Era Begins
         </span>
 
         {/* Title block (bottom) */}
         <FadeUp className="relative z-10 mt-auto w-full max-w-[1600px] mx-auto">
-          <h1 className="font-display font-extrabold uppercase tracking-tighter text-brand-white leading-[0.82] text-[22vw] sm:text-[17vw] md:text-[13vw] lg:text-[12rem]">
-            Dami<br />Club
+          <h1 className="font-display font-extrabold uppercase tracking-tighter text-brand-white leading-[0.82] text-[14vw] sm:text-[11vw] md:text-[9vw] lg:text-[8rem]">
+            LOUDER.<br />EVERY SATURDAY
           </h1>
           <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
-            {["Nepali Bangers", "R&B", "Hip Hop"].map((g, i) => (
+            {["Club Bangers", "R&B", "Hip Hop"].map((g, i) => (
               <span key={g} className="flex items-center gap-5">
-                {i > 0 && <span className="w-1.5 h-1.5 rounded-full bg-brand-lime" />}
+                {i > 0 && <span className={`w-1.5 h-1.5 rounded-full ${i === 1 ? "bg-brand-accent" : "bg-brand-lime"}`} />}
                 <span className="text-[11px] sm:text-sm font-semibold tracking-[0.22em] uppercase text-brand-offwhite">
                   {g}
                 </span>
@@ -132,9 +132,9 @@ export default function HomePage() {
           <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
             <button
               onClick={() => setVipModal(true)}
-              className="bg-brand-lime text-brand-black px-8 md:px-10 py-4 rounded-full text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-center cursor-pointer hover:bg-brand-white transition-colors duration-300 w-full sm:w-auto"
+              className="btn-glow glow-on-blue bg-brand-blue text-brand-white px-8 md:px-10 py-4 rounded-full text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-center cursor-pointer hover:bg-brand-white hover:text-brand-black transition-colors duration-300 w-full sm:w-auto"
             >
-              Reserve VIP
+              <span>Reserve VIP</span>
             </button>
             <Link
               href="#residency"
@@ -147,10 +147,10 @@ export default function HomePage() {
       </section>
 
       {/* ════════════════ MARQUEE ════════════════ */}
-      <div className="bg-brand-lime border-y border-brand-black overflow-hidden whitespace-nowrap">
+      <div className="bg-brand-blue border-y border-brand-black overflow-hidden whitespace-nowrap">
         <div className="flex w-max animate-marquee">
           {[0, 1, 2].map((g) => (
-            <div key={g} className="flex items-center gap-8 py-3 pr-8 text-brand-black">
+            <div key={g} className="flex items-center gap-8 py-3 pr-8 text-brand-white">
               <MarqueeSet />
             </div>
           ))}
@@ -168,8 +168,8 @@ export default function HomePage() {
           <FadeUp delay={120}>
             <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[1.02] text-[7vw] md:text-[4.6vw] max-w-[18ch]">
               Melbourne&apos;s home for{" "}
-              <span className="bg-brand-lime px-1.5">Nepali</span> sound, late
-              nights &amp; the diaspora that runs it.
+              <span className="bg-brand-blue text-brand-white px-1.5">louder</span> nights,
+              big sound &amp; the crowd that runs it.
             </h2>
           </FadeUp>
           <FadeUp delay={200}>
@@ -177,7 +177,7 @@ export default function HomePage() {
               {[
                 ["Residency", "Weekly"],
                 ["Floor", "L3 Nightclubs"],
-                ["Sound", "Nepali · R&B · Hip Hop"],
+                ["Sound", "Club · R&B · Hip Hop"],
                 ["City", "Melbourne"],
               ].map(([k, v]) => (
                 <div key={k}>
@@ -201,7 +201,7 @@ export default function HomePage() {
       >
         <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center">
           <FadeUp>
-            <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-lime mb-6">
+            <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-blue mb-6">
               (02) — The Residency
             </p>
             <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-[16vw] md:text-[7rem] mb-6">
@@ -213,13 +213,13 @@ export default function HomePage() {
             </h2>
             <p className="text-brand-gray leading-relaxed max-w-[44ch] text-sm md:text-base">
               {featured?.short_description ??
-                "One night, every week. A curated floor of Nepali bangers cut with R&B and hip hop — built for the people who never had a room of their own. Reserve a table or walk the door."}
+                "One night, every week. A curated floor of club bangers cut with R&B and hip hop — built for the people who live for the night. Reserve a table or walk the door."}
             </p>
           </FadeUp>
 
           <FadeUp delay={150}>
             <div className="relative border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent p-8">
-              <span className="absolute top-0 left-0 w-full h-1 bg-brand-lime" />
+              <span className="absolute top-0 left-0 w-full h-1 bg-brand-blue" />
               {[
                 ["Event", featured?.title ?? "Dami Club", false],
                 ["When", "Every Friday · 10PM", true],
@@ -236,7 +236,7 @@ export default function HomePage() {
                   </span>
                   <span
                     className={`font-display font-bold uppercase tracking-tight text-right text-base md:text-lg ${
-                      accent ? "text-brand-lime" : "text-brand-white"
+                      accent ? "text-brand-blue" : "text-brand-white"
                     }`}
                   >
                     {value}
@@ -246,9 +246,9 @@ export default function HomePage() {
               <div className="mt-6 flex flex-col sm:flex-row gap-3">
                 <Link
                   href="/book"
-                  className="flex-1 bg-brand-lime text-brand-black text-center py-4 text-xs font-bold tracking-[0.16em] uppercase hover:bg-brand-white transition-colors"
+                  className="btn-glow glow-on-blue flex-1 bg-brand-blue text-brand-white text-center py-4 text-xs font-bold tracking-[0.16em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
                 >
-                  Book Tickets
+                  <span>Book Tickets</span>
                 </Link>
                 <button
                   onClick={() => setVipModal(true)}
@@ -267,7 +267,7 @@ export default function HomePage() {
         <div className="max-w-[1600px] mx-auto w-full">
           <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-10">
             <div>
-              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-lime mb-3">
+              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-blue mb-3">
                 (03) — The Nights
               </p>
               <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-5xl md:text-7xl">
@@ -276,9 +276,9 @@ export default function HomePage() {
             </div>
             <Link
               href="/gallery"
-              className="bg-brand-lime text-brand-black px-6 py-3 rounded-full text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white transition-colors"
+              className="btn-glow glow-on-blue bg-brand-blue text-brand-white px-6 py-3 rounded-full text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
             >
-              Full Gallery →
+              <span>Full Gallery →</span>
             </Link>
           </FadeUp>
 
@@ -352,11 +352,11 @@ export default function HomePage() {
       </section> */}
       <section 
         ref={sectionRef} 
-        className="relative min-h-screen flex flex-col items-center justify-center text-center text-brand-black snap-start px-4 py-20 overflow-hidden"
+        className="relative min-h-screen flex flex-col items-center justify-center text-center text-brand-white snap-start px-4 py-20 overflow-hidden"
       >
         
         {/* Background Video Layer */}
-        <motion.video
+        {/* <motion.video
           autoPlay
           loop
           muted
@@ -367,17 +367,17 @@ export default function HomePage() {
           className="absolute inset-0 w-full h-full object-cover -z-20"
         >
           <source src="/bg-animate-home.mp4" type="video/mp4" />
-        </motion.video>
+        </motion.video> */}
 
         {/* Dynamic Opacity Color Overlay Layer */}
-        <motion.div 
-          style={{ opacity: overlayOpacity }} // Opacity controlled by scroll
-          className="absolute inset-0 bg-brand-lime -z-10 pointer-events-none"
-        ></motion.div>
+          <motion.div 
+            style={{ opacity: overlayOpacity }} // Opacity controlled by scroll
+            className="absolute inset-0 bg-brand-blue -z-10 pointer-events-none"
+          ></motion.div>
 
         {/* Foreground Content */}
         <FadeUp className="relative z-10 flex flex-col items-center">
-          <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-black/60 mb-6">
+          <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-white/70 mb-6">
             Doors open every Friday
           </p>
           <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.84] text-[14vw] md:text-[10rem]">

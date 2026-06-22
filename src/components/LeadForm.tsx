@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { CountryCodePicker } from './CountryCodePicker';
+import { EqLoader } from './Loader';
 
 // Define the available fields as a type for strict checking
 export type FormField =
@@ -73,7 +74,7 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
   };
 
   const inputClass = `w-full bg-transparent text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase placeholder-brand-gray focus:outline-none ${dark ? 'text-white' : 'text-brand-black'}`;
-  const wrapperClass = `pb-2 border-b ${dark ? 'border-white/30' : 'border-brand-black'}`;
+  const wrapperClass = `pb-2 border-b transition-colors duration-300 ${dark ? 'border-white/30 focus-within:border-brand-blue' : 'border-brand-black focus-within:border-brand-blue'}`;
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-6 md:gap-8">
@@ -186,9 +187,11 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
         <button
           type="submit"
           disabled={formStatus === 'loading'}
-          className="w-full py-3 sm:py-4 md:py-5 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase mt-2 sm:mt-4 rounded-full bg-brand-lime text-brand-black hover:bg-brand-white transition-colors duration-300 disabled:opacity-50"
+          className="btn-glow w-full py-3 sm:py-4 md:py-5 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase mt-2 sm:mt-4 rounded-full bg-brand-blue text-brand-white hover:bg-brand-white hover:text-brand-black transition-colors duration-300 disabled:opacity-50 disabled:hover:translate-y-0"
         >
-          {formStatus === 'loading' ? 'Submitting...' : buttonText}
+          <span className="flex items-center justify-center gap-2">
+            {formStatus === 'loading' ? (<><EqLoader tone="white" bars={4} /> Submitting</>) : buttonText}
+          </span>
         </button>
       ) : (
         <button
@@ -196,7 +199,9 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
           disabled={formStatus === 'loading'}
           className="btn-monumental w-full py-3 sm:py-4 md:py-5 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase mt-2 sm:mt-4 disabled:opacity-50"
         >
-          <span>{formStatus === 'loading' ? 'Submitting...' : buttonText}</span>
+          <span className="flex items-center justify-center gap-2">
+            {formStatus === 'loading' ? (<><EqLoader tone="white" bars={4} /> Submitting</>) : buttonText}
+          </span>
         </button>
       )}
     </form>

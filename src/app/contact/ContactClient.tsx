@@ -91,7 +91,7 @@ export default function ContactClient() {
     const faqTitle = formatTitle(faqs?.title || 'FAQ Quick Answers');
 
     return (
-        <main className="w-full bg-brand-black text-brand-white selection:bg-brand-lime selection:text-brand-black">
+        <main className="w-full bg-brand-black text-brand-white selection:bg-brand-blue selection:text-brand-white">
 
             {/* ── HERO SECTION ── */}
             <section className="relative w-full px-3 sm:px-4 md:px-6 lg:px-8 pt-20 sm:pt-24 md:pt-28 pb-6 sm:pb-8 md:pb-12 flex flex-col">
@@ -125,7 +125,7 @@ export default function ContactClient() {
                     <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 md:p-12 lg:p-20 z-20">
                         <div className="fade-up max-w-4xl">
                             <div className="flex flex-wrap gap-2 sm:gap-3 mb-3 sm:mb-4 md:mb-6 lg:mb-8">
-                                <span className="inline-block text-[8px] sm:text-[9px] md:text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black bg-brand-lime px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full shadow-lg">
+                                <span className="inline-block text-[8px] sm:text-[9px] md:text-[10px] font-bold tracking-[0.2em] uppercase text-brand-white bg-brand-blue px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full shadow-lg">
                                     Support & Inquiries
                                 </span>
                             </div>
@@ -137,7 +137,7 @@ export default function ContactClient() {
                                 </span>
                             </h1>
 
-                            <p className="mt-3 md:mt-4 text-brand-white/80 text-[10px] sm:text-xs md:text-sm lg:text-base font-medium max-w-lg leading-relaxed border-l-2 border-brand-lime pl-3 md:pl-4">
+                            <p className="mt-3 md:mt-4 text-brand-white/80 text-[10px] sm:text-xs md:text-sm lg:text-base font-medium max-w-lg leading-relaxed border-l-2 border-brand-blue pl-3 md:pl-4">
                                 {hero?.content}
                             </p>
                         </div>
@@ -154,7 +154,7 @@ export default function ContactClient() {
                         <div className="lg:sticky lg:top-32">
                             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-extrabold tracking-tighter uppercase leading-[0.9] text-brand-white mb-3 sm:mb-4 md:mb-6">
                                 {contactTitle.main} <br />
-                                <span className="text-transparent [-webkit-text-stroke:1px_#FFFFFF] hover:text-brand-lime hover:[-webkit-text-stroke:0px] transition-all duration-400 cursor-default">
+                                <span className="text-transparent [-webkit-text-stroke:1px_#FFFFFF] hover:text-brand-blue hover:[-webkit-text-stroke:0px] transition-all duration-400 cursor-default">
                                     {contactTitle.last}
                                 </span>
                             </h2>
@@ -168,7 +168,7 @@ export default function ContactClient() {
                                         key={i}
                                         className="group bg-white/5 border border-white/10 p-4 sm:p-5 md:p-6 lg:p-8 rounded-xl md:rounded-2xl flex items-start gap-3 sm:gap-4 md:gap-5 lg:gap-6 cursor-pointer transition-all duration-[400ms] ease-custom hover:bg-white/10 hover:border-white/20 hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
                                     >
-                                        <div className="text-base sm:text-lg md:text-xl lg:text-2xl text-brand-white mt-0.5 sm:mt-1 transition-colors duration-300 group-hover:text-brand-lime flex-shrink-0">
+                                        <div className="text-base sm:text-lg md:text-xl lg:text-2xl text-brand-white mt-0.5 sm:mt-1 transition-colors duration-300 group-hover:text-brand-blue flex-shrink-0">
                                             <i className={info.icon}></i>
                                         </div>
                                         <div className="min-w-0">
@@ -218,7 +218,7 @@ export default function ContactClient() {
                         <div className="flex md:block max-w-2xl">
                             <h2 className="flex flex-col items-end text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-display font-bold tracking-tighter uppercase text-brand-white leading-[0.9]">
                                 <span className="flex">
-                                    <h3 className="text-[8px] sm:text-[9px] md:text-sm font-bold tracking-[0.2em] uppercase text-brand-lime mb-2 sm:mb-3 md:mb-4">FAQ</h3>
+                                    <h3 className="text-[8px] sm:text-[9px] md:text-sm font-bold tracking-[0.2em] uppercase text-brand-blue mb-2 sm:mb-3 md:mb-4">FAQ</h3>
                                     <span className="ml-3">{faqTitle.main}</span>
                                 </span>
                                 <span className="text-transparent [-webkit-text-stroke:1px_#FFFFFF]">{faqTitle.last}</span>
@@ -241,12 +241,12 @@ export default function ContactClient() {
                                                 {faq.question}
                                             </h4>
                                             {faq.pageLink && (
-                                                <span className="text-brand-white transition-colors duration-300 group-hover:text-brand-lime flex-shrink-0 mt-0.5">
+                                                <span className="text-brand-white transition-colors duration-300 group-hover:text-brand-blue flex-shrink-0 mt-0.5">
                                                     📄
                                                 </span>
                                             )}
                                         </div>
-                                        <i className={`${faq.icon} text-brand-gray text-xl transition-colors duration-300 group-hover:text-brand-lime flex-shrink-0`}></i>
+                                        <i className={`${faq.icon} text-brand-gray text-xl transition-colors duration-300 group-hover:text-brand-blue flex-shrink-0`}></i>
                                     </div>
                                     <p className="text-xs text-brand-gray leading-relaxed font-medium transition-colors duration-300 group-hover:text-white/80">
                                         {faq.answer}

@@ -91,7 +91,7 @@ export default function CorporateClient() {
 
 
     return (
-        <main className="w-full bg-brand-black text-brand-white selection:bg-brand-lime selection:text-brand-black">
+        <main className="w-full bg-brand-black text-brand-white selection:bg-brand-blue selection:text-brand-white">
 
             {/* ── HERO SECTION ── */}
             <section className="relative h-[88svh] md:h-[100svh] min-h-[400px] sm:min-h-[450px] w-full md:px-6 lg:px-12 pt-16 sm:pt-24 md:pt-28 pb-6 sm:pb-8 md:pb-12 flex flex-col">
@@ -112,7 +112,7 @@ export default function CorporateClient() {
 
                     <div className="absolute inset-0 flex flex-col justify-end pb-8 sm:pb-12 md:pb-8 px-4 md:px-8 z-20">
                         <div className="fade-up">
-                            <span className="inline-block text-[8px] sm:text-[9px] md:text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black bg-brand-lime px-3 sm:px-4 py-1.5 sm:py-2 rounded-full mb-4 sm:mb-6">
+                            <span className="inline-block text-[8px] sm:text-[9px] md:text-[10px] font-bold tracking-[0.2em] uppercase text-brand-white bg-brand-blue px-3 sm:px-4 py-1.5 sm:py-2 rounded-full mb-4 sm:mb-6">
                                 Unforgettable Experiences
                             </span>
                             <h1 className="text-[26px] min-[360px]:text-3xl sm:text-5xl md:text-7xl lg:text-[8vw] leading-[0.9] font-display font-extrabold uppercase tracking-tighter text-brand-white">
@@ -130,7 +130,7 @@ export default function CorporateClient() {
                         Redefine Your <br />
                         <span className="text-transparent [-webkit-text-stroke:1px_#FFFFFF]">Corporate Culture</span>
                     </h2>
-                    <div className="w-16 h-[2px] bg-brand-lime mx-auto mb-8"></div>
+                    <div className="w-16 h-[2px] bg-brand-blue mx-auto mb-8"></div>
                     <p className="text-[10px] sm:text-xs md:text-sm lg:text-base font-medium text-brand-gray leading-relaxed max-w-2xl mx-auto">
                         Elevate your next company milestone, product launch, or end-of-year celebration with Dami Club&apos;s premier event services. We blend sophisticated execution with unparalleled entertainment.
                     </p>
@@ -161,7 +161,7 @@ export default function CorporateClient() {
                                     />
                                 </div>
 
-                                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/10 flex items-center justify-center text-brand-white text-lg sm:text-xl mb-4 sm:mb-6 group-hover:bg-brand-lime group-hover:text-brand-black transition-colors duration-300">
+                                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/10 flex items-center justify-center text-brand-white text-lg sm:text-xl mb-4 sm:mb-6 group-hover:bg-brand-blue group-hover:text-brand-white transition-colors duration-300">
                                     <i className={cap.icon}></i>
                                 </div>
 
@@ -197,7 +197,7 @@ export default function CorporateClient() {
 
                         <div className="absolute bottom-6 sm:bottom-8 md:bottom-12 left-6 sm:left-8 md:left-12 mix-blend-difference text-brand-white z-10 pr-4">
                             <h3 className="text-4xl sm:text-4xl md:text-5xl lg:text-7xl font-display font-extrabold uppercase tracking-tighter leading-none">
-                                Make An <br /> <span className="text-brand-lime">Inquiry</span>
+                                Make An <br /> <span className="text-brand-blue">Inquiry</span>
                             </h3>
                         </div>
                     </div>

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { EqLoader } from '@/components/Loader';
 
 // 1. Update the interface to reflect that params is a Promise
 interface EventPageProps {
@@ -62,7 +63,7 @@ export default async function EventTicketPage({ params }: EventPageProps) {
       
       <div className="absolute inset-0 flex items-center justify-center -z-10 bg-brand-offwhite">
         <div className="flex flex-col items-center gap-3 text-brand-gray">
-          <div className="w-8 h-8 border-2 border-brand-gray/30 border-t-brand-black rounded-full animate-spin" />
+          <EqLoader tone="black" bars={4} />
           <span className="text-[10px] font-bold tracking-[0.2em] uppercase">
             Loading Checkout
           </span>

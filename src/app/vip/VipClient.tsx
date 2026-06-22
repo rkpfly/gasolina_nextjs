@@ -57,7 +57,7 @@ export default function VipClient() {
     }, [isLoading]);
 
     return (
-        <main className="w-full bg-brand-black text-brand-white selection:bg-brand-lime selection:text-brand-black">
+        <main className="w-full bg-brand-black text-brand-white selection:bg-brand-blue selection:text-brand-white">
 
             {/* ── HERO SECTION ── */}
             <section className="relative h-[92svh] md:h-[100svh] min-h-[500px] w-full md:px-3 pt-16 md:pt-28 pb-4 md:pb-12 flex flex-col">
@@ -77,7 +77,7 @@ export default function VipClient() {
 
                     <div className="absolute inset-0 flex flex-col justify-end pb-16 px-4 md:px-16 lg:px-24 z-20">
                         <div className="fade-up">
-                            <span className="inline-block text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black bg-brand-lime px-4 py-2 rounded-full mb-6">
+                            <span className="inline-block text-[10px] font-bold tracking-[0.2em] uppercase text-brand-white bg-brand-blue px-4 py-2 rounded-full mb-6">
                                 Bottle Service
                             </span>
                             <h1 className="text-[26px] min-[360px]:text-3xl text-5xl md:text-7xl lg:text-[8vw] leading-[0.9] font-display font-extrabold uppercase tracking-tighter text-brand-white">
@@ -95,7 +95,7 @@ export default function VipClient() {
                         Elevate Your Nightlife <br />
                         <span className="text-brand-gray text-2xl md:text-4xl">With Our Exclusive VIP Packages</span>
                     </h2>
-                    <div className="w-16 h-[2px] bg-brand-lime mx-auto mb-8"></div>
+                    <div className="w-16 h-[2px] bg-brand-blue mx-auto mb-8"></div>
                     <p className="text-sm md:text-base font-medium text-brand-gray leading-relaxed max-w-3xl mx-auto">
                         Indulge in the ultimate VIP treatment with Dami Club, where luxury meets excitement. Our VIP Booth Package is designed to take your night out to extraordinary heights, offering an exclusive haven for you and your entourage to revel in style and absolute glamour.
                     </p>
@@ -125,7 +125,7 @@ export default function VipClient() {
                         {/* 3. Text is visible ONLY on mobile, resting on the black background */}
                         <div className="absolute bottom-2 left-2 text-brand-white z-10 md:hidden">
                             <h3 className="text-5xl font-display font-extrabold uppercase tracking-tighter leading-none">
-                                The <br /> Inner <br /> <span className="text-brand-lime">Circle</span>
+                                The <br /> Inner <br /> <span className="text-brand-blue">Circle</span>
                             </h3>
                         </div>
                     </div>
@@ -156,7 +156,7 @@ export default function VipClient() {
                             <h3 className="text-sm font-bold tracking-[0.2em] uppercase text-brand-gray mb-4">The VIP Standard</h3>
                             <h2 className="text-4xl md:text-6xl font-display font-bold tracking-tighter uppercase text-brand-white leading-[0.9]">
                                 Why Settle For <br />
-                                <span className="text-transparent [-webkit-text-stroke:1px_#FFFFFF] hover:text-brand-lime hover:[-webkit-text-stroke:0px] transition-colors duration-400 cursor-default">Ordinary?</span>
+                                <span className="text-transparent [-webkit-text-stroke:1px_#FFFFFF] hover:text-brand-blue hover:[-webkit-text-stroke:0px] transition-colors duration-400 cursor-default">Ordinary?</span>
                             </h2>
                         </div>
                         <div className="mt-6 md:mt-0 max-w-sm">
@@ -174,7 +174,7 @@ export default function VipClient() {
                                 style={{ transitionDelay: feature.delay }}
                             >
                                 <div className="mb-8">
-                                    <span className="text-5xl font-display font-extrabold text-white/10 group-hover:text-brand-lime transition-colors duration-500">
+                                    <span className="text-5xl font-display font-extrabold text-white/10 group-hover:text-brand-blue transition-colors duration-500">
                                         {feature.num}
                                     </span>
                                 </div>
@@ -196,7 +196,7 @@ export default function VipClient() {
             {/* ── PRIVATE EVENTS CTA SECTION ── */}
             <section className="py-16 sm:py-24 md:py-32 px-4 sm:px-6 md:px-12 bg-brand-black text-brand-white relative overflow-hidden flex items-center justify-center text-center border-t border-white/10">
                 <div className="absolute inset-0 w-full h-full pointer-events-none opacity-20">
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 md:left-1/4 md:translate-x-0 w-64 h-64 md:w-96 md:h-96 bg-brand-lime rounded-full mix-blend-screen filter blur-[80px] md:blur-[100px]"></div>
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 md:left-1/4 md:translate-x-0 w-64 h-64 md:w-96 md:h-96 bg-brand-blue rounded-full mix-blend-screen filter blur-[80px] md:blur-[100px]"></div>
                 </div>
 
                 <div className="relative z-10 max-w-3xl mx-auto fade-up w-full">
@@ -210,9 +210,9 @@ export default function VipClient() {
                     </p>
                     <a
                         href="/private-events"
-                        className="relative inline-flex items-center justify-center bg-brand-lime text-brand-black border border-brand-lime px-6 py-4 md:px-12 md:py-5 rounded-full text-[10px] sm:text-xs font-bold tracking-[0.15em] uppercase transition-all duration-300 hover:bg-brand-white hover:border-brand-white w-full sm:w-auto"
+                        className="btn-glow relative inline-flex items-center justify-center bg-brand-blue text-brand-white border border-brand-blue px-6 py-4 md:px-12 md:py-5 rounded-full text-[10px] sm:text-xs font-bold tracking-[0.15em] uppercase transition-all duration-300 hover:bg-brand-white hover:border-brand-white hover:text-brand-black w-full sm:w-auto"
                     >
-                        Explore Private Events
+                        <span>Explore Private Events</span>
                     </a>
                 </div>
             </section>

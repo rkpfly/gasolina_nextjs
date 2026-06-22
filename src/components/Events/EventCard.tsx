@@ -150,7 +150,7 @@ export function EventCard({ event, isActive, imgSrc, delay, onReserve, onBookVIP
               onClick={onReserve}
               className="relative inline-flex items-center justify-center w-full py-3 rounded-full text-xs font-bold tracking-[0.15em] uppercase text-center bg-brand-black text-white hover:bg-gray-800 transition-all duration-300"
             >
-              Reserve Tickets
+              <span>Reserve Tickets</span>
             </button>
             <button
               onClick={onBookVIP}

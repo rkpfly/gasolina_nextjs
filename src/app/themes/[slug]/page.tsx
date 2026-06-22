@@ -6,6 +6,7 @@ import FadeUp from "@/components/FadeUp";
 import { EventCard } from "@/components/Events/EventCard";
 import JsonRenderer from "@/components/JSONRenderer";
 import { fetchThemeDetailsAction } from "@/app/actions/themes";
+import { EqLoader } from "@/components/Loader";
 
 export default function ThemePage() {
   const params = useParams();
@@ -50,7 +51,7 @@ export default function ThemePage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-brand-black text-white">
-        <p className="font-bold tracking-[0.15em] uppercase text-sm">Loading Theme...</p>
+        <p className="font-bold tracking-[0.15em] uppercase text-sm inline-flex items-center gap-2"><EqLoader tone="blue" bars={4} /> Loading Theme...</p>
       </div>
     );
   }

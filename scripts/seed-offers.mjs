@@ -119,7 +119,7 @@ const offers = [
         'A reserved area to base the celebration',
         'A welcome bottle of bubbles for groups of 8 or more',
         'A dedicated host to get you settled',
-        'A floor of Nepali bangers, R&B and hip hop all night',
+        'A floor of club bangers, R&B and hip hop all night',
       ])
     ),
     how_to_redeem: doc(

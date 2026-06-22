@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import { EqLoader } from "@/components/Loader";
 
 // Helper to preserve TipTap empty paragraphs
 function preserveEmptyParagraphs(html: string): string {
@@ -180,22 +181,22 @@ export default function JobClientView({ job }: { job: any }) {
           <form className="space-y-8" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                    <input name="firstName" type="text" placeholder="FIRST NAME *" required className="w-full bg-transparent border-b border-brand-black pb-2 text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-accent text-brand-black placeholder-brand-gray rounded-none" />
+                    <input name="firstName" type="text" placeholder="FIRST NAME *" required className="w-full bg-transparent border-b border-brand-black pb-2 text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-brand-black placeholder-brand-gray rounded-none" />
                 </div>
                 <div>
-                    <input name="lastName" type="text" placeholder="LAST NAME *" required className="w-full bg-transparent border-b border-brand-black pb-2 text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-accent text-brand-black placeholder-brand-gray rounded-none" />
+                    <input name="lastName" type="text" placeholder="LAST NAME *" required className="w-full bg-transparent border-b border-brand-black pb-2 text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-brand-black placeholder-brand-gray rounded-none" />
                 </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="flex items-end border-b border-brand-black pb-2 transition-colors focus-within:border-brand-accent group">
+                <div className="flex items-end border-b border-brand-black pb-2 transition-colors focus-within:border-brand-blue group">
                     <div className="flex items-center gap-2 mr-4 text-xs font-bold tracking-widest text-brand-black">
                         <span>+91</span>
                     </div>
                     <input name="phone" type="tel" placeholder="PHONE NUMBER *" required className="w-full bg-transparent text-xs font-bold tracking-[0.15em] uppercase outline-none placeholder-brand-gray text-brand-black rounded-none" />
                 </div>
                 <div>
-                    <input name="email" type="email" placeholder="EMAIL ADDRESS *" required className="w-full bg-transparent border-b border-brand-black pb-2 text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-accent text-brand-black placeholder-brand-gray rounded-none" />
+                    <input name="email" type="email" placeholder="EMAIL ADDRESS *" required className="w-full bg-transparent border-b border-brand-black pb-2 text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-brand-black placeholder-brand-gray rounded-none" />
                 </div>
             </div>
 
@@ -229,10 +230,10 @@ export default function JobClientView({ job }: { job: any }) {
             <button 
               type="submit" 
               disabled={isSubmitting}
-              className="group relative overflow-hidden inline-flex items-center justify-center w-full py-6 text-xs font-bold tracking-[0.15em] uppercase mt-4 bg-brand-black text-white transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group relative overflow-hidden inline-flex items-center justify-center w-full py-6 text-xs font-bold tracking-[0.15em] uppercase mt-4 bg-brand-black text-white transition-colors duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
             >
                 <div className="absolute top-full left-0 w-full h-full bg-brand-accent transition-all duration-[400ms] ease-custom z-10 group-hover:top-0"></div>
-                <span className="relative z-20">{isSubmitting ? 'Submitting...' : 'Submit Application'}</span>
+                <span className="relative z-20 inline-flex items-center gap-2">{isSubmitting ? <><EqLoader tone="white" bars={4} /> Submitting...</> : 'Submit Application'}</span>
             </button>
           </form>
         </div>

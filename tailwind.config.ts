@@ -11,11 +11,18 @@ const config: Config = {
       colors: {
         brand: {
           black: "#0A0A0A",
+          ink: "#07070B",
           white: "#FFFFFF",
           offwhite: "#F4F4F5",
           gray: "#86868B",
           border: "#E5E5E5",
+          // Neon accents (poster palette) — lime leads
+          lime: "#C6F94B",
           accent: "#FF2E93",
+          pink: "#FF2E93",
+          blue: "#3E6FF5",
+          coral: "#FF6B4A",
+          purple: "#7C5CFF",
         },
       },
       fontFamily: {

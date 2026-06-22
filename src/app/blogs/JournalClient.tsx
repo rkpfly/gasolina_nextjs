@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { EqLoader } from "@/components/Loader";
 
 // Define the shape of our mapped blog posts
 interface BlogPost {
@@ -123,7 +124,7 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
                     <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/60 to-transparent"></div>
 
                     <div className="relative z-20 fade-up px-3 sm:px-4 w-full flex flex-col items-center mt-6 sm:mt-8">
-                        <span className="inline-block text-[9px] sm:text-[10px] md:text-xs font-display font-extrabold tracking-[0.2em] uppercase text-brand-black bg-brand-lime px-4 sm:px-5 py-2 sm:py-2.5 rounded-full shadow-lg mb-3 sm:mb-4 md:mb-6">
+                        <span className="inline-block text-[9px] sm:text-[10px] md:text-xs font-display font-extrabold tracking-[0.2em] uppercase text-brand-white bg-brand-blue px-4 sm:px-5 py-2 sm:py-2.5 rounded-full shadow-lg mb-3 sm:mb-4 md:mb-6">
                             News & Editorials
                         </span>
 
@@ -135,12 +136,12 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
             </section>
 
             {/* MARQUEE SECTION */}
-            <div className="w-full bg-brand-lime border-y-2 sm:border-y-3 md:border-y-4 border-brand-black overflow-hidden flex whitespace-nowrap py-2 sm:py-3 md:py-4 z-20 relative">
+            <div className="w-full bg-brand-blue border-y-2 sm:border-y-3 md:border-y-4 border-brand-black overflow-hidden flex whitespace-nowrap py-2 sm:py-3 md:py-4 z-20 relative">
                 <div className="animate-marquee flex items-center w-max">
                     {[0, 1, 2].map((i) => (
                     <div
                         key={i}
-                        className="flex items-center shrink-0 text-brand-black px-2 sm:px-4"
+                        className="flex items-center shrink-0 text-brand-white px-2 sm:px-4"
                     >
                         <span className="text-xs sm:text-lg md:text-2xl font-display font-bold uppercase tracking-tighter">LATEST NEWS</span>
                         <span className="text-sm sm:text-xl md:text-3xl mx-2 sm:mx-4">•</span>
@@ -161,7 +162,7 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
 
                     <div className="mb-6 sm:mb-8 md:mb-12 fade-up">
                         <h2 className="text-3xl sm:text-4xl md:text-6xl font-display font-extrabold tracking-tighter uppercase text-brand-white">
-                            Editor&apos;s <span className="text-transparent [-webkit-text-stroke:1.5px_#FFFFFF] hover:text-brand-lime hover:[-webkit-text-stroke:0px] transition-all duration-400">Pick</span>
+                            Editor&apos;s <span className="text-transparent [-webkit-text-stroke:1.5px_#FFFFFF] hover:text-brand-blue hover:[-webkit-text-stroke:0px] transition-all duration-400">Pick</span>
                         </h2>
                     </div>
 
@@ -171,14 +172,14 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
                                 <div className="relative w-full aspect-video md:aspect-[16/9] lg:aspect-auto lg:h-[600px] rounded-xl sm:rounded-2xl bg-white/5 img-wrapper mb-4 sm:mb-6">
                                     <img src={featuredPost.coverImage} alt={featuredPost.title} className="absolute inset-0 w-full h-full object-cover filter grayscale-[100%]" />
                                     <div className="absolute top-6 left-6 z-10">
-                                        <span className="bg-brand-lime text-brand-black px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] rounded-full shadow-lg">Feature Story</span>
+                                        <span className="bg-brand-blue text-brand-white px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] rounded-full shadow-lg">Feature Story</span>
                                     </div>
                                 </div>
                                 <div className="flex flex-col flex-1 pr-4">
                                     <p className="text-xs font-bold tracking-[0.2em] uppercase text-brand-gray mb-3">
                                         {formatDate(featuredPost.publishedAt || featuredPost.createdAt)} • {featuredPost.tags[0] || 'Editorial'}
                                     </p>
-                                    <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold uppercase tracking-tighter text-brand-white leading-[0.95] mb-2 sm:mb-4 group-hover:text-brand-lime transition-colors">
+                                    <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold uppercase tracking-tighter text-brand-white leading-[0.95] mb-2 sm:mb-4 group-hover:text-brand-blue transition-colors">
                                         {featuredPost.title}
                                     </h3>
                                     <p className="text-[10px] sm:text-xs md:text-sm lg:text-base font-medium text-brand-gray leading-relaxed mb-4 sm:mb-6 line-clamp-2 max-w-3xl">
@@ -206,7 +207,7 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
                                         <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-gray mb-2">
                                             {formatDate(post.publishedAt || post.createdAt)}
                                         </p>
-                                        <h3 className="text-lg sm:text-xl md:text-2xl font-display font-bold uppercase tracking-tighter text-brand-white leading-tight mb-2 group-hover:text-brand-lime transition-colors">
+                                        <h3 className="text-lg sm:text-xl md:text-2xl font-display font-bold uppercase tracking-tighter text-brand-white leading-tight mb-2 group-hover:text-brand-blue transition-colors">
                                             {post.title}
                                         </h3>
                                         <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-brand-gray flex items-center mt-3">
@@ -235,7 +236,7 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
                                     className={`filter-tab pb-4 whitespace-nowrap transition-colors hover:text-brand-white ${
-                                        activeTab === tab ? 'active text-brand-white border-b-2 border-brand-lime' : 'border-b-2 border-transparent'
+                                        activeTab === tab ? 'active text-brand-white border-b-2 border-brand-blue' : 'border-b-2 border-transparent'
                                     }`}
                                 >
                                     {tab}
@@ -251,7 +252,7 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
                                     <div className="relative w-full aspect-[4/3] rounded-xl bg-white/5 img-wrapper mb-5">
                                         <img src={post.coverImage} className="absolute inset-0 w-full h-full object-cover filter grayscale-[100%]" alt={post.title} />
                                         <div className="absolute top-4 left-4 z-10">
-                                            <span className={`${i % 2 === 0 ? 'bg-brand-lime' : 'bg-brand-white'} text-brand-black px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] rounded-full`}>
+                                            <span className={`${i % 2 === 0 ? 'bg-brand-blue text-brand-white' : 'bg-brand-white text-brand-black'} px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] rounded-full`}>
                                                 {post.tags[0] || 'Story'}
                                             </span>
                                         </div>
@@ -260,7 +261,7 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
                                         <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-gray mb-3">
                                             {formatDate(post.publishedAt || post.createdAt)}
                                         </p>
-                                        <h3 className="text-lg sm:text-xl md:text-2xl font-display font-bold uppercase tracking-tighter text-brand-white leading-tight mb-2 sm:mb-3 group-hover:text-brand-lime transition-colors">
+                                        <h3 className="text-lg sm:text-xl md:text-2xl font-display font-bold uppercase tracking-tighter text-brand-white leading-tight mb-2 sm:mb-3 group-hover:text-brand-blue transition-colors">
                                             {post.title}
                                         </h3>
                                         <p className="text-sm font-medium text-brand-gray leading-relaxed mb-5 line-clamp-2">
@@ -281,7 +282,7 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
 
                     {archivePosts.length > 0 && (
                         <div className="mt-20 text-center fade-up">
-                            <button className="border border-white/30 text-brand-white hover:bg-brand-lime hover:text-brand-black hover:border-brand-lime px-12 py-5 rounded-full text-xs font-bold tracking-[0.15em] uppercase transition-colors duration-300">
+                            <button className="border border-white/30 text-brand-white hover:bg-brand-blue hover:text-brand-white hover:border-brand-blue px-12 py-5 rounded-full text-xs font-bold tracking-[0.15em] uppercase transition-colors duration-300">
                                 Load More Stories
                             </button>
                         </div>
@@ -294,7 +295,7 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
             <section className="py-0 flex flex-col lg:flex-row bg-brand-black border-t border-white/10 snap-start">
                 <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-8 md:p-12 lg:p-24 fade-up order-2 lg:order-1 border-r border-white/10">
                     <div className="w-full max-w-md mx-auto">
-                        <span className="text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase text-brand-lime mb-2 sm:mb-4 block">The Inner Circle</span>
+                        <span className="text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase text-brand-blue mb-2 sm:mb-4 block">The Inner Circle</span>
                         <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold tracking-tighter uppercase text-brand-white mb-3 sm:mb-4">Stay In The Loop</h2>
                         <p className="text-brand-gray font-medium text-[10px] sm:text-xs md:text-sm mb-8 sm:mb-10 md:mb-12 leading-relaxed">Subscribe to the journal to receive priority access to ticket drops, exclusive editorial content, and secret venue reveals delivered directly to your inbox.</p>
 
@@ -321,7 +322,7 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
                                             required
                                             value={formData.f_name}
                                             onChange={(e) => setFormData({...formData, f_name: e.target.value})}
-                                            className="w-full bg-transparent border-b border-white/30 pb-3 text-xs font-bold tracking-[0.15em] uppercase outline-none focus:border-brand-lime transition-colors text-brand-white placeholder-brand-gray"
+                                            className="w-full bg-transparent border-b border-white/30 pb-3 text-xs font-bold tracking-[0.15em] uppercase outline-none focus:border-brand-blue transition-colors text-brand-white placeholder-brand-gray"
                                         />
                                     </div>
                                     <div>
@@ -330,7 +331,7 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
                                             placeholder="LAST NAME"
                                             value={formData.l_name}
                                             onChange={(e) => setFormData({...formData, l_name: e.target.value})}
-                                            className="w-full bg-transparent border-b border-white/30 pb-3 text-xs font-bold tracking-[0.15em] uppercase outline-none focus:border-brand-lime transition-colors text-brand-white placeholder-brand-gray"
+                                            className="w-full bg-transparent border-b border-white/30 pb-3 text-xs font-bold tracking-[0.15em] uppercase outline-none focus:border-brand-blue transition-colors text-brand-white placeholder-brand-gray"
                                         />
                                     </div>
                                 </div>
@@ -343,7 +344,7 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
                                             required
                                             value={formData.email}
                                             onChange={(e) => setFormData({...formData, email: e.target.value})}
-                                            className="w-full bg-transparent border-b border-white/30 pb-3 text-xs font-bold tracking-[0.15em] uppercase outline-none focus:border-brand-lime transition-colors text-brand-white placeholder-brand-gray"
+                                            className="w-full bg-transparent border-b border-white/30 pb-3 text-xs font-bold tracking-[0.15em] uppercase outline-none focus:border-brand-blue transition-colors text-brand-white placeholder-brand-gray"
                                         />
                                     </div>
                                 </div>
@@ -353,7 +354,7 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
                                     <select
                                         value={citySelection}
                                         onChange={(e) => setCitySelection(e.target.value)}
-                                        className={`w-full bg-transparent border-b border-white/30 pb-3 text-xs font-bold tracking-[0.15em] uppercase outline-none focus:border-brand-lime transition-colors appearance-none cursor-pointer ${citySelection === "" ? 'text-brand-gray' : 'text-brand-white'}`}
+                                        className={`w-full bg-transparent border-b border-white/30 pb-3 text-xs font-bold tracking-[0.15em] uppercase outline-none focus:border-brand-blue transition-colors appearance-none cursor-pointer ${citySelection === "" ? 'text-brand-gray' : 'text-brand-white'}`}
                                         required
                                     >
                                         <option value="" disabled className="text-brand-gray bg-brand-black">SELECT CITY *</option>
@@ -378,7 +379,7 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
                                             placeholder="ENTER YOUR CITY *"
                                             value={customCity}
                                             onChange={(e) => setCustomCity(e.target.value)}
-                                            className="w-full bg-transparent border-b border-white/30 pb-3 text-xs font-bold tracking-[0.15em] uppercase outline-none focus:border-brand-lime transition-colors text-brand-white placeholder-brand-gray"
+                                            className="w-full bg-transparent border-b border-white/30 pb-3 text-xs font-bold tracking-[0.15em] uppercase outline-none focus:border-brand-blue transition-colors text-brand-white placeholder-brand-gray"
                                             required
                                         />
                                     </div>
@@ -387,9 +388,15 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
                                 <button
                                     type="submit"
                                     disabled={formStatus === 'loading'}
-                                    className="w-full py-5 text-xs font-bold tracking-[0.15em] uppercase mt-4 rounded-full bg-brand-lime text-brand-black hover:bg-brand-white transition-colors duration-300 disabled:opacity-50"
+                                    className="btn-glow disabled:hover:translate-y-0 w-full py-5 text-xs font-bold tracking-[0.15em] uppercase mt-4 rounded-full bg-brand-blue text-brand-white hover:bg-brand-white hover:text-brand-black transition-colors duration-300 disabled:opacity-50"
                                 >
-                                    {formStatus === 'loading' ? 'Submitting...' : 'Subscribe'}
+                                    {formStatus === 'loading' ? (
+                                        <span className="inline-flex items-center justify-center gap-2">
+                                            <EqLoader tone="white" bars={4} /> Submitting...
+                                        </span>
+                                    ) : (
+                                        <span>Subscribe</span>
+                                    )}
                                 </button>
                             </form>
                         )}

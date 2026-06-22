@@ -39,7 +39,7 @@ const GalleryItemCard = ({ post, index }: { post: GalleryPost, index: number }) 
             </div>
 
             <div className="absolute top-6 left-6 z-20">
-                <span className={`${isVideo ? 'bg-brand-lime text-brand-black' : 'bg-brand-white text-brand-black'} text-[9px] font-bold px-3 py-1.5 uppercase tracking-widest rounded-full`}>
+                <span className={`${isVideo ? 'bg-brand-blue text-brand-white' : 'bg-brand-white text-brand-black'} text-[9px] font-bold px-3 py-1.5 uppercase tracking-widest rounded-full`}>
                     {post.category || (isVideo ? 'Video Recap' : 'Photo Album')}
                 </span>
             </div>
@@ -56,7 +56,7 @@ const GalleryItemCard = ({ post, index }: { post: GalleryPost, index: number }) 
                 <h3 className="text-xl md:text-3xl font-display font-bold text-white uppercase tracking-tighter mb-1 truncate">
                     {post.title}
                 </h3>
-                <p className="text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-lime truncate">
+                <p className="text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-blue truncate">
                     {post.location || 'Location TBA'} {post.caption && `• ${post.caption}`}
                 </p>
             </div>
@@ -131,7 +131,7 @@ export default function GalleryClient({
 
                     <div className="absolute bottom-0 md:inset-0 flex flex-col justify-between py-8 px-4 md:p-16 z-20">
                         <div className="fade-up max-w-4xl text-center mx-auto">
-                            <span className="inline-block text-[10px] md:text-xs font-display font-extrabold tracking-[0.2em] uppercase text-brand-black bg-brand-lime px-5 py-2.5 rounded-full shadow-lg mb-6">
+                            <span className="inline-block text-[10px] md:text-xs font-display font-extrabold tracking-[0.2em] uppercase text-brand-white bg-brand-blue px-5 py-2.5 rounded-full shadow-lg mb-6">
                                 Captured Moments
                             </span>
                             <h1 className="text-5xl md:text-7xl lg:text-[7.5vw] leading-[1.1] font-display font-extrabold uppercase tracking-tighter text-brand-white py-2">
@@ -154,9 +154,9 @@ export default function GalleryClient({
 
                     <div className="flex justify-between items-end mb-4 px-2 md:px-12">
                         <div>
-                            <p className="text-xs font-bold tracking-[0.2em] uppercase text-brand-lime mb-2">Featured</p>
+                            <p className="text-xs font-bold tracking-[0.2em] uppercase text-brand-blue mb-2">Featured</p>
                             <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tighter uppercase text-brand-white">
-                                Latest <span className='bg-brand-lime text-brand-black px-2'>Aftermovie</span>
+                                Latest <span className='bg-brand-blue text-brand-white px-2'>Aftermovie</span>
                             </h2>
                         </div>
                         <button className="hidden md:flex items-center gap-2 text-xs font-bold tracking-[0.15em] uppercase text-brand-gray hover:text-brand-white transition-colors">
@@ -195,7 +195,7 @@ export default function GalleryClient({
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
                                     className={`filter-tab pb-4 whitespace-nowrap transition-colors hover:text-brand-white ${
-                                        activeTab === tab ? 'active text-brand-white border-b-2 border-brand-lime' : 'border-b-2 border-transparent'
+                                        activeTab === tab ? 'active text-brand-white border-b-2 border-brand-blue' : 'border-b-2 border-transparent'
                                     }`}
                                 >
                                     {tab}
@@ -218,7 +218,7 @@ export default function GalleryClient({
                     </div>
 
                     <div className="mt-20 text-center fade-up">
-                        <button className="border border-white/30 text-brand-white hover:bg-brand-lime hover:text-brand-black hover:border-brand-lime px-12 py-5 rounded-full text-xs font-bold tracking-[0.15em] uppercase transition-colors duration-300">
+                        <button className="border border-white/30 text-brand-white hover:bg-brand-blue hover:text-brand-white hover:border-brand-blue px-12 py-5 rounded-full text-xs font-bold tracking-[0.15em] uppercase transition-colors duration-300">
                             Load More Memories
                         </button>
                     </div>
@@ -233,7 +233,7 @@ export default function GalleryClient({
                             <h2 className="text-4xl md:text-6xl font-display font-bold tracking-tighter uppercase mb-2">Follow The Vibe</h2>
                             <p className="text-sm font-medium text-brand-gray">Tag @damiclub to be featured.</p>
                         </div>
-                        <a href="#" className="mt-6 md:mt-0 flex items-center gap-3 text-xs font-bold tracking-[0.15em] uppercase text-brand-lime hover:text-white transition-colors">
+                        <a href="#" className="mt-6 md:mt-0 flex items-center gap-3 text-xs font-bold tracking-[0.15em] uppercase text-brand-blue hover:text-white transition-colors">
                             <i className="fa-brands fa-instagram text-lg"></i> Follow Us
                         </a>
                     </div>
@@ -250,7 +250,7 @@ export default function GalleryClient({
                                 className={`aspect-square bg-white/5 rounded-lg overflow-hidden group cursor-pointer relative ${i > 1 ? 'hidden md:block' : ''}`}
                             >
                                 <img src={src} className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700" alt={`Dami Club social ${i + 1}`} />
-                                <div className="absolute inset-0 bg-brand-lime/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-brand-black text-3xl">
+                                <div className="absolute inset-0 bg-brand-blue/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-brand-white text-3xl">
                                     <i className="fa-brands fa-instagram"></i>
                                 </div>
                             </div>

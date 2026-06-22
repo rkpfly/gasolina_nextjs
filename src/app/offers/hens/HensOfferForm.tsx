@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { EqLoader } from "@/components/Loader";
 
 const COUNTRY_CODES = [
   { code: "+61", label: "AU" },
@@ -201,7 +202,10 @@ export default function HensOfferForm() {
         disabled={formStatus === "loading"}
         className="btn-monumental w-full py-4 sm:py-5 text-[9px] sm:text-[10px] md:text-xs font-bold tracking-[0.15em] uppercase mt-2 border border-white/20 disabled:opacity-50"
       >
-        <span>{formStatus === "loading" ? "Submitting..." : "Claim Our Free Entry"}</span>
+        <span className="inline-flex items-center gap-2">
+          {formStatus === "loading" && <EqLoader tone="white" bars={4} />}
+          {formStatus === "loading" ? "Submitting..." : "Claim Our Free Entry"}
+        </span>
       </button>
     </form>
   );

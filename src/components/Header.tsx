@@ -6,6 +6,9 @@ import Link from "next/link";
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Brand runs electric-blue across the public site.
+  const navHover = "hover:text-brand-blue";
+
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? "hidden" : "";
   }, [isMenuOpen]);
@@ -35,11 +38,12 @@ export default function Header() {
           }`}
         >
           <div
-            aria-label="Dami Club"
-            className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-white text-brand-black flex flex-col items-center justify-center leading-[0.8] transition-[transform,background-color] duration-500 hover:bg-brand-lime hover:-rotate-[8deg]"
+            aria-label="Louder"
+            className="w-12 h-12 sm:w-14 sm:h-14 md:w-20 md:h-20 rounded-full bg-white text-brand-black flex flex-col items-center justify-center leading-[0.8] transition-[transform,background-color] duration-500 hover:bg-brand-blue hover:-rotate-[8deg]"
           >
-            <span className="font-display font-extrabold text-[0.6rem] sm:text-[0.68rem] md:text-[0.78rem] tracking-tight">DAMI</span>
-            <span className="font-display font-extrabold text-[0.6rem] sm:text-[0.68rem] md:text-[0.78rem] tracking-tight">CLUB</span>
+            <span className="font-display font-extrabold text-[0.5rem] sm:text-[0.58rem] md:text-[0.68rem] tracking-tight">
+              LOUDER<span className="text-brand-blue">.</span>
+            </span>
           </div>
         </Link>
 
@@ -47,22 +51,22 @@ export default function Header() {
         <nav
           className={`hidden md:flex space-x-8 lg:space-x-12 items-center text-xs font-semibold tracking-[0.15em] uppercase text-white transition-opacity duration-500 ${revealOnClose}`}
         >
-          <Link href="/book" className="hover:text-brand-lime transition-colors">
+          <Link href="/book" className={`${navHover} transition-colors`}>
             Book
           </Link>
-          <Link href="/gallery" className="hover:text-brand-lime transition-colors">
+          <Link href="/gallery" className={`${navHover} transition-colors`}>
             Gallery
           </Link>
-          <Link href="/offers" className="hover:text-brand-lime transition-colors">
+          <Link href="/offers" className={`${navHover} transition-colors`}>
             Offers
           </Link>
-          <Link href="/offers/birthday" className="hover:text-brand-lime transition-colors">
+          <Link href="/offers/birthday" className={`${navHover} transition-colors`}>
             Birthday
           </Link>
-          <Link href="/offers/hens" className="hover:text-brand-lime transition-colors">
+          <Link href="/offers/hens" className={`${navHover} transition-colors`}>
             Hens
           </Link>
-          <Link href="/careers#apply" className="hover:text-brand-lime transition-colors">
+          <Link href="/careers#apply" className={`${navHover} transition-colors`}>
             Party & Earn
           </Link>
         </nav>
@@ -71,9 +75,9 @@ export default function Header() {
         <div className="flex items-center gap-3 sm:gap-4 relative z-[60]">
           <Link
             href="/book"
-            className={`hidden md:inline-flex items-center bg-brand-lime text-brand-black text-xs font-bold tracking-[0.14em] uppercase px-5 py-2.5 rounded-full hover:bg-brand-black hover:text-white transition-all duration-500 ${revealOnClose}`}
+            className={`btn-glow glow-on-blue bg-brand-blue text-brand-white hover:bg-brand-white hover:text-brand-black hidden md:inline-flex items-center text-xs font-bold tracking-[0.14em] uppercase px-5 py-2.5 rounded-full transition-all duration-500 ${revealOnClose}`}
           >
-            Reserve
+            <span>Reserve</span>
           </Link>
 
           <button
@@ -120,7 +124,7 @@ export default function Header() {
           </nav>
 
           <nav className="flex flex-col space-y-4 md:space-y-6 border-t md:border-t-0 md:border-l border-white/10 pt-8 md:pt-0 md:pl-12">
-            <span className="text-[10px] font-semibold tracking-[0.25em] uppercase text-brand-lime mb-1">
+            <span className="text-[10px] font-semibold tracking-[0.25em] uppercase text-brand-blue mb-1">
               Index
             </span>
             {[

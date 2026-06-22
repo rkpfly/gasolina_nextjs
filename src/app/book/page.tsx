@@ -137,7 +137,7 @@ export default function ThemePage() {
                     id="date-selector"
                     value={selectedEventId}
                     onChange={(e) => setSelectedEventId(e.target.value)}
-                    className="w-full bg-transparent border-b border-white/30 text-white py-4 pl-0 pr-8 focus:outline-none focus:border-white uppercase tracking-wider appearance-none cursor-pointer text-lg font-medium transition-colors"
+                    className="w-full bg-transparent border-b border-white/30 text-white py-4 pl-0 pr-8 focus:outline-none focus:border-brand-blue uppercase tracking-wider appearance-none cursor-pointer text-lg font-medium transition-colors"
                     >
                     <option value="" disabled className="bg-brand-black text-white/50">
                         Choose a date...

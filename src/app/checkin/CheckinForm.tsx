@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import type { CheckinCity } from './cities';
 import { CountryCodePicker } from '@/components/CountryCodePicker';
+import { EqLoader } from '@/components/Loader';
 
 type Phase = 'phone' | 'details' | 'registered' | 'done';
 
@@ -84,7 +85,7 @@ export default function CheckinForm({ city }: { city: CheckinCity }) {
         className="mb-10 h-12 w-auto object-contain filter-[brightness(0)_invert(1)]"
       />
 
-      <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-lime">{city}</p>
+      <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-blue">{city}</p>
       <h1 className="mt-4 font-syne text-4xl font-extrabold uppercase tracking-tight">Check in</h1>
 
       {error && (
@@ -111,7 +112,7 @@ export default function CheckinForm({ city }: { city: CheckinCity }) {
             />
           </div>
           <button type="submit" disabled={busy} className={btnClass}>
-            {busy ? 'Checking…' : 'Continue'}
+            <span className="inline-flex items-center justify-center gap-2">{busy ? <><EqLoader tone="white" bars={4} /> Checking…</> : 'Continue'}</span>
           </button>
         </form>
       )}
@@ -192,7 +193,7 @@ export default function CheckinForm({ city }: { city: CheckinCity }) {
           </label>
 
           <button type="submit" disabled={busy} className={btnClass}>
-            {busy ? 'Submitting…' : 'Complete check-in'}
+            <span className="inline-flex items-center justify-center gap-2">{busy ? <><EqLoader tone="white" bars={4} /> Submitting…</> : 'Complete check-in'}</span>
           </button>
         </form>
       )}
@@ -213,4 +214,4 @@ export default function CheckinForm({ city }: { city: CheckinCity }) {
 }
 
 const btnClass =
-  'w-full rounded-full bg-brand-lime py-4 text-xs font-bold uppercase tracking-[0.15em] text-brand-black transition-colors duration-300 hover:bg-brand-white disabled:opacity-50';
+  'btn-glow disabled:hover:translate-y-0 w-full rounded-full bg-brand-blue py-4 text-xs font-bold uppercase tracking-[0.15em] text-brand-white transition-colors duration-300 hover:bg-brand-white hover:text-brand-black disabled:opacity-50';

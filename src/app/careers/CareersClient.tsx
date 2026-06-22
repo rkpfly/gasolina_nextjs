@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { MediaAsset } from '@/lib/media';
 import MediaSlot from '@/lib/media';
 import Link from 'next/link';
+import { EqLoader } from "@/components/Loader";
 
 // ─── Interfaces ───────────────────────────────────────────────────────────────
 
@@ -158,7 +159,7 @@ export default function CareersClient() {
     }, [isLoading]);
 
     return (
-        <main className="w-full bg-brand-black text-brand-white selection:bg-brand-lime selection:text-brand-black">
+        <main className="w-full bg-brand-black text-brand-white selection:bg-brand-blue selection:text-brand-white">
 
             {/* ── HERO SECTION ── */}
             <section className="relative w-full px-3 sm:px-4 md:px-6 lg:px-8 pt-20 sm:pt-24 md:pt-28 pb-8 sm:pb-10 md:pb-12 flex flex-col">
@@ -178,7 +179,7 @@ export default function CareersClient() {
                     <div className="absolute inset-0 bg-brand-black/30"></div>
 
                     <div className="relative z-20 fade-up px-3 sm:px-6 w-full flex flex-col items-center">
-                        <span className="inline-block text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.2em] uppercase text-brand-black bg-brand-lime px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full shadow-lg mb-2 sm:mb-3 md:mb-4 lg:mb-6">
+                        <span className="inline-block text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.2em] uppercase text-brand-white bg-brand-blue px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full shadow-lg mb-2 sm:mb-3 md:mb-4 lg:mb-6">
                             Join The Movement
                         </span>
 
@@ -194,9 +195,9 @@ export default function CareersClient() {
                 <div className="max-w-4xl mx-auto fade-up">
                     <h2 className="text-xl sm:text-2xl md:text-4xl lg:text-6xl font-display font-bold tracking-tighter uppercase text-brand-white mb-4 sm:mb-6 leading-[0.95]">
                         Build A Career. <br />
-                        <span className="text-transparent [-webkit-text-stroke:1px_#FFFFFF] hover:text-brand-lime hover:[-webkit-text-stroke:0px] transition-all duration-400 cursor-default">Build The Hype.</span>
+                        <span className="text-transparent [-webkit-text-stroke:1px_#FFFFFF] hover:text-brand-blue hover:[-webkit-text-stroke:0px] transition-all duration-400 cursor-default">Build The Hype.</span>
                     </h2>
-                    <div className="w-12 sm:w-16 h-[2px] bg-brand-lime mx-auto mb-4 sm:mb-6 md:mb-8"></div>
+                    <div className="w-12 sm:w-16 h-[2px] bg-brand-blue mx-auto mb-4 sm:mb-6 md:mb-8"></div>
                     <p className="text-[9px] sm:text-xs md:text-sm lg:text-base font-medium text-brand-gray leading-relaxed max-w-2xl mx-auto mb-4 sm:mb-6">
                         Dami Club aspires to build an interconnected community of nightlife enthusiasts. We are looking to connect, collaborate, and build a career while doing something that pushes the boundaries of entertainment.
                     </p>
@@ -237,7 +238,7 @@ export default function CareersClient() {
                                     <div className="absolute inset-0 z-10" aria-hidden="true" />
                                 </div>
                                 <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-                                    <div className="text-base sm:text-lg md:text-2xl text-brand-white transition-colors duration-300 group-hover:text-brand-lime flex-shrink-0">
+                                    <div className="text-base sm:text-lg md:text-2xl text-brand-white transition-colors duration-300 group-hover:text-brand-blue flex-shrink-0">
                                         <i className={role.icon}></i>
                                     </div>
                                     <h4 className="text-sm sm:text-base md:text-xl font-display font-bold uppercase tracking-tighter text-brand-white">
@@ -272,14 +273,14 @@ export default function CareersClient() {
                             <button
                                 onClick={() => setJobPage(p => Math.max(1, p - 1))}
                                 disabled={jobPage === 1 || isJobsLoading}
-                                className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full border border-white/30 flex items-center justify-center text-sm sm:text-base md:text-lg text-brand-white transition-all duration-300 hover:bg-brand-lime hover:text-brand-black hover:border-brand-lime disabled:opacity-20 disabled:hover:bg-transparent disabled:hover:text-brand-white disabled:hover:border-white/30"
+                                className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full border border-white/30 flex items-center justify-center text-sm sm:text-base md:text-lg text-brand-white transition-all duration-300 hover:bg-brand-blue hover:text-brand-white hover:border-brand-blue disabled:opacity-20 disabled:hover:bg-transparent disabled:hover:text-brand-white disabled:hover:border-white/30"
                             >
                                 <i className="fa-solid fa-arrow-left"></i>
                             </button>
                             <button
                                 onClick={() => setJobPage(p => Math.min(totalJobPages, p + 1))}
                                 disabled={jobPage >= totalJobPages || isJobsLoading}
-                                className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full border border-white/30 flex items-center justify-center text-sm sm:text-base md:text-lg text-brand-white transition-all duration-300 hover:bg-brand-lime hover:text-brand-black hover:border-brand-lime disabled:opacity-20 disabled:hover:bg-transparent disabled:hover:text-brand-white disabled:hover:border-white/30"
+                                className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full border border-white/30 flex items-center justify-center text-sm sm:text-base md:text-lg text-brand-white transition-all duration-300 hover:bg-brand-blue hover:text-brand-white hover:border-brand-blue disabled:opacity-20 disabled:hover:bg-transparent disabled:hover:text-brand-white disabled:hover:border-white/30"
                             >
                                 <i className="fa-solid fa-arrow-right"></i>
                             </button>
@@ -290,7 +291,7 @@ export default function CareersClient() {
                     <div className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory pb-6 sm:pb-8 pt-3 sm:pt-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                         {isJobsLoading ? (
                             <div className="w-full py-16 sm:py-20 text-center flex flex-col items-center">
-                                <i className="fa-solid fa-circle-notch animate-spin text-2xl sm:text-3xl text-brand-gray mb-2 sm:mb-4"></i>
+                                <div className="mb-2 sm:mb-4"><EqLoader tone="blue" bars={4} /></div>
                                 <span className="text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.2em] uppercase text-brand-gray">Loading Opportunities...</span>
                             </div>
                         ) : jobs.length === 0 ? (
@@ -321,7 +322,7 @@ export default function CareersClient() {
 
                                     {/* Bottom Meta */}
                                     <div className="flex flex-col gap-2 sm:gap-3 mt-auto pt-4 sm:pt-5 md:pt-6 border-t border-white/10 transition-colors">
-                                        <div className="flex items-center gap-2 sm:gap-3 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-widest text-brand-gray group-hover:text-brand-lime transition-colors">
+                                        <div className="flex items-center gap-2 sm:gap-3 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-widest text-brand-gray group-hover:text-brand-blue transition-colors">
                                             <i className="fa-solid fa-briefcase w-4 text-center flex-shrink-0"></i>
                                             <span className="uppercase">{job.employment_type.replace('_', ' ')}</span>
                                         </div>
@@ -334,7 +335,7 @@ export default function CareersClient() {
                                     {/* Call to Action */}
                                     <Link href={`/careers/${job.slug}`} className="mt-6 sm:mt-7 md:mt-8 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.2em] uppercase text-brand-white transition-colors flex items-center justify-between">
                                         View Details
-                                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-brand-lime group-hover:text-brand-black transition-all group-hover:translate-x-1 flex-shrink-0">
+                                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-brand-blue group-hover:text-brand-white transition-all group-hover:translate-x-1 flex-shrink-0">
                                             <i className="fa-solid fa-arrow-right text-[9px] sm:text-xs"></i>
                                         </div>
                                     </Link>
@@ -364,7 +365,7 @@ export default function CareersClient() {
 
                         <div className="absolute bottom-8 sm:bottom-10 md:bottom-12 left-4 sm:left-8 md:left-12 text-brand-white z-10 pr-4 sm:pr-6 md:pr-8">
                             <h3 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-display font-extrabold uppercase tracking-tighter leading-none mb-2 sm:mb-3 md:mb-4">
-                                Join The <br /> <span className="text-brand-lime">Team</span>
+                                Join The <br /> <span className="text-brand-blue">Team</span>
                             </h3>
                             <p className="text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-white/80">Our recruitment team reviews all submissions.</p>
                         </div>
@@ -379,16 +380,16 @@ export default function CareersClient() {
                             <form className="space-y-6 sm:space-y-8" onSubmit={(e) => e.preventDefault()}>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
                                     <div>
-                                        <input type="text" placeholder="FIRST NAME *" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-lime text-white placeholder-brand-gray rounded-none" />
+                                        <input type="text" placeholder="FIRST NAME *" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white placeholder-brand-gray rounded-none" />
                                     </div>
                                     <div>
-                                        <input type="text" placeholder="LAST NAME" className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-lime text-white placeholder-brand-gray rounded-none" />
+                                        <input type="text" placeholder="LAST NAME" className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white placeholder-brand-gray rounded-none" />
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
                                     {/* ── UPDATED PHONE INPUT ── */}
-                                    <div className="flex items-end border-b border-white/30 pb-2 transition-colors focus-within:border-brand-lime group">
+                                    <div className="flex items-end border-b border-white/30 pb-2 transition-colors focus-within:border-brand-blue group">
                                         <div className="relative flex items-center shrink-0 mb-[-2px] mr-2 sm:mr-3 md:mr-4">
                                             <select
                                                 value={countryCode}
@@ -408,22 +409,22 @@ export default function CareersClient() {
                                     </div>
 
                                     <div>
-                                        <input type="email" placeholder="EMAIL ADDRESS *" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-lime text-white placeholder-brand-gray rounded-none" />
+                                        <input type="email" placeholder="EMAIL ADDRESS *" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white placeholder-brand-gray rounded-none" />
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
                                     <div>
-                                        <input type="date" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-lime text-brand-gray [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-50 hover:[&::-webkit-calendar-picker-indicator]:opacity-100 transition-opacity rounded-none" />
+                                        <input type="date" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-brand-gray [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-50 hover:[&::-webkit-calendar-picker-indicator]:opacity-100 transition-opacity rounded-none" />
                                     </div>
                                     <div>
-                                        <input type="url" placeholder="SOCIAL / PORTFOLIO LINK *" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-lime text-white placeholder-brand-gray rounded-none" />
+                                        <input type="url" placeholder="SOCIAL / PORTFOLIO LINK *" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white placeholder-brand-gray rounded-none" />
                                     </div>
                                 </div>
 
                                 <div>
                                     <div className="relative">
-                                        <select required value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)} className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-lime text-white appearance-none cursor-pointer pr-6 sm:pr-7 md:pr-8 rounded-none">
+                                        <select required value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)} className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white appearance-none cursor-pointer pr-6 sm:pr-7 md:pr-8 rounded-none">
                                             <option className="text-brand-black" value="" disabled>SELECT ROLE *</option>
                                             <option className="text-brand-black" value="promoter">Promoter</option>
                                             <option className="text-brand-black" value="influencer">Influencer</option>
@@ -435,8 +436,8 @@ export default function CareersClient() {
                                     </div>
                                 </div>
 
-                                <button type="submit" className="w-full py-4 sm:py-5 md:py-6 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase mt-6 sm:mt-8 rounded-full bg-brand-lime text-brand-black hover:bg-brand-white transition-colors duration-300">
-                                    Submit Application
+                                <button type="submit" className="btn-glow w-full py-4 sm:py-5 md:py-6 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase mt-6 sm:mt-8 rounded-full bg-brand-blue text-brand-white hover:bg-brand-white hover:text-brand-black transition-colors duration-300">
+                                    <span>Submit Application</span>
                                 </button>
                             </form>
                         </div>
