@@ -45,6 +45,7 @@ next-env.d.ts
 
 # design sandbox (local mockups, not shipped)
 /sandbox
+/Sandbox
 
 # internal docs (not shipped)
 /docs/

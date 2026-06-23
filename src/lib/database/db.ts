@@ -368,8 +368,8 @@ export async function getPageMetadata(slug: string): Promise<Metadata> {
 
   if (!seoData) {
     return { 
-      title: "Dami Club | Elevate Your Nightlife Experience",
-      description: "Curating Premium Bollywood Experiences Worldwide.",
+      title: "Louder Club | Elevate Your Nightlife Experience",
+      description: "Curating Premium Party Experiences Worldwide.",
      };
   }
 

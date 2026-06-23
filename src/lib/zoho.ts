@@ -179,3 +179,79 @@ export function splitName(full: string): { firstName: string | null; lastName: s
     lastName: trimmed.slice(firstSpace + 1),
   };
 }
+
+// ── Search Contacts by phone OR email ────────────────────────────────────────
+// Used by the registration form to avoid pushing duplicates: if a contact
+// already exists under either the phone (Phone/Mobile) or the email, we skip the
+// create. Pass whichever identifiers you have.
+export async function findContactByPhoneOrEmail(opts: {
+  phoneE164?: string | null;
+  email?: string | null;
+}): Promise<FoundContact | null> {
+  const clauses: string[] = [];
+  if (opts.phoneE164) {
+    clauses.push(`(Phone:equals:${opts.phoneE164})`, `(Mobile:equals:${opts.phoneE164})`);
+  }
+  if (opts.email) {
+    clauses.push(`(Email:equals:${opts.email})`);
+  }
+  if (clauses.length === 0) return null;
+
+  const criteria = clauses.length === 1 ? clauses[0] : `(${clauses.join('or')})`;
+  const res = await zohoFetch(`/crm/v3/Contacts/search?criteria=${encodeURIComponent(criteria)}`);
+
+  if (res.status === 204) return null; // no match
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `Contact search failed (${res.status})`);
+  }
+
+  const data = await res.json();
+  const row = data?.data?.[0];
+  if (!row) return null;
+  return {
+    id: row.id,
+    firstName: row.First_Name ?? null,
+    lastName: row.Last_Name ?? null,
+    email: row.Email ?? null,
+  };
+}
+
+// ── Create Contact from the registration form ────────────────────────────────
+// Like createContact() but for the registration flow (no check-in city). The
+// brand owner tag is applied the same way as elsewhere.
+export interface RegistrationLead {
+  firstName?: string | null;
+  lastName: string; // required by Zoho
+  email: string;
+  phoneE164: string;
+}
+
+export async function createRegistrationContact(c: RegistrationLead): Promise<{ id: string }> {
+  const record: Record<string, any> = {
+    Last_Name: c.lastName,
+    First_Name: c.firstName || undefined,
+    Email: c.email,
+    Phone: c.phoneE164,
+    Lead_Source: 'Website Registration',
+    Description: `Registered via ${LEAD_OWNER} registration form.`,
+  };
+  if (process.env.ZOHO_OWNER_FIELD) record[process.env.ZOHO_OWNER_FIELD] = LEAD_OWNER;
+
+  const res = await zohoFetch(`/crm/v3/Contacts`, {
+    method: 'POST',
+    body: JSON.stringify({ data: [record], trigger: [] }),
+  });
+
+  const data = await res.json().catch(() => ({}));
+  const row = data?.data?.[0];
+
+  // Email is unique in Zoho → a duplicate email returns DUPLICATE_DATA.
+  if (row?.code === 'DUPLICATE_DATA') {
+    throw new Error('DUPLICATE');
+  }
+  if (!res.ok || row?.code !== 'SUCCESS') {
+    throw new Error(row?.message || data?.message || `Contact create failed (${res.status})`);
+  }
+  return { id: row.details.id };
+}

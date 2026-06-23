@@ -7,9 +7,11 @@ export default function HeaderWrapper() {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
   const isCheckin = pathname.startsWith("/checkin");
+  const isRegistration = pathname.startsWith("/registration");
 
-  // Admin and the kiosk check-in flow render without the public header.
-  if (isAdmin || isCheckin) return null;
+  // Admin, the kiosk check-in flow, and the immersive registration page render
+  // without the public header.
+  if (isAdmin || isCheckin || isRegistration) return null;
 
   // Otherwise, render the normal Header
   return <Header />;

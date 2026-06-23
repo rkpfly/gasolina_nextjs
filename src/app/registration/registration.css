@@ -1,0 +1,314 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap');
+
+/* ── Scene (scoped so nothing leaks to the rest of the site) ── */
+.reg-scene {
+  --bg:     #050505;
+  --card:   #000000;
+  --accent: #7D1648;            /* magenta (darkened) */
+  --hot:    #ff2a5f;            /* red-pink */
+  --line:   rgba(255, 255, 255, 0.14);
+  --muted:  rgba(255, 255, 255, 0.45);
+
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--bg);
+  color: #fff;
+  font-family: 'Google Sans', 'Helvetica Neue', Arial, sans-serif;
+}
+.reg-scene *, .reg-scene *::before, .reg-scene *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Background media ── */
+.reg-scene .background-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: #050505;
+  animation: reg-bgFade 1.6s ease both;
+}
+.reg-scene .background-wrapper video,
+.reg-scene .background-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  animation: reg-slowPan 32s infinite alternate linear;
+}
+.reg-scene .overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(120% 85% at 50% 45%, transparent 0%, rgba(5, 5, 5, 0.9) 100%),
+    linear-gradient(135deg, rgba(5, 5, 5, 0.55), rgba(5, 5, 5, 0.8));
+}
+
+/* ── Layout ── */
+.reg-scene .container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  /* extra bottom padding shifts the centered card slightly upward */
+  padding: 24px 27px 72px;
+}
+
+/* ── Flip scene ── */
+.reg-scene .flip {
+  position: relative;
+  width: 100%;
+  max-width: 374px;
+  perspective: 1500px;
+  animation: reg-cardIn 0.9s cubic-bezier(.2, .8, .2, 1) both;
+}
+.reg-scene .flip-inner {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+  transition: transform 1s cubic-bezier(.2, .8, .2, 1);
+}
+.reg-scene .flip.is-sent .flip-inner { transform: rotateY(180deg); }
+
+/* ── Card (both faces) ── */
+.reg-scene .access-card {
+  position: relative;
+  width: 100%;
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 37px 26px 29px;
+  box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.85);
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.reg-scene .card-back {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.reg-scene .access-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.8;
+}
+
+/* ── Title artwork ── */
+.reg-scene .title-img {
+  display: block;
+  width: 100%;
+  max-width: 240px;
+  height: auto;
+  margin: 0 auto 26px;
+  border-radius: 12px;
+  box-shadow: 0 14px 36px -12px rgba(0, 0, 0, 0.85);
+}
+
+/* ── Accent line ── */
+.reg-scene .accent-line {
+  width: 38px;
+  height: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 12px rgba(125, 22, 72, 0.7);
+  margin: 0 auto 24px;
+  animation: reg-lineGrow 0.8s cubic-bezier(.2, .8, .2, 1) both;
+  animation-delay: var(--d, 0s);
+}
+
+/* ── Floating-label fields ── */
+.reg-scene .field { position: relative; margin-bottom: 30px; }
+.reg-scene .field input {
+  width: 100%;
+  padding: 8px 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+  font-family: inherit;
+}
+.reg-scene .field label {
+  position: absolute;
+  left: 0;
+  top: 8px;
+  color: var(--muted);
+  font-size: 16px;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(.2, .8, .2, 1);
+}
+.reg-scene .field input:focus + label,
+.reg-scene .field input:not(:placeholder-shown) + label {
+  top: -14px;
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.reg-scene .field .underline {
+  position: absolute;
+  left: 0; bottom: 0;
+  height: 1px;
+  width: 100%;
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(125, 22, 72, 0.5);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(.2, .8, .2, 1);
+}
+.reg-scene .field input:focus ~ .underline { transform: scaleX(1); }
+
+/* ── Button ── */
+.reg-scene .btn {
+  position: relative;
+  width: 100%;
+  margin-top: 8px;
+  padding: 17px;
+  background: transparent;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  overflow: hidden;
+  font-family: inherit;
+}
+.reg-scene .btn span {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  transition: color 0.35s ease;
+}
+/* equalizer bars shown while the submission is in flight (nightlife vibe) */
+.reg-scene .btn .eq {
+  display: inline-flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+  height: 18px;
+}
+.reg-scene .btn .eq i {
+  width: 3px;
+  height: 100%;
+  background: #fff;
+  border-radius: 2px;
+  transform-origin: bottom;
+  animation: reg-eq 0.9s ease-in-out infinite;
+}
+.reg-scene .btn .eq i:nth-child(2) { animation-delay: 0.15s; }
+.reg-scene .btn .eq i:nth-child(3) { animation-delay: 0.30s; }
+.reg-scene .btn .eq i:nth-child(4) { animation-delay: 0.45s; }
+.reg-scene .btn .eq i:nth-child(5) { animation-delay: 0.60s; }
+.reg-scene .btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(.2, .8, .2, 1);
+}
+.reg-scene .btn:hover::before,
+.reg-scene .btn:focus-visible::before { transform: scaleX(1); }
+.reg-scene .btn:hover span,
+.reg-scene .btn:focus-visible span { color: var(--bg); }
+.reg-scene .btn:active { transform: translateY(1px); }
+.reg-scene .btn:disabled { cursor: default; opacity: 0.75; }
+.reg-scene .btn:disabled::before { transform: scaleX(0); }
+
+.reg-scene .form-error {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 0.72rem;
+  letter-spacing: 0.5px;
+  color: var(--hot);
+}
+
+.reg-scene .footer-note {
+  margin-top: 26px;
+  text-align: center;
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* ── Staggered reveal ── */
+.reg-scene .reveal {
+  animation: reg-revealUp 0.7s cubic-bezier(.2, .8, .2, 1) both;
+  animation-delay: var(--d, 0s);
+}
+
+/* ── Success (back face) ── */
+.reg-scene .back-inner { text-align: center; padding: 6px 2px; }
+.reg-scene .back-inner h2 {
+  font-size: 1.9rem; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase; color: #fff;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.45), 0 0 18px rgba(255, 255, 255, 0.22);
+}
+.reg-scene .back-inner p {
+  margin: 14px auto 0; max-width: 30ch;
+  font-size: 0.78rem; line-height: 1.65;
+  letter-spacing: 0.4px; color: var(--muted);
+}
+.reg-scene .check { width: 58px; height: 58px; margin: 0 auto 20px; display: block; }
+.reg-scene .check circle {
+  fill: none; stroke: #fff; stroke-width: 2;
+  stroke-dasharray: 151; stroke-dashoffset: 151;
+}
+.reg-scene .check path {
+  fill: none; stroke: #fff; stroke-width: 3;
+  stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 40; stroke-dashoffset: 40;
+}
+.reg-scene .flip.is-sent .check circle { animation: reg-draw 0.6s 0.65s ease forwards; }
+.reg-scene .flip.is-sent .check path   { animation: reg-draw 0.4s 1.05s ease forwards; }
+
+/* ── Keyframes ── */
+@keyframes reg-bgFade   { from { opacity: 0; } to { opacity: 1; } }
+@keyframes reg-slowPan  { 0% { transform: scale(1); } 100% { transform: scale(1.06); } }
+@keyframes reg-cardIn   { from { opacity: 0; transform: translateY(26px) scale(0.985); } to { opacity: 1; transform: none; } }
+@keyframes reg-revealUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes reg-lineGrow { from { opacity: 0; transform: scaleX(0); } to { opacity: 1; transform: scaleX(1); } }
+@keyframes reg-draw     { to { stroke-dashoffset: 0; } }
+@keyframes reg-eq       { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .reg-scene *, .reg-scene *::before, .reg-scene *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .reg-scene .reveal, .reg-scene .accent-line, .reg-scene .flip {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .reg-scene .check circle, .reg-scene .check path { stroke-dashoffset: 0 !important; }
+}
+
+/* ── Desktop ── */
+@media (min-width: 768px) {
+  .reg-scene .flip { max-width: 414px; }
+  .reg-scene .access-card { padding: 47px 42px 35px; }
+  .reg-scene .title-img { max-width: 260px; }
+}

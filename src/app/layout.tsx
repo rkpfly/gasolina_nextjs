@@ -3,6 +3,7 @@ import { Inter, Syne } from "next/font/google";
 import "./globals.css";
 import HeaderWrapper from "@/components/HeaderWrapper"; // Note the new import
 import Footer from "../components/Footer";
+import FooterGate from "@/components/FooterGate";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -43,8 +44,11 @@ export default function RootLayout({
         
         <main className="">{children}</main>
         
-        {/* The Footer stays here, safely querying the DB on the server */}
-        <Footer />
+        {/* The Footer stays here, safely querying the DB on the server.
+            FooterGate hides it on immersive routes (e.g. /registration). */}
+        <FooterGate>
+          <Footer />
+        </FooterGate>
       </body>
     </html>
   );
