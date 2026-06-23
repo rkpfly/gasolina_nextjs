@@ -173,6 +173,46 @@
 }
 .reg-scene .field input:focus ~ .underline { transform: scaleX(1); }
 
+/* ── Phone field with country-code selector ── */
+.reg-scene .field.phone > label {            /* label sits up permanently (a select occupies the line) */
+  top: -14px;
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.reg-scene .field.phone:focus-within > label { color: var(--accent); }
+.reg-scene .field.phone .phone-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--line);
+}
+.reg-scene .field.phone .cc {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: transparent;
+  border: none;
+  border-right: 1px solid var(--line);
+  color: #fff;
+  font-family: inherit;
+  font-size: 16px;
+  padding: 8px 26px 8px 0;
+  outline: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23ffffff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 9px 6px;
+}
+.reg-scene .field.phone .cc option { color: #000; } /* native dropdown is light */
+.reg-scene .field.phone .phone-row input {
+  flex: 1;
+  min-width: 0;
+  border: none;          /* the underline lives on .phone-row now */
+  padding: 8px 0;
+}
+.reg-scene .field.phone:focus-within .underline { transform: scaleX(1); }
+
 /* ── Button ── */
 .reg-scene .btn {
   position: relative;
@@ -250,7 +290,7 @@
   text-align: center;
   font-size: 0.62rem;
   letter-spacing: 1px;
-  color: rgba(255, 255, 255, 0.3);
+  color: #fff;
 }
 
 /* ── Staggered reveal ── */

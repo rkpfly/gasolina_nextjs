@@ -234,7 +234,7 @@ export async function createRegistrationContact(c: RegistrationLead): Promise<{ 
     Email: c.email,
     Phone: c.phoneE164,
     Lead_Source: 'Website Registration',
-    Description: `Registered via ${LEAD_OWNER} registration form.`,
+    Description: 'Registered via the Louder registration form.',
   };
   if (process.env.ZOHO_OWNER_FIELD) record[process.env.ZOHO_OWNER_FIELD] = LEAD_OWNER;
 

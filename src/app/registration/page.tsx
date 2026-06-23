@@ -8,12 +8,28 @@ type Status = 'idle' | 'submitting' | 'done' | 'error';
 // CSS-var styles need a small cast to satisfy TS.
 const v = (delay: string) => ({ ['--d']: delay } as React.CSSProperties);
 
+// Country dial codes for the phone field. Defaults to AU (+61); changeable.
+const COUNTRIES = [
+  { iso: 'AU', dial: '+61', label: 'AU +61' },
+  { iso: 'NZ', dial: '+64', label: 'NZ +64' },
+  { iso: 'GB', dial: '+44', label: 'GB +44' },
+  { iso: 'US', dial: '+1', label: 'US +1' },
+  { iso: 'IN', dial: '+91', label: 'IN +91' },
+  { iso: 'SG', dial: '+65', label: 'SG +65' },
+  { iso: 'AE', dial: '+971', label: 'AE +971' },
+  { iso: 'CA', dial: '+1', label: 'CA +1' },
+  { iso: 'ID', dial: '+62', label: 'ID +62' },
+  { iso: 'PH', dial: '+63', label: 'PH +63' },
+];
+
 export default function RegistrationPage() {
   const [status, setStatus] = useState<Status>('idle');
   const [error, setError] = useState<string | null>(null);
+  const [cc, setCc] = useState('AU'); // selected country (ISO)
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const sent = status === 'done';
+  const dial = COUNTRIES.find((c) => c.iso === cc)?.dial ?? '+61';
 
   // Background video: play once, then hold the final frame.
   const handleEnded = () => {
@@ -31,9 +47,12 @@ export default function RegistrationPage() {
       return;
     }
     const fd = new FormData(formEl);
+    // national number → digits only, drop any trunk 0, then prefix the dial code → E.164
+    const nationalNumber = String(fd.get('phone') || '').replace(/\D/g, '').replace(/^0+/, '');
     const payload = {
       email: String(fd.get('email') || '').trim(),
-      phone: String(fd.get('phone') || '').trim(),
+      phone: `${dial}${nationalNumber}`,
+      countryCode: dial,
       name: String(fd.get('name') || '').trim(),
     };
 
@@ -86,9 +105,21 @@ export default function RegistrationPage() {
                   <span className="underline" />
                 </div>
 
-                <div className="field reveal" style={v('.65s')}>
-                  <input type="tel" id="phone" name="phone" placeholder=" " required autoComplete="tel" />
-                  <label htmlFor="phone">Phone</label>
+                <div className="field phone reveal" style={v('.65s')}>
+                  <label htmlFor="phone">Mobile</label>
+                  <div className="phone-row">
+                    <select
+                      className="cc"
+                      aria-label="Country code"
+                      value={cc}
+                      onChange={(e) => setCc(e.target.value)}
+                    >
+                      {COUNTRIES.map((c) => (
+                        <option key={c.iso} value={c.iso}>{c.label}</option>
+                      ))}
+                    </select>
+                    <input type="tel" id="phone" name="phone" inputMode="tel" placeholder=" " required autoComplete="tel" />
+                  </div>
                   <span className="underline" />
                 </div>
 
@@ -123,7 +154,7 @@ export default function RegistrationPage() {
               </form>
 
               <p className="footer-note reveal" style={v('.95s')}>
-                Location details arrive by SMS, two hours before doors.
+                First access to perks, pre-sale tickets and offers.
               </p>
             </div>
 
@@ -135,7 +166,7 @@ export default function RegistrationPage() {
                   <path d="M14 27l8 8 16-16" />
                 </svg>
                 <h2>You&apos;re in.</h2>
-                <p>The list is set. Location details arrive by SMS, two hours before doors — keep your phone close.</p>
+                <p>You&apos;ll be the first to get perks, plus pre-sale access to tickets and offers.</p>
               </div>
             </div>
 
