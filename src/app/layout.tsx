@@ -19,8 +19,8 @@ const syne = Syne({
 
 // Because this is a Server Component again, we can safely export metadata!
 export const metadata: Metadata = {
-  title: "Dami Club | Elevate Your Nightlife Experience",
-  description: "Curating Premium Bollywood Experiences Worldwide.",
+  title: "Louder Club | Elevate Your Nightlife Experience",
+  description: "Curating Premium Clubbing Experiences Worldwide.",
 };
 
 export default function RootLayout({
