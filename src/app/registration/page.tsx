@@ -23,7 +23,7 @@ const COUNTRIES = [
 ];
 
 export default function RegistrationPage() {
-  const [status, setStatus] = useState<Status>('idle');
+  const [status, setStatus] = useState<Status>('done');
   const [error, setError] = useState<string | null>(null);
   const [cc, setCc] = useState('AU'); // selected country (ISO)
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -167,6 +167,16 @@ export default function RegistrationPage() {
                 </svg>
                 <h2>You&apos;re in.</h2>
                 <p>You&apos;ll be the first to get perks, plus pre-sale access to tickets and offers.</p>
+                <a
+                  className="ig-btn"
+                  href="https://www.instagram.com/loudersaturdays/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Follow us on Instagram"
+                >
+                  <i className="fab fa-instagram" aria-hidden="true" />
+                  Follow us
+                </a>
               </div>
             </div>
 

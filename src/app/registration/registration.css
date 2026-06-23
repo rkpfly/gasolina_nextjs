@@ -311,6 +311,37 @@
   font-size: 0.78rem; line-height: 1.65;
   letter-spacing: 0.4px; color: var(--muted);
 }
+/* Instagram "Follow us" CTA on the success face */
+.reg-scene .ig-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 24px;
+  padding: 11px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: border-color 0.3s ease, background 0.3s ease, transform 0.2s ease;
+}
+.reg-scene .ig-btn i {
+  font-size: 1.05rem;
+  /* Instagram brand gradient on the glyph */
+  background: linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.reg-scene .ig-btn:hover,
+.reg-scene .ig-btn:focus-visible {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+}
 .reg-scene .check { width: 58px; height: 58px; margin: 0 auto 20px; display: block; }
 .reg-scene .check circle {
   fill: none; stroke: #fff; stroke-width: 2;
