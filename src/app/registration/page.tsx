@@ -23,7 +23,7 @@ const COUNTRIES = [
 ];
 
 export default function RegistrationPage() {
-  const [status, setStatus] = useState<Status>('done');
+  const [status, setStatus] = useState<Status>('idle');
   const [error, setError] = useState<string | null>(null);
   const [cc, setCc] = useState('AU'); // selected country (ISO)
   const videoRef = useRef<HTMLVideoElement>(null);
