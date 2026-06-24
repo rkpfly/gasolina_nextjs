@@ -255,3 +255,53 @@ export async function createRegistrationContact(c: RegistrationLead): Promise<{ 
   }
   return { id: row.details.id };
 }
+
+// ── Best-effort push of a Lead to Zoho (Leads module) ────────────────────────
+// Used by the offer-submission flow. NEVER throws — a CRM hiccup must not break
+// the user's submission, so failures are swallowed and returned as { ok:false }.
+// No-ops (ok:false) when Zoho credentials aren't configured.
+export interface ZohoLeadInput {
+  firstName?: string | null;
+  lastName: string; // required by Zoho
+  email?: string | null;
+  phone?: string | null;
+  leadSource?: string | null;
+  description?: string | null;
+}
+
+export async function pushLeadToZoho(
+  lead: ZohoLeadInput
+): Promise<{ ok: boolean; id?: string; error?: string }> {
+  if (!CLIENT_ID || !CLIENT_SECRET || !REFRESH_TOKEN) {
+    return { ok: false, error: 'Zoho not configured' };
+  }
+  try {
+    const record: Record<string, any> = {
+      Last_Name: lead.lastName,
+      First_Name: lead.firstName || undefined,
+      Email: lead.email || undefined,
+      Phone: lead.phone || undefined,
+      Lead_Source: lead.leadSource || 'Website',
+      Description: lead.description || undefined,
+    };
+    if (process.env.ZOHO_OWNER_FIELD) record[process.env.ZOHO_OWNER_FIELD] = LEAD_OWNER;
+
+    const res = await zohoFetch(`/crm/v3/Leads`, {
+      method: 'POST',
+      body: JSON.stringify({ data: [record], trigger: [] }),
+    });
+    const data = await res.json().catch(() => ({}));
+    const row = data?.data?.[0];
+
+    // A duplicate email/phone is acceptable — treat it as a successful no-op.
+    if (row?.code === 'DUPLICATE_DATA') {
+      return { ok: true, id: row?.details?.id, error: 'DUPLICATE' };
+    }
+    if (!res.ok || row?.code !== 'SUCCESS') {
+      return { ok: false, error: row?.message || data?.message || `Lead create failed (${res.status})` };
+    }
+    return { ok: true, id: row.details.id };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : String(e) };
+  }
+}
