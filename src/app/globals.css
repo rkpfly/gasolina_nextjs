@@ -10,12 +10,16 @@
   --color-brand-border:   #E5E5E5;
 
   /* ─── Neon Accents (poster palette) ────────────────────── */
-  --color-brand-lime:     #C6F94B;   /* PRIMARY — CTAs, kickers, lead accent */
+  --color-brand-lime:     #6CFB13;   /* neon green — POP / semantic success */
   --color-brand-accent:   #FF2E93;   /* hot magenta */
   --color-brand-pink:     #FF2E93;   /* alias of accent for readability */
-  --color-brand-blue:     #3E6FF5;   /* electric blue (LOUDER logo) */
+  --color-brand-blue:     #723CF4;   /* electric violet — PRIMARY (site-wide) */
   --color-brand-coral:    #FF6B4A;   /* coral / sunset orange */
   --color-brand-purple:   #7C5CFF;   /* violet (gradient mid-tone) */
+
+  /* ─── Club brand (home page trial) ─────────────────────── */
+  --color-club-purple:    #723CF4;   /* electric violet — home PRIMARY accent */
+  --color-club-green:     #6CFB13;   /* neon green — home POP accent */
 
   /* Fonts */
   --font-sans:    var(--font-inter);
@@ -43,6 +47,10 @@ html, body {
 /* Screen-by-screen scroll snapping (scoped via a class toggled on <html>) */
 html.snap-home,
 html.snap-sections { scroll-snap-type: y proximity; }
+
+/* Home route — never allow horizontal overflow (oversized display type can spill).
+   `clip` (not hidden) so it doesn't create a scroll container or break y-snapping. */
+html.snap-home body { overflow-x: clip; }
 
 body {
   background: var(--color-brand-white);
@@ -164,7 +172,7 @@ body {
 #menu-overlay .menu-primary:hover {
   color: transparent;
   -webkit-text-stroke: 1.5px var(--color-brand-blue);
-  filter: drop-shadow(0 0 14px rgba(62, 111, 245, 0.45));
+  filter: drop-shadow(0 0 14px rgba(114, 60, 244, 0.45));
 }
 #menu-overlay .menu-secondary {
   transition: color 0.3s ease, transform 0.3s ease;
@@ -334,19 +342,23 @@ body {
 @keyframes ringSpin { to { transform: rotate(360deg); } }
 
 /* ─── Neon glow (box-shadow) ────────────────────────────────────── */
-.glow-lime  { box-shadow: 0 10px 36px -8px rgba(198, 249, 75, 0.55), 0 0 22px -4px rgba(198, 249, 75, 0.45); }
+.glow-lime  { box-shadow: 0 10px 36px -8px rgba(108, 251, 19, 0.50), 0 0 22px -4px rgba(108, 251, 19, 0.40); }
 .glow-pink  { box-shadow: 0 10px 36px -8px rgba(255, 46, 147, 0.55), 0 0 22px -4px rgba(255, 46, 147, 0.45); }
-.glow-blue  { box-shadow: 0 10px 36px -8px rgba(62, 111, 245, 0.55), 0 0 22px -4px rgba(62, 111, 245, 0.45); }
+.glow-blue  { box-shadow: 0 10px 36px -8px rgba(114, 60, 244, 0.55), 0 0 22px -4px rgba(114, 60, 244, 0.45); }
 .glow-coral { box-shadow: 0 10px 36px -8px rgba(255, 107, 74, 0.55), 0 0 22px -4px rgba(255, 107, 74, 0.45); }
+.glow-purple { box-shadow: 0 10px 36px -8px rgba(114, 60, 244, 0.55), 0 0 22px -4px rgba(114, 60, 244, 0.45); }
+.glow-green  { box-shadow: 0 10px 36px -8px rgba(108, 251, 19, 0.50), 0 0 22px -4px rgba(108, 251, 19, 0.40); }
 
 /* ─── Neon text glow ────────────────────────────────────────────── */
-.text-glow-lime  { text-shadow: 0 0 10px rgba(198, 249, 75, 0.55), 0 0 30px rgba(198, 249, 75, 0.3); }
+.text-glow-lime  { text-shadow: 0 0 10px rgba(108, 251, 19, 0.55), 0 0 30px rgba(108, 251, 19, 0.3); }
 .text-glow-pink  { text-shadow: 0 0 10px rgba(255, 46, 147, 0.55), 0 0 30px rgba(255, 46, 147, 0.3); }
-.text-glow-blue  { text-shadow: 0 0 10px rgba(62, 111, 245, 0.55), 0 0 30px rgba(62, 111, 245, 0.3); }
+.text-glow-blue  { text-shadow: 0 0 10px rgba(114, 60, 244, 0.55), 0 0 30px rgba(114, 60, 244, 0.3); }
+.text-glow-green  { text-shadow: 0 0 10px rgba(108, 251, 19, 0.60), 0 0 26px rgba(108, 251, 19, 0.35); }
+.text-glow-purple { text-shadow: 0 0 10px rgba(114, 60, 244, 0.60), 0 0 28px rgba(114, 60, 244, 0.35); }
 
 /* ─── Animated neon gradient text ───────────────────────────────── */
 .text-gradient-neon {
-  background-image: linear-gradient(90deg, #FF2E93, #7C5CFF, #3E6FF5, #C6F94B, #FF2E93);
+  background-image: linear-gradient(90deg, #FF2E93, #7C5CFF, #723CF4, #6CFB13, #FF2E93);
   background-size: 250% auto;
   -webkit-background-clip: text;
   background-clip: text;
@@ -367,8 +379,8 @@ body {
 }
 .btn-glow:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 44px -10px rgba(62, 111, 245, 0.6),
-              0 0 26px -4px rgba(62, 111, 245, 0.5);
+  box-shadow: 0 14px 44px -10px rgba(114, 60, 244, 0.6),
+              0 0 26px -4px rgba(114, 60, 244, 0.5);
 }
 .btn-glow:active { transform: translateY(0); }
 .btn-glow::after {
@@ -386,7 +398,17 @@ body {
 
 /* Pink / blue glow variants for the lift colour */
 .btn-glow.glow-on-pink:hover { box-shadow: 0 14px 44px -10px rgba(255, 46, 147, 0.6), 0 0 26px -4px rgba(255, 46, 147, 0.5); }
-.btn-glow.glow-on-blue:hover { box-shadow: 0 14px 44px -10px rgba(62, 111, 245, 0.6), 0 0 26px -4px rgba(62, 111, 245, 0.5); }
+.btn-glow.glow-on-blue:hover { box-shadow: 0 14px 44px -10px rgba(114, 60, 244, 0.6), 0 0 26px -4px rgba(114, 60, 244, 0.5); }
+.btn-glow.glow-on-purple:hover { box-shadow: 0 14px 44px -10px rgba(114, 60, 244, 0.62), 0 0 26px -4px rgba(114, 60, 244, 0.5); }
+.btn-glow.glow-on-green:hover  { box-shadow: 0 14px 44px -10px rgba(108, 251, 19, 0.55), 0 0 26px -4px rgba(108, 251, 19, 0.45); }
+
+/* VIP modal — squared corners + purple-themed submit (scoped; leaves shared LeadForm intact) */
+.vip-form button[type="submit"] { border-radius: 0; background-color: #723CF4; }
+.vip-form button[type="submit"]:hover {
+  background-color: #FFFFFF;
+  color: #0A0A0A;
+  box-shadow: 0 14px 44px -10px rgba(114, 60, 244, 0.62), 0 0 26px -4px rgba(114, 60, 244, 0.5);
+}
 
 /* ─── Modal & backdrop motion (CSS-driven modals) ───────────────── */
 .animate-modal-pop  { animation: modalPop 0.4s var(--ease-out-expo) forwards; }
@@ -397,8 +419,8 @@ body {
   box-shadow:
     0 30px 90px -20px rgba(0, 0, 0, 0.65),
     0 0 0 1px rgba(255, 255, 255, 0.6),
-    0 0 40px -6px rgba(62, 111, 245, 0.35),
-    0 0 60px -10px rgba(255, 46, 147, 0.25);
+    0 0 40px -6px rgba(114, 60, 244, 0.35),
+    0 0 60px -10px rgba(108, 251, 19, 0.22);
 }
 
 /* ─── Loader: equalizer bars ────────────────────────────────────── */

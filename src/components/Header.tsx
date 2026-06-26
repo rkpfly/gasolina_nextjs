@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,32 +25,33 @@ export default function Header() {
     <>
       <header
         id="navbar"
-        className={`fixed top-0 left-0 w-full z-9999 py-2 sm:py-4 md:py-6 px-4 sm:px-6 md:px-12 flex justify-end md:justify-between items-center transition-colors duration-300 ${
+        className={`fixed top-0 left-0 w-full z-9999 py-2 sm:py-4 md:py-6 px-4 sm:px-6 md:px-12 flex justify-between items-center transition-colors duration-300 ${
           isMenuOpen ? "bg-transparent" : "bg-brand-black/90 backdrop-blur-md border-b border-white/10"
         }`}
       >
         <Link
           href="/"
           onClick={closeMenu}
-          className={`absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 flex items-center transition-opacity duration-500 ${
+          aria-label="Louder"
+          className={`flex items-center mt-1 sm:mt-1.5 md:mt-2 ml-1 sm:ml-2 md:ml-3 transition-opacity duration-500 ${
             isMenuOpen
               ? "opacity-0 pointer-events-none delay-0"
               : "opacity-100 pointer-events-auto delay-200"
           }`}
         >
-          <div
-            aria-label="Louder"
-            className="w-12 h-12 sm:w-14 sm:h-14 md:w-20 md:h-20 rounded-full bg-white text-brand-black flex flex-col items-center justify-center leading-[0.8] transition-[transform,background-color] duration-500 hover:bg-brand-blue hover:-rotate-[8deg]"
-          >
-            <span className="font-display font-extrabold text-[0.5rem] sm:text-[0.58rem] md:text-[0.68rem] tracking-tight">
-              LOUDER<span className="text-brand-blue">.</span>
-            </span>
-          </div>
+          <Image
+            src="/louderSaturdaysLogo.png"
+            alt="Louder Saturdays"
+            width={814}
+            height={162}
+            priority
+            className="h-6 sm:h-7 md:h-9 w-auto transition-opacity duration-500 hover:opacity-80"
+          />
         </Link>
 
         {/* Desktop Navigation */}
         <nav
-          className={`hidden md:flex space-x-8 lg:space-x-12 items-center text-xs font-semibold tracking-[0.15em] uppercase text-white transition-opacity duration-500 ${revealOnClose}`}
+          className={`hidden lg:flex space-x-8 lg:space-x-12 items-center text-xs font-semibold tracking-[0.15em] uppercase text-white transition-opacity duration-500 ${revealOnClose}`}
         >
           <Link href="/book" className={`${navHover} transition-colors`}>
             Book
@@ -75,7 +77,7 @@ export default function Header() {
         <div className="flex items-center gap-3 sm:gap-4 relative z-[60]">
           <Link
             href="/book"
-            className={`btn-glow glow-on-blue bg-brand-blue text-brand-white hover:bg-brand-white hover:text-brand-black hidden md:inline-flex items-center text-xs font-bold tracking-[0.14em] uppercase px-5 py-2.5 rounded-full transition-all duration-500 ${revealOnClose}`}
+            className={`btn-glow glow-on-blue bg-brand-blue text-brand-white hover:bg-brand-white hover:text-brand-black hidden lg:inline-flex items-center text-xs font-bold tracking-[0.14em] uppercase px-5 py-2.5 rounded-full transition-all duration-500 ${revealOnClose}`}
           >
             <span>Reserve</span>
           </Link>

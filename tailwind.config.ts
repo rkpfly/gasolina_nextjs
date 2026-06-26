@@ -16,11 +16,11 @@ const config: Config = {
           offwhite: "#F4F4F5",
           gray: "#86868B",
           border: "#E5E5E5",
-          // Neon accents (poster palette) — lime leads
-          lime: "#C6F94B",
+          // Neon accents — electric violet leads, neon green pops (site-wide)
+          lime: "#6CFB13",
           accent: "#FF2E93",
           pink: "#FF2E93",
-          blue: "#3E6FF5",
+          blue: "#723CF4",
           coral: "#FF6B4A",
           purple: "#7C5CFF",
         },

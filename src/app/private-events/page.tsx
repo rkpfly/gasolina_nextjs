@@ -146,7 +146,7 @@ export default function PrivateEventsPage() {
                 delay={i * 90}
                 className="group bg-brand-black p-8 md:p-10 hover:bg-[#121214] transition-colors duration-500"
               >
-                <span className="block text-3xl md:text-4xl font-display font-bold text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.3)] group-hover:[-webkit-text-stroke:1px_#3E6FF5] transition-all duration-300 mb-6">
+                <span className="block text-3xl md:text-4xl font-display font-bold text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.3)] group-hover:[-webkit-text-stroke:1px_#723CF4] transition-all duration-300 mb-6">
                   {o.num}
                 </span>
                 <h3 className="text-xl md:text-2xl font-display font-bold uppercase tracking-tighter text-brand-white mb-3">

@@ -88,7 +88,7 @@ export default function HomePage() {
       <VIPForm vipModal={vipModal} setVipModal={setVipModal} />
 
       {/* ════════════════ HERO ════════════════ */}
-      <section className="relative min-h-screen w-full flex flex-col bg-brand-black overflow-hidden snap-start px-4 sm:px-6 md:px-12 pt-28 md:pt-32 pb-10 md:pb-16">
+      <section className="relative min-h-[80svh] md:min-h-[90svh] w-full flex flex-col bg-brand-black overflow-hidden snap-start px-4 sm:px-6 md:px-12 pt-28 md:pt-32 pb-6 md:pb-10">
         {/* Hero visual (CMS-driven) — full section height, fading to black toward the left */}
         <div
           aria-hidden
@@ -101,27 +101,29 @@ export default function HomePage() {
             autoPlayVideo
             className="w-full h-full object-cover"
           />
+          {/* Purple theme tint over the hero video (masked + fades with it) */}
+          <div className="absolute inset-0 bg-club-purple/25 mix-blend-overlay" />
         </div>
         {/* Grain */}
         <div
-          className="pointer-events-none absolute inset-0 z-0 opacity-[0.06] mix-blend-overlay"
+          className="pointer-events-none absolute inset-0 z-0 opacity-[0.1] mix-blend-overlay"
           style={{ backgroundImage: GRAIN }}
         />
 
         {/* Kicker banner (top) */}
-        <span className="relative z-10 self-start bg-brand-blue text-brand-white font-bold uppercase tracking-[0.18em] text-[10px] sm:text-xs md:text-sm px-4 py-2 glow-blue">
+        <span className="relative z-10 self-start bg-club-purple text-brand-white font-bold uppercase tracking-[0.18em] text-[10px] sm:text-xs md:text-sm px-4 py-2 glow-purple">
           A New Clubbing Era Begins
         </span>
 
         {/* Title block (bottom) */}
         <FadeUp className="relative z-10 mt-auto w-full max-w-[1600px] mx-auto">
-          <h1 className="font-display font-extrabold uppercase tracking-tighter text-brand-white leading-[0.82] text-[14vw] sm:text-[11vw] md:text-[9vw] lg:text-[8rem]">
-            LOUDER.<br />EVERY SATURDAY
+          <h1 className="font-display font-extrabold uppercase tracking-tighter text-brand-white leading-[0.82] text-[8vw] sm:text-[8.5vw] md:text-[9vw] lg:text-[8rem]">
+            LOUDER<span className="text-club-green text-glow-green">.</span><br />EVERY <span className="text-club-green text-glow-green">SATURDAY</span>
           </h1>
           <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
             {["Club Bangers", "R&B", "Hip Hop"].map((g, i) => (
               <span key={g} className="flex items-center gap-5">
-                {i > 0 && <span className={`w-1.5 h-1.5 rounded-full ${i === 1 ? "bg-brand-accent" : "bg-brand-lime"}`} />}
+                {i > 0 && <span className={`w-1.5 h-1.5 rounded-full ${i === 1 ? "bg-club-green shadow-[0_0_8px_#6CFB13]" : "bg-club-purple shadow-[0_0_8px_#723CF4]"}`} />}
                 <span className="text-[11px] sm:text-sm font-semibold tracking-[0.22em] uppercase text-brand-offwhite">
                   {g}
                 </span>
@@ -132,13 +134,13 @@ export default function HomePage() {
           <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
             <button
               onClick={() => setVipModal(true)}
-              className="btn-glow glow-on-blue bg-brand-blue text-brand-white px-8 md:px-10 py-4 rounded-full text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-center cursor-pointer hover:bg-brand-white hover:text-brand-black transition-colors duration-300 w-full sm:w-auto"
+              className="btn-glow glow-on-purple bg-club-purple text-brand-white px-8 md:px-10 py-4 rounded-full text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-center cursor-pointer hover:bg-brand-white hover:text-brand-black transition-colors duration-300 w-full sm:w-auto"
             >
               <span>Reserve VIP</span>
             </button>
             <Link
               href="#residency"
-              className="border border-brand-white/40 text-brand-white px-8 md:px-10 py-4 rounded-full text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-center hover:bg-brand-white hover:text-brand-black transition-colors duration-300 w-full sm:w-auto"
+              className="border border-club-green/50 text-brand-white px-8 md:px-10 py-4 rounded-full text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-center hover:bg-club-green hover:text-brand-black hover:shadow-[0_0_28px_-6px_#6CFB13] transition-all duration-300 w-full sm:w-auto"
             >
               The Residency
             </Link>
@@ -147,7 +149,7 @@ export default function HomePage() {
       </section>
 
       {/* ════════════════ MARQUEE ════════════════ */}
-      <div className="bg-brand-blue border-y border-brand-black overflow-hidden whitespace-nowrap">
+      <div className="bg-club-purple border-y border-brand-black overflow-hidden whitespace-nowrap">
         <div className="flex w-max animate-marquee">
           {[0, 1, 2].map((g) => (
             <div key={g} className="flex items-center gap-8 py-3 pr-8 text-brand-white">
@@ -168,7 +170,7 @@ export default function HomePage() {
           <FadeUp delay={120}>
             <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[1.02] text-[7vw] md:text-[4.6vw] max-w-[18ch]">
               Melbourne&apos;s home for{" "}
-              <span className="bg-brand-blue text-brand-white px-1.5">louder</span> nights,
+              <span className="bg-club-purple text-brand-white px-1.5">louder</span> nights,
               big sound &amp; the crowd that runs it.
             </h2>
           </FadeUp>
@@ -201,14 +203,14 @@ export default function HomePage() {
       >
         <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center">
           <FadeUp>
-            <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-blue mb-6">
+            <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-6">
               (02) — The Residency
             </p>
-            <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-[16vw] md:text-[7rem] mb-6">
+            <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-[10vw] md:text-[4.5rem] lg:text-[3.25rem] mb-6">
               Every
               <br />
               <span className="text-transparent [-webkit-text-stroke:1.5px_white]">
-                Friday
+              Saturday
               </span>
             </h2>
             <p className="text-brand-gray leading-relaxed max-w-[44ch] text-sm md:text-base">
@@ -219,11 +221,11 @@ export default function HomePage() {
 
           <FadeUp delay={150}>
             <div className="relative border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent p-8">
-              <span className="absolute top-0 left-0 w-full h-1 bg-brand-blue" />
+              <span className="absolute top-0 left-0 w-full h-1 bg-club-purple shadow-[0_0_16px_0_rgba(114,60,244,0.7)]" />
               {[
-                ["Event", featured?.title ?? "Dami Club", false],
-                ["When", "Every Friday · 10PM", true],
-                ["Venue", "The Loft · L3 Nightclubs", false],
+                ["Event", featured?.title ?? "Louder Club", false],
+                ["When", "Every Saturday · 10PM", true],
+                ["Venue", "Therapy · L3 Nightclubs", false],
                 ["Location", "Crown, Melbourne", false],
                 ["Dress", "Smart / Statement", false],
               ].map(([label, value, accent]) => (
@@ -236,7 +238,7 @@ export default function HomePage() {
                   </span>
                   <span
                     className={`font-display font-bold uppercase tracking-tight text-right text-base md:text-lg ${
-                      accent ? "text-brand-blue" : "text-brand-white"
+                      accent ? "text-club-green text-glow-green" : "text-brand-white"
                     }`}
                   >
                     {value}
@@ -246,13 +248,13 @@ export default function HomePage() {
               <div className="mt-6 flex flex-col sm:flex-row gap-3">
                 <Link
                   href="/book"
-                  className="btn-glow glow-on-blue flex-1 bg-brand-blue text-brand-white text-center py-4 text-xs font-bold tracking-[0.16em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
+                  className="btn-glow glow-on-purple flex-1 bg-club-purple text-brand-white text-center py-4 text-xs font-bold tracking-[0.16em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
                 >
                   <span>Book Tickets</span>
                 </Link>
                 <button
                   onClick={() => setVipModal(true)}
-                  className="flex-1 border border-white/30 text-brand-white text-center py-4 text-xs font-bold tracking-[0.16em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors cursor-pointer"
+                  className="flex-1 border border-club-green/40 text-brand-white text-center py-4 text-xs font-bold tracking-[0.16em] uppercase hover:bg-club-green hover:text-brand-black transition-all cursor-pointer"
                 >
                   Request VIP
                 </button>
@@ -267,7 +269,7 @@ export default function HomePage() {
         <div className="max-w-[1600px] mx-auto w-full">
           <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-10">
             <div>
-              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-blue mb-3">
+              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
                 (03) — The Nights
               </p>
               <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-5xl md:text-7xl">
@@ -276,7 +278,7 @@ export default function HomePage() {
             </div>
             <Link
               href="/gallery"
-              className="btn-glow glow-on-blue bg-brand-blue text-brand-white px-6 py-3 rounded-full text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
+              className="btn-glow glow-on-purple bg-club-purple text-brand-white px-6 py-3 rounded-full text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
             >
               <span>Full Gallery →</span>
             </Link>
@@ -302,14 +304,6 @@ export default function HomePage() {
 
       {/* ════════════════ INNER CIRCLE (newsletter) ════════════════ */}
       <section className="flex flex-col lg:flex-row bg-brand-white border-y border-brand-border">
-        <div className="w-full lg:w-1/2 aspect-square lg:aspect-auto relative overflow-hidden">
-          <MediaSlot
-            id="newsletter-visual"
-            mediaMap={media}
-            autoPlayVideo
-            className="w-full h-full object-cover"
-          />
-        </div>
         <FadeUp className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-10 md:p-16 lg:p-24">
           <div className="w-full max-w-md">
             <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-gray mb-4">
@@ -319,7 +313,7 @@ export default function HomePage() {
               Get on the List
             </h2>
             <p className="text-brand-gray font-medium text-xs sm:text-sm mb-8 md:mb-10">
-              Priority access to ticket drops, VIP tables, and the next Dami
+              Priority access to ticket drops, VIP tables, and the next Louder
               Club night — straight to your inbox.
             </p>
             <LeadForm
@@ -372,13 +366,13 @@ export default function HomePage() {
         {/* Dynamic Opacity Color Overlay Layer */}
           <motion.div 
             style={{ opacity: overlayOpacity }} // Opacity controlled by scroll
-            className="absolute inset-0 bg-brand-blue -z-10 pointer-events-none"
+            className="absolute inset-0 bg-club-purple -z-10 pointer-events-none"
           ></motion.div>
 
         {/* Foreground Content */}
         <FadeUp className="relative z-10 flex flex-col items-center">
           <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-white/70 mb-6">
-            Doors open every Friday
+            Doors open every Saturday
           </p>
           <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.84] text-[14vw] md:text-[10rem]">
             See You
@@ -387,7 +381,7 @@ export default function HomePage() {
           </h2>
           <button
             onClick={() => setVipModal(true)}
-            className="mt-10 bg-brand-black text-brand-white px-12 py-4 rounded-full text-sm font-bold tracking-[0.16em] uppercase hover:-translate-y-1 transition-transform duration-300 cursor-pointer"
+            className="mt-10 bg-brand-black text-brand-white px-12 py-4 text-sm font-bold tracking-[0.16em] uppercase border border-club-green/40 shadow-[0_0_30px_-6px_#6CFB13] hover:-translate-y-1 hover:shadow-[0_0_46px_-6px_#6CFB13] transition-all duration-300 cursor-pointer"
           >
             Reserve Your Spot
           </button>
@@ -398,7 +392,7 @@ export default function HomePage() {
 }
 
 function MarqueeSet() {
-  const items = ["Every Friday", "The Loft · L3 Nightclubs", "Crown, Melbourne"];
+  const items = ["Every Saturday", "Therapy · L3 Nightclubs", "Crown, Melbourne"];
   return (
     <>
       {items.map((t) => (

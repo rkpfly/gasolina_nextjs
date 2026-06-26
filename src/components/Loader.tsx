@@ -12,9 +12,9 @@
 type Tone = "lime" | "pink" | "blue" | "coral" | "white" | "black";
 
 const TONE_HEX: Record<Tone, string> = {
-  lime: "#C6F94B",
+  lime: "#6CFB13",
   pink: "#FF2E93",
-  blue: "#3E6FF5",
+  blue: "#723CF4",
   coral: "#FF6B4A",
   white: "#FFFFFF",
   black: "#0A0A0A",
@@ -98,7 +98,7 @@ export default function FullScreenLoader({
         className="pointer-events-none absolute h-72 w-72 rounded-full blur-3xl animate-glow-pulse"
         style={{
           background:
-            "radial-gradient(circle, rgba(62,111,245,0.35) 0%, rgba(255,46,147,0.18) 45%, transparent 70%)",
+            "radial-gradient(circle, rgba(114,60,244,0.35) 0%, rgba(108,251,19,0.16) 45%, transparent 70%)",
         }}
       />
 
