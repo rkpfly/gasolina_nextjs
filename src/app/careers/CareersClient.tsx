@@ -41,9 +41,55 @@ export default function CareersClient() {
     // Role autofilled when a roster card is clicked
     const [selectedRole, setSelectedRole] = useState('');
 
+    // Application form submission status
+    const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const [formError, setFormError] = useState('');
+
     const handleRoleSelect = (value: string) => {
         setSelectedRole(value);
         document.getElementById('apply')?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    // Submit the vendor/talent application to the API.
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (formStatus === 'loading') return;
+
+        const form = e.currentTarget;
+        const fd = new FormData(form);
+
+        setFormStatus('loading');
+        setFormError('');
+
+        const payload = {
+            first_name: (fd.get('first_name') as string)?.trim(),
+            last_name: (fd.get('last_name') as string)?.trim() || null,
+            country_code: countryCode,
+            phone: (fd.get('phone') as string)?.trim(),
+            email: (fd.get('email') as string)?.trim(),
+            role: selectedRole,
+            collaboration_date: (fd.get('collaboration_date') as string) || null,
+            portfolio_link: (fd.get('portfolio_link') as string)?.trim() || null,
+            source_url: typeof window !== 'undefined' ? window.location.href : null,
+        };
+
+        try {
+            const res = await fetch('/api/vendor-requests', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
+                throw new Error(data.error || 'Submission failed. Please try again.');
+            }
+            form.reset();
+            setSelectedRole('');
+            setFormStatus('success');
+        } catch (err) {
+            setFormError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+            setFormStatus('error');
+        }
     };
 
     // Hardcoded Roster Array (value maps to the application form's role <select>)
@@ -377,13 +423,19 @@ export default function CareersClient() {
                             <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-display font-bold uppercase tracking-tighter text-brand-white mb-1 sm:mb-2">Application Form</h3>
                             <p className="text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-gray mb-8 sm:mb-10 md:mb-12 border-b border-white/10 pb-4 sm:pb-5 md:pb-6">Submit your details and portfolio below.</p>
 
-                            <form className="space-y-6 sm:space-y-8" onSubmit={(e) => e.preventDefault()}>
+                            {formStatus === 'success' ? (
+                            <div className="bg-white/5 border border-white/10 text-brand-white p-6 sm:p-8 md:p-10 rounded-lg md:rounded-2xl text-center animate-in fade-in zoom-in duration-500">
+                                <h4 className="text-lg sm:text-xl md:text-2xl font-display font-bold uppercase tracking-tighter mb-2 sm:mb-3">Application Received</h4>
+                                <p className="text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-gray">Our recruitment team reviews all submissions and will be in touch.</p>
+                            </div>
+                            ) : (
+                            <form className="space-y-6 sm:space-y-8" onSubmit={handleSubmit}>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
                                     <div>
-                                        <input type="text" placeholder="FIRST NAME *" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white placeholder-brand-gray rounded-none" />
+                                        <input name="first_name" type="text" placeholder="FIRST NAME *" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white placeholder-brand-gray rounded-none" />
                                     </div>
                                     <div>
-                                        <input type="text" placeholder="LAST NAME" className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white placeholder-brand-gray rounded-none" />
+                                        <input name="last_name" type="text" placeholder="LAST NAME" className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white placeholder-brand-gray rounded-none" />
                                     </div>
                                 </div>
 
@@ -405,20 +457,23 @@ export default function CareersClient() {
                                             </select>
                                             <i className="fa-solid fa-chevron-down absolute right-0 text-[8px] pointer-events-none text-white"></i>
                                         </div>
-                                        <input type="tel" placeholder="PHONE NUMBER *" required className="w-full bg-transparent text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none placeholder-brand-gray text-white rounded-none" />
+                                        <input name="phone" type="tel" placeholder="PHONE NUMBER *" required className="w-full bg-transparent text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none placeholder-brand-gray text-white rounded-none" />
                                     </div>
 
                                     <div>
-                                        <input type="email" placeholder="EMAIL ADDRESS *" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white placeholder-brand-gray rounded-none" />
+                                        <input name="email" type="email" placeholder="EMAIL ADDRESS *" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white placeholder-brand-gray rounded-none" />
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 items-end">
                                     <div>
-                                        <input type="date" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-brand-gray [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-50 hover:[&::-webkit-calendar-picker-indicator]:opacity-100 transition-opacity rounded-none" />
+                                        <label htmlFor="collaboration_date" className="block text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-gray mb-2">
+                                            Preferred Collaboration Date *
+                                        </label>
+                                        <input id="collaboration_date" name="collaboration_date" type="date" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-brand-gray [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-50 hover:[&::-webkit-calendar-picker-indicator]:opacity-100 transition-opacity rounded-none" />
                                     </div>
                                     <div>
-                                        <input type="url" placeholder="SOCIAL / PORTFOLIO LINK *" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white placeholder-brand-gray rounded-none" />
+                                        <input name="portfolio_link" type="url" placeholder="SOCIAL / PORTFOLIO LINK *" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white placeholder-brand-gray rounded-none" />
                                     </div>
                                 </div>
 
@@ -436,10 +491,17 @@ export default function CareersClient() {
                                     </div>
                                 </div>
 
-                                <button type="submit" className="btn-glow w-full py-4 sm:py-5 md:py-6 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase mt-6 sm:mt-8 rounded-full bg-brand-blue text-brand-white hover:bg-brand-white hover:text-brand-black transition-colors duration-300">
-                                    <span>Submit Application</span>
+                                {formStatus === 'error' && (
+                                    <p className="text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-blue">
+                                        {formError}
+                                    </p>
+                                )}
+
+                                <button type="submit" disabled={formStatus === 'loading'} className="btn-glow w-full py-4 sm:py-5 md:py-6 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase mt-6 sm:mt-8 rounded-full bg-brand-blue text-brand-white hover:bg-brand-white hover:text-brand-black transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed">
+                                    <span>{formStatus === 'loading' ? 'Submitting...' : 'Submit Application'}</span>
                                 </button>
                             </form>
+                            )}
                         </div>
                     </div>
 

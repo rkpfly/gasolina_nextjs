@@ -12,6 +12,7 @@ const MENU_ITEMS = [
   { label: 'Images', href: '/admin/images', icon: '🖼️' },
   { label: 'Submissions', href: '/admin/submissions', icon: '📥' },
   { label: 'Offer Submissions', href: '/admin/offer-submissions', icon: '🎟️' },
+  { label: 'Vendor Requests', href: '/admin/vendor-requests', icon: '🎤' },
   { label: 'Manage Jobs', href: '/admin/jobs', icon: '💼' },
   { label: 'Manage Offers', href: '/admin/offers', icon: '🎁' },
   { label: 'Manage Cities', href: '/admin/city', icon: '🌆' },
