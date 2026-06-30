@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=794, initial-scale=1" />
-<title>Birthday Offer — Dami Club</title>
+<title>Birthday Offer — Louder Club</title>
 <style>
   :root {
     --black: #0A0A0A;
     --white: #FFFFFF;
     --gray: #86868B;
-    --lime: #C8F23C;
+    --blue: #723CF4; /* electric violet — Louder. primary, site-wide */
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body {
@@ -24,31 +24,40 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    padding: 64px 56px;
+    padding: 72px 56px;
   }
-  /* Decorative grain / glow */
+  /* Decorative glow — top-right + balancing bottom-left */
   body::before {
     content: "";
     position: absolute;
     top: -160px; right: -160px;
+    width: 540px; height: 540px;
+    background: radial-gradient(circle, rgba(114,60,244,0.30) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  body::after {
+    content: "";
+    position: absolute;
+    bottom: -200px; left: -180px;
     width: 520px; height: 520px;
-    background: radial-gradient(circle, rgba(200,242,60,0.18) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(114,60,244,0.16) 0%, transparent 70%);
     pointer-events: none;
   }
   .kicker {
     display: inline-block;
     align-self: flex-start;
-    background: var(--lime);
-    color: var(--black);
+    background: var(--blue);
+    color: var(--white);
     font-size: 15px;
     font-weight: 900;
     letter-spacing: 0.28em;
     text-transform: uppercase;
     padding: 12px 18px;
+    border-radius: 999px;
   }
   .title {
-    margin-top: 48px;
-    font-size: 92px;
+    margin-top: 52px;
+    font-size: 96px;
     line-height: 0.86;
     font-weight: 900;
     text-transform: uppercase;
@@ -59,18 +68,20 @@
     -webkit-text-stroke: 2px var(--white);
   }
   .offer {
-    margin-top: 56px;
+    margin-top: 64px;
     border: 1px solid rgba(255,255,255,0.14);
-    background: linear-gradient(180deg, rgba(255,255,255,0.05), transparent);
-    padding: 40px;
+    background: linear-gradient(180deg, rgba(114,60,244,0.10), transparent);
+    padding: 48px;
     position: relative;
+    border-radius: 14px;
+    overflow: hidden;
   }
   .offer::before {
     content: "";
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 6px;
-    background: var(--lime);
+    background: var(--blue);
   }
   .offer .label {
     font-size: 14px;
@@ -80,57 +91,39 @@
     font-weight: 700;
   }
   .offer .big {
-    margin-top: 14px;
-    font-size: 74px;
+    margin-top: 16px;
+    font-size: 78px;
     line-height: 0.9;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: -0.02em;
-    color: var(--lime);
+    color: var(--white);
   }
+  .offer .big span { color: var(--blue); }
   .offer .sub {
-    margin-top: 18px;
+    margin-top: 22px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 18px;
-    line-height: 1.5;
+    font-size: 19px;
+    line-height: 1.55;
     font-weight: 500;
     color: rgba(255,255,255,0.72);
-    max-width: 44ch;
-  }
-  .how {
-    margin-top: auto;
-    display: flex;
-    gap: 28px;
-  }
-  .how .step { flex: 1; }
-  .how .num {
-    font-size: 20px;
-    font-weight: 900;
-    color: var(--lime);
-  }
-  .how .txt {
-    margin-top: 8px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 15px;
-    line-height: 1.45;
-    font-weight: 500;
-    color: rgba(255,255,255,0.78);
+    max-width: 46ch;
   }
   .footer {
-    margin-top: 44px;
-    padding-top: 24px;
+    margin-top: auto;
+    padding-top: 28px;
     border-top: 1px solid rgba(255,255,255,0.14);
     display: flex;
     justify-content: space-between;
     align-items: baseline;
   }
   .footer .brand {
-    font-size: 30px;
+    font-size: 32px;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: -0.02em;
   }
-  .footer .brand span { color: var(--lime); }
+  .footer .brand span { color: var(--blue); }
   .footer .meta {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 13px;
@@ -149,29 +142,14 @@
 
   <div class="offer">
     <div class="label">The Birthday Offer</div>
-    <div class="big">Double Pass<br />On Us</div>
+    <div class="big">Double Pass<br /><span>On Us</span></div>
     <p class="sub">It's your night. Bring the crew and let us handle the rest — then upgrade to a VIP booth for the ultimate celebration.</p>
   </div>
 
-  <div class="how">
-    <div class="step">
-      <div class="num">01</div>
-      <div class="txt">Fill in your details on the birthday offer page.</div>
-    </div>
-    <div class="step">
-      <div class="num">02</div>
-      <div class="txt">We confirm your double pass &amp; booth options.</div>
-    </div>
-    <div class="step">
-      <div class="num">03</div>
-      <div class="txt">Roll up Friday &amp; celebrate on the floor.</div>
-    </div>
-  </div>
-
   <div class="footer">
-    <div class="brand">Dami<span>.</span>Club</div>
+    <div class="brand">Louder<span>.</span>Club</div>
     <div class="meta">
-      Every Friday · The Loft<br />
+      Every Saturday · Therapy<br />
       L3 Nightclubs · Crown, Melbourne
     </div>
   </div>

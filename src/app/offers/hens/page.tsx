@@ -22,7 +22,7 @@ export default function HensOfferPage() {
         <div className="w-full md:w-5/12 relative order-2 md:order-1 border-t md:border-t-0 md:border-r border-white/10 bg-[#0b0b10] flex items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/offers/hens-dami.png"
+            src="/offers/louder-hens.png"
             alt="Hens offer — free 1 + 2 entry"
             className="w-full h-auto object-contain"
           />
