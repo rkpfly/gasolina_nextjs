@@ -4,13 +4,13 @@ import HtmlFlyer from "@/components/HtmlFlyer";
 import BirthdayOfferForm from "./BirthdayOfferForm";
 
 export const metadata: Metadata = {
-  title: "Birthday Offer | Bollywood Club",
+  title: "Birthday Offer | Louder.",
   description:
-    "Birthdays made memorable — enjoy a double pass on us. Upgrade to VIP booths for the ultimate experience.",
+    "Birthdays made memorable — entry for you + 4 friends, complimentary. Upgrade to VIP booths for the ultimate experience.",
   openGraph: {
-    title: "Birthdays Made Memorable | Bollywood Club",
+    title: "Birthdays Made Memorable | Louder.",
     description:
-      "Celebrate in style with a double pass on us. Upgrade to VIP booths for the ultimate experience.",
+      "Celebrate in style — entry for you + 4 friends, complimentary. Upgrade to VIP booths for the ultimate experience.",
   },
 };
 
@@ -26,7 +26,7 @@ export default function BirthdayOfferPage() {
             src="/offers/birthday-flyer.html"
             baseWidth={794}
             baseHeight={1123}
-            title="Birthday offer — complimentary double pass"
+            title="Birthday offer — entry for you + 4 friends complimentary"
           />
         </div>
 
@@ -50,7 +50,7 @@ export default function BirthdayOfferPage() {
                 Birthdays Made Memorable
               </h1>
               <p className="text-[10px] sm:text-xs text-brand-gray leading-relaxed font-medium mt-3 max-w-md">
-                Enjoy a <span className="text-brand-white font-bold">double pass on us</span> — and
+                <span className="text-brand-white font-bold">Entry for you + 4 friends, complimentary</span> — and
                 upgrade to VIP booths for the ultimate experience. Fill in your details below and
                 we&apos;ll take care of the rest.
               </p>

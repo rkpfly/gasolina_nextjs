@@ -97,7 +97,7 @@ export default function VipClient() {
                     </h2>
                     <div className="w-16 h-[2px] bg-brand-blue mx-auto mb-8"></div>
                     <p className="text-sm md:text-base font-medium text-brand-gray leading-relaxed max-w-3xl mx-auto">
-                        Indulge in the ultimate VIP treatment with Dami Club, where luxury meets excitement. Our VIP Booth Package is designed to take your night out to extraordinary heights, offering an exclusive haven for you and your entourage to revel in style and absolute glamour.
+                        Indulge in the ultimate VIP treatment with Louder Club, where luxury meets excitement. Our VIP Booth Package is designed to take your night out to extraordinary heights, offering an exclusive haven for you and your entourage to revel in style and absolute glamour.
                     </p>
                 </div>
             </section>
@@ -137,7 +137,7 @@ export default function VipClient() {
 
                             <LeadForm
                                 formType="vip_table_request"
-                                fields={['f_name', 'l_name', 'email', 'phone', 'city', 'dob', 'total_guests']}
+                                fields={['f_name', 'l_name', 'email', 'phone', 'dob', 'total_guests', 'booking_date']}
                                 buttonText="Request Table"
                                 tone="dark"
                             />
@@ -206,7 +206,7 @@ export default function VipClient() {
                         <span className="text-transparent [-webkit-text-stroke:1px_#FFFFFF]">Private?</span>
                     </h2>
                     <p className="text-xs sm:text-sm md:text-base font-medium text-brand-gray mb-8 md:mb-12 max-w-xl mx-auto leading-relaxed">
-                        Birthdays, corporate nights and full venue buyouts — hosted with the sound and service that made Dami Club. Tell us your night and we&apos;ll build it.
+                        Birthdays, corporate nights and full venue buyouts — hosted with the sound and service that made Louder Club. Tell us your night and we&apos;ll build it.
                     </p>
                     <a
                         href="/private-events"

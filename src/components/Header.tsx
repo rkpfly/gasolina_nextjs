@@ -62,6 +62,9 @@ export default function Header() {
           <Link href="/offers" className={`${navHover} transition-colors`}>
             Offers
           </Link>
+          <Link href="/vip" className={`${navHover} transition-colors`}>
+            VIP
+          </Link>
           <Link href="/offers/birthday" className={`${navHover} transition-colors`}>
             Birthday
           </Link>
@@ -131,8 +134,6 @@ export default function Header() {
             </span>
             {[
               { label: "Offers", href: "/offers", delay: "0.3s" },
-              { label: "Birthday", href: "/offers/birthday", delay: "0.35s" },
-              { label: "Hens", href: "/offers/hens", delay: "0.4s" },
               { label: "Private Events", href: "/private-events", delay: "0.45s" },
               { label: "VIP Reservations", href: "/vip", delay: "0.5s" },
               { label: "Corporate Galas", href: "/corporate", delay: "0.55s" },

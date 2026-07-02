@@ -46,26 +46,29 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Free-text guest list: full name + Male/Female/Other for every attendee,
+    // including the birthday person / hen. Replaces the old single gender field.
+    const guests = (formData.get('guests') as string) || null;
+
     // ── Full submission payload (kept flexible so other offers can reuse it) ─
     const payload: Record<string, any> = {
       name,
       email,
       phone,
+      guests,
       dob: (formData.get('dob') as string) || null,
-      gender: (formData.get('gender') as string) || null,
       celebration_date: (formData.get('celebration_date') as string) || null,
-      group_size: (formData.get('group_size') as string) || null,
       booth_interest: (formData.get('booth_interest') as string) || null,
       proof_url: proofUrl,
       source_url: (formData.get('source_url') as string) || null,
     };
 
     const sql = `
-      INSERT INTO offer_submissions (offer_key, email, phone, payload)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO offer_submissions (offer_key, email, phone, guests, payload)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING id, submitted_at;
     `;
-    const result = await query(sql, [offer_key, email, phone, JSON.stringify(payload)]);
+    const result = await query(sql, [offer_key, email, phone, guests, JSON.stringify(payload)]);
 
     // Best-effort push to Zoho CRM as a Lead (no-op if not configured).
     await pushLeadToZoho({
@@ -76,8 +79,9 @@ export async function POST(request: NextRequest) {
       description: [
         `Offer: ${offer_key}`,
         payload.dob ? `DOB: ${payload.dob}` : null,
-        payload.gender ? `Gender: ${payload.gender}` : null,
         payload.celebration_date ? `Celebration: ${payload.celebration_date}` : null,
+        payload.booth_interest ? `Booth interest: ${payload.booth_interest}` : null,
+        payload.guests ? `Guests: ${payload.guests}` : null,
         payload.source_url ? `Source: ${payload.source_url}` : null,
       ].filter(Boolean).join(' | '),
     });

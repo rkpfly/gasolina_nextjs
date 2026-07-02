@@ -210,7 +210,7 @@ export default function CorporateClient() {
 
                             <LeadForm
                               formType="corporate_inquiry"
-                              fields={['f_name', 'l_name', 'company_name', 'email', 'phone', 'city', 'description']}
+                              fields={['f_name', 'l_name', 'company_name', 'email', 'phone', 'description']}
                               buttonText="Submit Inquiry"
                               tone="dark"
                             />

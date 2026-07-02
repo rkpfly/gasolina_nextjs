@@ -24,7 +24,7 @@ export default function BirthdayOfferForm() {
     email: "",
     phone: "",
     dob: "",
-    gender: "",
+    guests: "",
     celebration_date: "",
   });
   const [countryCode, setCountryCode] = useState("+61");
@@ -39,7 +39,7 @@ export default function BirthdayOfferForm() {
   }, []);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -62,7 +62,7 @@ export default function BirthdayOfferForm() {
       fd.append("email", formData.email);
       fd.append("phone", `${countryCode}${formData.phone}`);
       fd.append("dob", formData.dob);
-      fd.append("gender", formData.gender);
+      fd.append("guests", formData.guests);
       fd.append("celebration_date", formData.celebration_date);
       // fd.append("proofFile", proofFile);
       fd.append("source_url", currentUrl);
@@ -89,10 +89,10 @@ export default function BirthdayOfferForm() {
       <div className="flex flex-col items-center justify-center text-center py-16 px-6 border border-white/10 rounded-xl bg-white/5">
         <p className="text-2xl mb-4">🥂</p>
         <h3 className="text-xl font-display font-bold uppercase tracking-tighter text-brand-white mb-3">
-          You&apos;re On The List
+          Details Received
         </h3>
         <p className="text-[10px] sm:text-xs text-brand-gray leading-relaxed max-w-xs tracking-widest uppercase font-bold">
-          We&apos;ve received your details. Keep an eye on your inbox — your double pass is on its way.
+          We&apos;ve got their details and we will get back to them.
         </p>
       </div>
     );
@@ -185,23 +185,28 @@ export default function BirthdayOfferForm() {
         </div>
       </div>
 
-      <div className={`${wrapperClass} relative`}>
-        <select
-          name="gender"
-          value={formData.gender}
-          onChange={handleChange}
-          required
-          className={`w-full bg-transparent text-[9px] sm:text-[10px] md:text-xs font-bold tracking-[0.15em] uppercase focus:outline-none appearance-none cursor-pointer [color-scheme:dark] ${
-            formData.gender === "" ? "text-brand-gray" : "text-brand-white"
-          }`}
-        >
-          <option value="" disabled className="bg-brand-black">SELECT GENDER *</option>
-          <option value="Female" className="bg-brand-black">Female</option>
-          <option value="Male" className="bg-brand-black">Male</option>
-          <option value="Non-binary" className="bg-brand-black">Non-binary</option>
-          <option value="Prefer not to say" className="bg-brand-black">Prefer not to say</option>
-        </select>
-        <i className="fa-solid fa-chevron-down absolute right-0 top-1 text-[8px] pointer-events-none text-brand-white/50" />
+      <div>
+        <label className={labelClass}>Guest List — You + 4 Friends *</label>
+        <div className={wrapperClass}>
+          <textarea
+            name="guests"
+            value={formData.guests}
+            onChange={handleChange}
+            required
+            rows={6}
+            placeholder={
+              "List every guest, including yourself — full name + Male/Female/Other, one per line. e.g.\nJane Doe – Female (Birthday)\nJohn Smith – Male\nAlex Kim – Other"
+            }
+            className={`${inputClass} resize-none normal-case tracking-normal leading-relaxed`}
+          />
+        </div>
+        <p className="text-[8px] tracking-[0.15em] uppercase text-brand-white/40 mt-2 font-bold leading-relaxed">
+          Entry for you + 4 friends, complimentary. Once you submit, we review based on
+          availability, allocation and our terms &amp; conditions, then send your tickets.
+        </p>
+        <p className="text-[8px] tracking-[0.15em] uppercase text-brand-white/30 mt-2 font-bold leading-relaxed">
+          Must provide ID &amp; proof of birthday. Valid for 14 days before or after your birthday.
+        </p>
       </div>
 
       {/* <div>
@@ -241,7 +246,7 @@ export default function BirthdayOfferForm() {
       >
         <span className="inline-flex items-center gap-2">
           {formStatus === "loading" && <EqLoader tone="white" bars={4} />}
-          {formStatus === "loading" ? "Submitting..." : "Claim My Double Pass"}
+          {formStatus === "loading" ? "Submitting..." : "Claim Complimentary Entry"}
         </span>
       </button>
     </form>

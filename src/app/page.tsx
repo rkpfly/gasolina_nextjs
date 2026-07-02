@@ -20,6 +20,27 @@ interface Theme {
   thumbnail_url?: string;
 }
 
+interface Offer {
+  id: string;
+  slug: string;
+  offer_title: string;
+  short_description: string;
+  thumbnail_url: string;
+  category: string;
+  expiry_date: string;
+}
+
+interface BlogPost {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  cover_image: string;
+  tags: string[];
+  published_at: string;
+  created_at: string;
+}
+
 // Left-to-right fade so the poster melts into the black hero
 const POSTER_MASK =
   "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.3) 38%, #000 85%)";
@@ -30,6 +51,8 @@ const GRAIN =
 export default function HomePage() {
   const [media, setMedia] = useState<Record<string, MediaAsset>>({});
   const [themes, setThemes] = useState<Theme[]>([]);
+  const [offers, setOffers] = useState<Offer[]>([]);
+  const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [vipModal, setVipModal] = useState(false);
 
@@ -59,12 +82,16 @@ export default function HomePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [mediaRes, themesData] = await Promise.all([
+        const [mediaRes, themesData, offersRes, blogsRes] = await Promise.all([
           fetch("/api/media?page=/home"),
           fetchActiveThemes(),
+          fetch("/api/offers"),
+          fetch("/api/blogs"),
         ]);
         if (mediaRes.ok) setMedia(await mediaRes.json());
         setThemes(themesData);
+        if (offersRes.ok) setOffers(await offersRes.json());
+        if (blogsRes.ok) setBlogs(await blogsRes.json());
       } catch (error) {
         console.error("Failed to fetch page data:", error);
       } finally {
@@ -121,7 +148,7 @@ export default function HomePage() {
             LOUDER<span className="text-club-green text-glow-green">.</span><br />EVERY <span className="text-club-green text-glow-green">SATURDAY</span>
           </h1>
           <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
-            {["Club Bangers", "R&B", "Hip Hop"].map((g, i) => (
+            {["DANCE", "POP", "HOUSE"].map((g, i) => (
               <span key={g} className="flex items-center gap-5">
                 {i > 0 && <span className={`w-1.5 h-1.5 rounded-full ${i === 1 ? "bg-club-green shadow-[0_0_8px_#6CFB13]" : "bg-club-purple shadow-[0_0_8px_#723CF4]"}`} />}
                 <span className="text-[11px] sm:text-sm font-semibold tracking-[0.22em] uppercase text-brand-offwhite">
@@ -169,15 +196,13 @@ export default function HomePage() {
           </FadeUp>
           <FadeUp delay={120}>
             <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[1.02] text-[7vw] md:text-[4.6vw] max-w-[18ch]">
-              Melbourne&apos;s home for{" "}
-              <span className="bg-club-purple text-brand-white px-1.5">louder</span> nights,
-              big sound &amp; the crowd that runs it.
+              Melbourne&apos;s <span className="bg-club-purple text-brand-white px-1.5">louder</span>
+              <br /> nights &amp; big sound.
             </h2>
           </FadeUp>
           <FadeUp delay={200}>
             <div className="mt-12 md:mt-16 flex flex-wrap gap-8 md:gap-14 border-t border-brand-border pt-8">
               {[
-                ["Residency", "Weekly"],
                 ["Floor", "L3 Nightclubs"],
                 ["Sound", "Club · R&B · Hip Hop"],
                 ["City", "Melbourne"],
@@ -264,13 +289,149 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ════════════════ OFFERS ════════════════ */}
+      {offers.length > 0 && (
+        <section className="min-h-screen flex flex-col justify-center bg-brand-black text-brand-white snap-start px-4 sm:px-6 md:px-12 py-20">
+          <div className="max-w-[1600px] mx-auto w-full">
+            <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-10">
+              <div>
+                <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
+                  (03) — The Offers
+                </p>
+                <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-5xl md:text-7xl">
+                  Members&apos; Perks
+                </h2>
+              </div>
+              <Link
+                href="/offers"
+                className="btn-glow glow-on-purple bg-club-purple text-brand-white px-6 py-3 rounded-full text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
+              >
+                <span>All Offers →</span>
+              </Link>
+            </FadeUp>
+
+            <FadeUp
+              delay={150}
+              className="flex overflow-x-auto gap-4 sm:gap-6 pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+            >
+              {offers.map((offer) => (
+                <Link
+                  key={offer.id}
+                  href={`/offers/${offer.slug}`}
+                  className="snap-start shrink-0 w-[260px] sm:w-[300px] md:w-[340px] flex flex-col group"
+                >
+                  {/* Image */}
+                  <div className="aspect-[4/5] w-full overflow-hidden relative mb-4 bg-white/5">
+                    <img
+                      src={offer.thumbnail_url}
+                      alt={offer.offer_title}
+                      className="absolute inset-0 w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+                    />
+                    {offer.category && (
+                      <span className="absolute top-3 left-3 z-10 bg-brand-black/80 backdrop-blur-sm text-brand-white text-[9px] font-bold tracking-widest uppercase px-3 py-1.5">
+                        {offer.category}
+                      </span>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-brand-black/90 via-transparent to-transparent opacity-80" />
+                  </div>
+
+                  {/* Text */}
+                  <h3 className="text-lg md:text-xl font-display font-bold uppercase tracking-tighter text-brand-white mb-2 group-hover:text-transparent group-hover:[-webkit-text-stroke:1px_#FFFFFF] transition-colors duration-300">
+                    {offer.offer_title}
+                  </h3>
+                  <p className="text-[11px] sm:text-xs text-brand-gray leading-relaxed font-medium mb-4 line-clamp-2">
+                    {offer.short_description}
+                  </p>
+                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/10">
+                    <span className="text-[9px] uppercase tracking-[0.2em] text-brand-white/50 font-bold">
+                      {offer.expiry_date
+                        ? `Expires ${new Date(offer.expiry_date).toLocaleDateString()}`
+                        : "Ongoing"}
+                    </span>
+                    <span className="text-[9px] font-bold tracking-widest uppercase text-club-green group-hover:text-brand-white transition-colors">
+                      View Details &rarr;
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </FadeUp>
+          </div>
+        </section>
+      )}
+
+      {/* ════════════════ JOURNAL / BLOGS ════════════════ */}
+      {blogs.length > 0 && (
+        <section className="min-h-screen flex flex-col justify-center bg-brand-offwhite text-brand-black snap-start px-4 sm:px-6 md:px-12 py-20">
+          <div className="max-w-[1600px] mx-auto w-full">
+            <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-10">
+              <div>
+                <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
+                  (04) — The Journal
+                </p>
+                <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-5xl md:text-7xl">
+                  Latest Stories
+                </h2>
+              </div>
+              <Link
+                href="/blogs"
+                className="btn-glow glow-on-purple bg-club-purple text-brand-white px-6 py-3 rounded-full text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-black hover:text-brand-white transition-colors"
+              >
+                <span>Read the Journal →</span>
+              </Link>
+            </FadeUp>
+
+            <FadeUp delay={150} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              {blogs.slice(0, 3).map((post) => (
+                <Link
+                  key={post.id}
+                  href={`/blogs/${post.slug}`}
+                  className="flex flex-col group"
+                >
+                  {/* Image */}
+                  <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-brand-black/5 mb-5">
+                    <img
+                      src={post.cover_image}
+                      alt={post.title}
+                      className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+                    />
+                    {post.tags?.[0] && (
+                      <span className="absolute top-4 left-4 z-10 bg-club-purple text-brand-white px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] rounded-full">
+                        {post.tags[0]}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Text */}
+                  <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-gray mb-3">
+                    {new Date(post.published_at || post.created_at).toLocaleDateString("en-AU", {
+                      month: "short",
+                      day: "2-digit",
+                      year: "numeric",
+                    })}
+                  </p>
+                  <h3 className="text-lg md:text-2xl font-display font-bold uppercase tracking-tighter text-brand-black leading-tight mb-2 group-hover:text-club-purple transition-colors">
+                    {post.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm font-medium text-brand-gray leading-relaxed mb-4 line-clamp-2">
+                    {post.excerpt}
+                  </p>
+                  <span className="mt-auto text-[10px] font-bold uppercase tracking-[0.15em] text-brand-black group-hover:text-club-purple transition-colors">
+                    Read Article &rarr;
+                  </span>
+                </Link>
+              ))}
+            </FadeUp>
+          </div>
+        </section>
+      )}
+
       {/* ════════════════ GALLERY / THE NIGHTS ════════════════ */}
       <section className="min-h-screen flex flex-col justify-center bg-[#0f0f10] text-brand-white snap-start px-4 sm:px-6 md:px-12 py-20">
         <div className="max-w-[1600px] mx-auto w-full">
           <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-10">
             <div>
               <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
-                (03) — The Nights
+                (05) — The Nights
               </p>
               <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-5xl md:text-7xl">
                 Inside the Room
@@ -307,7 +468,7 @@ export default function HomePage() {
         <FadeUp className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-10 md:p-16 lg:p-24">
           <div className="w-full max-w-md">
             <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-gray mb-4">
-              (04) — Inner Circle
+              (06) — Inner Circle
             </p>
             <h2 className="font-display font-extrabold uppercase tracking-tighter text-brand-black text-3xl sm:text-4xl md:text-5xl mb-3">
               Get on the List
@@ -318,7 +479,7 @@ export default function HomePage() {
             </p>
             <LeadForm
               formType="home_newsletter"
-              fields={["f_name", "l_name", "email", "phone", "city"]}
+              fields={["f_name", "l_name", "email", "phone", "dob"]}
               buttonText="Join the Club"
             />
           </div>

@@ -207,32 +207,119 @@ export default function CareersClient() {
     return (
         <main className="w-full bg-brand-black text-brand-white selection:bg-brand-blue selection:text-brand-white">
 
-            {/* ── HERO SECTION ── */}
-            <section className="relative w-full px-3 sm:px-4 md:px-6 lg:px-8 pt-20 sm:pt-24 md:pt-28 pb-8 sm:pb-10 md:pb-12 flex flex-col">
-                <div
-                    className={`relative w-full h-[40svh] sm:h-[45svh] md:h-[50svh] min-h-[350px] sm:min-h-[400px] rounded-lg md:rounded-[2rem] overflow-hidden bg-brand-black shadow-2xl flex items-center justify-center text-center transition-[clip-path] duration-[1200ms] ease-custom ${
-                        isRevealed ? '[clip-path:polygon(0_0,_100%_0,_100%_100%,_0_100%)]' : '[clip-path:polygon(0_100%,_100%_100%,_100%_100%,_0_100%)]'
-                    }`}
-                >
-                    <MediaSlot
-                        id="hero-video"
-                        mediaMap={media}
-                        className={`absolute inset-0 w-full h-full object-cover filter grayscale opacity-60 transition-transform duration-[10000ms] ease-out ${
-                            isRevealed ? 'scale-100' : 'scale-[1.15]'
+            {/* ── APPLICATION FORM SECTION (top of page) ── */}
+            <section id="apply" className="scroll-mt-24 pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-3 sm:px-4 md:px-6 lg:px-12 bg-[#0f0f10]">
+                <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-8 sm:gap-10 md:gap-12 lg:gap-16 items-stretch">
+
+                    {/* Left Image Reveal */}
+                    <div
+                        className={`w-full lg:w-1/2 relative rounded-lg md:rounded-[2rem] overflow-hidden min-h-[400px] sm:min-h-[500px] md:min-h-[600px] transition-[clip-path] duration-[1200ms] ease-custom ${
+                            isRevealed ? '[clip-path:polygon(0_0,_100%_0,_100%_100%,_0_100%)]' : '[clip-path:polygon(0_100%,_100%_100%,_100%_100%,_0_100%)]'
                         }`}
-                    />
+                    >
+                        <MediaSlot
+                            id="form-media"
+                            mediaMap={media}
+                            className="absolute inset-0 w-full h-full object-cover filter grayscale-[10%]"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-brand-black/60 to-transparent"></div>
 
-                    <div className="absolute inset-0 bg-brand-black/30"></div>
-
-                    <div className="relative z-20 fade-up px-3 sm:px-6 w-full flex flex-col items-center">
-                        <span className="inline-block text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.2em] uppercase text-brand-white bg-brand-blue px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full shadow-lg mb-2 sm:mb-3 md:mb-4 lg:mb-6">
-                            Join The Movement
-                        </span>
-
-                        <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl xl:text-[8vw] leading-none font-display font-extrabold uppercase tracking-tighter text-brand-white">
-                            <span className="py-[0.15em] inline-block align-bottom">CA</span><span className="text-transparent [-webkit-text-stroke:1px_#FFFFFF] py-[0.15em] inline-block align-bottom">REERS</span>
-                        </h1>
+                        <div className="absolute bottom-8 sm:bottom-10 md:bottom-12 left-4 sm:left-8 md:left-12 text-brand-white z-10 pr-4 sm:pr-6 md:pr-8">
+                            <h3 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-display font-extrabold uppercase tracking-tighter leading-none mb-2 sm:mb-3 md:mb-4">
+                                Join The <br /> <span className="text-brand-blue">Team</span>
+                            </h3>
+                            <p className="text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-white/80">Our recruitment team reviews all submissions.</p>
+                        </div>
                     </div>
+
+                    {/* Right Form */}
+                    <div className="w-full lg:w-1/2 flex flex-col justify-center py-6 sm:py-8 mt-6 sm:mt-8 lg:mt-0 fade-up" style={{ transitionDelay: '200ms' }}>
+                        <div className="max-w-xl w-full mx-auto lg:mx-0 mt-6 sm:mt-8 lg:mt-0">
+                            <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-display font-bold uppercase tracking-tighter text-brand-white mb-1 sm:mb-2">Application Form</h3>
+                            <p className="text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-gray mb-8 sm:mb-10 md:mb-12 border-b border-white/10 pb-4 sm:pb-5 md:pb-6">Submit your details and portfolio below.</p>
+
+                            {formStatus === 'success' ? (
+                            <div className="bg-white/5 border border-white/10 text-brand-white p-6 sm:p-8 md:p-10 rounded-lg md:rounded-2xl text-center animate-in fade-in zoom-in duration-500">
+                                <h4 className="text-lg sm:text-xl md:text-2xl font-display font-bold uppercase tracking-tighter mb-2 sm:mb-3">Application Received</h4>
+                                <p className="text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-gray">Our recruitment team reviews all submissions and will be in touch.</p>
+                            </div>
+                            ) : (
+                            <form className="space-y-6 sm:space-y-8" onSubmit={handleSubmit}>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+                                    <div>
+                                        <input name="first_name" type="text" placeholder="FIRST NAME *" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white placeholder-brand-gray rounded-none" />
+                                    </div>
+                                    <div>
+                                        <input name="last_name" type="text" placeholder="LAST NAME" className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white placeholder-brand-gray rounded-none" />
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+                                    {/* ── UPDATED PHONE INPUT ── */}
+                                    <div className="flex items-end border-b border-white/30 pb-2 transition-colors focus-within:border-brand-blue group">
+                                        <div className="relative flex items-center shrink-0 mb-[-2px] mr-2 sm:mr-3 md:mr-4">
+                                            <select
+                                                value={countryCode}
+                                                onChange={(e) => setCountryCode(e.target.value)}
+                                                className="bg-transparent text-[8px] sm:text-[9px] md:text-xs font-bold tracking-widest uppercase text-white focus:outline-none appearance-none cursor-pointer pr-4 sm:pr-5"
+                                            >
+                                                <option className="text-brand-black" value="+61">🇦🇺 +61</option>
+                                                <option className="text-brand-black" value="+64">🇳🇿 +64</option>
+                                                <option className="text-brand-black" value="+65">🇸🇬 +65</option>
+                                                <option className="text-brand-black" value="+91">🇮🇳 +91</option>
+                                                <option className="text-brand-black" value="+44">🇬🇧 +44</option>
+                                                <option className="text-brand-black" value="+1">🇺🇸 +1</option>
+                                            </select>
+                                            <i className="fa-solid fa-chevron-down absolute right-0 text-[8px] pointer-events-none text-white"></i>
+                                        </div>
+                                        <input name="phone" type="tel" placeholder="PHONE NUMBER *" required className="w-full bg-transparent text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none placeholder-brand-gray text-white rounded-none" />
+                                    </div>
+
+                                    <div>
+                                        <input name="email" type="email" placeholder="EMAIL ADDRESS *" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white placeholder-brand-gray rounded-none" />
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 items-end">
+                                    <div>
+                                        <label htmlFor="collaboration_date" className="block text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-gray mb-2">
+                                            Preferred Collaboration Date *
+                                        </label>
+                                        <input id="collaboration_date" name="collaboration_date" type="date" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-brand-gray [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-50 hover:[&::-webkit-calendar-picker-indicator]:opacity-100 transition-opacity rounded-none" />
+                                    </div>
+                                    <div>
+                                        <input name="portfolio_link" type="url" placeholder="SOCIAL / PORTFOLIO LINK *" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white placeholder-brand-gray rounded-none" />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div className="relative">
+                                        <select required value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)} className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white appearance-none cursor-pointer pr-6 sm:pr-7 md:pr-8 rounded-none">
+                                            <option className="text-brand-black" value="" disabled>SELECT ROLE *</option>
+                                            <option className="text-brand-black" value="promoter">Promoter</option>
+                                            <option className="text-brand-black" value="influencer">Influencer</option>
+                                            <option className="text-brand-black" value="artist">Artist (DJ/Producer)</option>
+                                            <option className="text-brand-black" value="musician">Live Musician</option>
+                                            <option className="text-brand-black" value="vocalist">Vocalist</option>
+                                        </select>
+                                        <i className="fa-solid fa-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-[8px] sm:text-[9px] md:text-[10px] text-white pointer-events-none"></i>
+                                    </div>
+                                </div>
+
+                                {formStatus === 'error' && (
+                                    <p className="text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-blue">
+                                        {formError}
+                                    </p>
+                                )}
+
+                                <button type="submit" disabled={formStatus === 'loading'} className="btn-glow w-full py-4 sm:py-5 md:py-6 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase mt-6 sm:mt-8 rounded-full bg-brand-blue text-brand-white hover:bg-brand-white hover:text-brand-black transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed">
+                                    <span>{formStatus === 'loading' ? 'Submitting...' : 'Submit Application'}</span>
+                                </button>
+                            </form>
+                            )}
+                        </div>
+                    </div>
+
                 </div>
             </section>
 
@@ -389,122 +476,6 @@ export default function CareersClient() {
                             ))
                         )}
                     </div>
-                </div>
-            </section>
-
-            {/* ── APPLICATION FORM SECTION ── */}
-            <section id="apply" className="scroll-mt-24 py-10 sm:py-12 md:py-16 lg:py-20 px-3 sm:px-4 md:px-6 lg:px-12 bg-[#0f0f10] border-t border-white/10">
-                <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-8 sm:gap-10 md:gap-12 lg:gap-16 items-stretch">
-
-                    {/* Left Image Reveal */}
-                    <div
-                        className={`w-full lg:w-1/2 relative rounded-lg md:rounded-[2rem] overflow-hidden min-h-[400px] sm:min-h-[500px] md:min-h-[600px] transition-[clip-path] duration-[1200ms] ease-custom ${
-                            isRevealed ? '[clip-path:polygon(0_0,_100%_0,_100%_100%,_0_100%)]' : '[clip-path:polygon(0_100%,_100%_100%,_100%_100%,_0_100%)]'
-                        }`}
-                    >
-                        <MediaSlot
-                            id="form-media"
-                            mediaMap={media}
-                            className="absolute inset-0 w-full h-full object-cover filter grayscale-[10%]"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-brand-black/60 to-transparent"></div>
-
-                        <div className="absolute bottom-8 sm:bottom-10 md:bottom-12 left-4 sm:left-8 md:left-12 text-brand-white z-10 pr-4 sm:pr-6 md:pr-8">
-                            <h3 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-display font-extrabold uppercase tracking-tighter leading-none mb-2 sm:mb-3 md:mb-4">
-                                Join The <br /> <span className="text-brand-blue">Team</span>
-                            </h3>
-                            <p className="text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-white/80">Our recruitment team reviews all submissions.</p>
-                        </div>
-                    </div>
-
-                    {/* Right Form */}
-                    <div className="w-full lg:w-1/2 flex flex-col justify-center py-6 sm:py-8 mt-6 sm:mt-8 lg:mt-0 fade-up" style={{ transitionDelay: '200ms' }}>
-                        <div className="max-w-xl w-full mx-auto lg:mx-0 mt-6 sm:mt-8 lg:mt-0">
-                            <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-display font-bold uppercase tracking-tighter text-brand-white mb-1 sm:mb-2">Application Form</h3>
-                            <p className="text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-gray mb-8 sm:mb-10 md:mb-12 border-b border-white/10 pb-4 sm:pb-5 md:pb-6">Submit your details and portfolio below.</p>
-
-                            {formStatus === 'success' ? (
-                            <div className="bg-white/5 border border-white/10 text-brand-white p-6 sm:p-8 md:p-10 rounded-lg md:rounded-2xl text-center animate-in fade-in zoom-in duration-500">
-                                <h4 className="text-lg sm:text-xl md:text-2xl font-display font-bold uppercase tracking-tighter mb-2 sm:mb-3">Application Received</h4>
-                                <p className="text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-gray">Our recruitment team reviews all submissions and will be in touch.</p>
-                            </div>
-                            ) : (
-                            <form className="space-y-6 sm:space-y-8" onSubmit={handleSubmit}>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-                                    <div>
-                                        <input name="first_name" type="text" placeholder="FIRST NAME *" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white placeholder-brand-gray rounded-none" />
-                                    </div>
-                                    <div>
-                                        <input name="last_name" type="text" placeholder="LAST NAME" className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white placeholder-brand-gray rounded-none" />
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-                                    {/* ── UPDATED PHONE INPUT ── */}
-                                    <div className="flex items-end border-b border-white/30 pb-2 transition-colors focus-within:border-brand-blue group">
-                                        <div className="relative flex items-center shrink-0 mb-[-2px] mr-2 sm:mr-3 md:mr-4">
-                                            <select
-                                                value={countryCode}
-                                                onChange={(e) => setCountryCode(e.target.value)}
-                                                className="bg-transparent text-[8px] sm:text-[9px] md:text-xs font-bold tracking-widest uppercase text-white focus:outline-none appearance-none cursor-pointer pr-4 sm:pr-5"
-                                            >
-                                                <option className="text-brand-black" value="+61">🇦🇺 +61</option>
-                                                <option className="text-brand-black" value="+64">🇳🇿 +64</option>
-                                                <option className="text-brand-black" value="+65">🇸🇬 +65</option>
-                                                <option className="text-brand-black" value="+91">🇮🇳 +91</option>
-                                                <option className="text-brand-black" value="+44">🇬🇧 +44</option>
-                                                <option className="text-brand-black" value="+1">🇺🇸 +1</option>
-                                            </select>
-                                            <i className="fa-solid fa-chevron-down absolute right-0 text-[8px] pointer-events-none text-white"></i>
-                                        </div>
-                                        <input name="phone" type="tel" placeholder="PHONE NUMBER *" required className="w-full bg-transparent text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none placeholder-brand-gray text-white rounded-none" />
-                                    </div>
-
-                                    <div>
-                                        <input name="email" type="email" placeholder="EMAIL ADDRESS *" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white placeholder-brand-gray rounded-none" />
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 items-end">
-                                    <div>
-                                        <label htmlFor="collaboration_date" className="block text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-gray mb-2">
-                                            Preferred Collaboration Date *
-                                        </label>
-                                        <input id="collaboration_date" name="collaboration_date" type="date" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-brand-gray [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-50 hover:[&::-webkit-calendar-picker-indicator]:opacity-100 transition-opacity rounded-none" />
-                                    </div>
-                                    <div>
-                                        <input name="portfolio_link" type="url" placeholder="SOCIAL / PORTFOLIO LINK *" required className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white placeholder-brand-gray rounded-none" />
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div className="relative">
-                                        <select required value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)} className="w-full bg-transparent border-b border-white/30 pb-2 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase outline-none transition-colors duration-300 focus:border-brand-blue text-white appearance-none cursor-pointer pr-6 sm:pr-7 md:pr-8 rounded-none">
-                                            <option className="text-brand-black" value="" disabled>SELECT ROLE *</option>
-                                            <option className="text-brand-black" value="promoter">Promoter</option>
-                                            <option className="text-brand-black" value="influencer">Influencer</option>
-                                            <option className="text-brand-black" value="artist">Artist (DJ/Producer)</option>
-                                            <option className="text-brand-black" value="musician">Live Musician</option>
-                                            <option className="text-brand-black" value="vocalist">Vocalist</option>
-                                        </select>
-                                        <i className="fa-solid fa-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-[8px] sm:text-[9px] md:text-[10px] text-white pointer-events-none"></i>
-                                    </div>
-                                </div>
-
-                                {formStatus === 'error' && (
-                                    <p className="text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-blue">
-                                        {formError}
-                                    </p>
-                                )}
-
-                                <button type="submit" disabled={formStatus === 'loading'} className="btn-glow w-full py-4 sm:py-5 md:py-6 text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase mt-6 sm:mt-8 rounded-full bg-brand-blue text-brand-white hover:bg-brand-white hover:text-brand-black transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed">
-                                    <span>{formStatus === 'loading' ? 'Submitting...' : 'Submit Application'}</span>
-                                </button>
-                            </form>
-                            )}
-                        </div>
-                    </div>
-
                 </div>
             </section>
 

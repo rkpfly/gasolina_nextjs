@@ -3,12 +3,13 @@
 import { useState, useEffect } from 'react';
 import { CountryCodePicker } from './CountryCodePicker';
 import { EqLoader } from './Loader';
+import SaturdayCalendar from './SaturdayCalendar';
 
 // Define the available fields as a type for strict checking
 export type FormField =
   | 'f_name' | 'l_name' | 'email' | 'phone' | 'city'
   | 'region' | 'country' | 'dob' | 'total_guests'
-  | 'description' | 'company_name';
+  | 'description' | 'company_name' | 'booking_date';
 
 interface LeadFormProps {
   formType: string;
@@ -23,13 +24,14 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
   const [formData, setFormData] = useState<Record<string, string>>({
     f_name: '', l_name: '', email: '', phone: '', city: '',
     region: '', country: '', dob: '', total_guests: '',
-    description: '', company_name: ''
+    description: '', company_name: '', booking_date: ''
   });
 
   const [citySelection, setCitySelection] = useState('');
   const [customCity, setCustomCity] = useState('');
   const [countryCode, setCountryCode] = useState('+61');
   const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [bookingError, setBookingError] = useState(false);
   const [currentUrl, setCurrentUrl] = useState('');
 
   useEffect(() => {
@@ -42,6 +44,13 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // The Saturday calendar has no native `required`, so guard it manually.
+    if (fields.includes('booking_date') && !formData.booking_date) {
+      setBookingError(true);
+      return;
+    }
+
     setFormStatus('loading');
 
     const finalCity = citySelection === 'Other' ? customCity : citySelection;
@@ -170,6 +179,27 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
             return (
               <div key={field} className={wrapperClass}>
                 <input type="date" name="dob" placeholder="DATE OF BIRTH" value={formData.dob} onChange={handleChange} className={inputClass} />
+              </div>
+            );
+          case 'booking_date':
+            return (
+              <div key={field} className="flex flex-col gap-3">
+                <label className={`text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase ${dark ? 'text-white' : 'text-brand-black'}`}>
+                  Select Booking Date (Saturdays) *
+                </label>
+                <SaturdayCalendar
+                  value={formData.booking_date}
+                  onChange={(val) => {
+                    setFormData({ ...formData, booking_date: val });
+                    setBookingError(false);
+                  }}
+                  dark={dark}
+                />
+                {bookingError && (
+                  <p className="text-red-500 text-[8px] sm:text-[9px] md:text-xs font-bold uppercase tracking-widest">
+                    Please select a Saturday.
+                  </p>
+                )}
               </div>
             );
           case 'description':

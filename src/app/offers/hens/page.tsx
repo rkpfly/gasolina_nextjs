@@ -3,13 +3,13 @@ import Link from "next/link";
 import HensOfferForm from "./HensOfferForm";
 
 export const metadata: Metadata = {
-  title: "Hens Offer | Bollywood Club",
+  title: "Hens Offer | Louder.",
   description:
-    "Celebrate her last night of freedom — free 1 + 2 entry for the bride and her girls. Upgrade to VIP booths for the ultimate hens night.",
+    "Celebrate her last night of freedom — hen + 4 complimentary entry for the bride and her crew. Upgrade to VIP booths for the ultimate hens night.",
   openGraph: {
-    title: "Hens Night Made Memorable | Bollywood Club",
+    title: "Hens Night Made Memorable | Louder.",
     description:
-      "Free 1 + 2 entry for the bride and her girls. Enquire about VIP booths for the ultimate hens night.",
+      "Hen + 4 complimentary entry for the bride and her crew. Enquire about VIP booths for the ultimate hens night.",
   },
 };
 
@@ -23,7 +23,7 @@ export default function HensOfferPage() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/offers/louder-hens.png"
-            alt="Hens offer — free 1 + 2 entry"
+            alt="Hens offer — hen + 4 complimentary entry"
             className="w-full h-auto object-contain"
           />
         </div>
@@ -48,10 +48,9 @@ export default function HensOfferPage() {
                 Hens Night Made Memorable
               </h1>
               <p className="text-[10px] sm:text-xs text-brand-gray leading-relaxed font-medium mt-3 max-w-md">
-                The bride and her girls get <span className="text-brand-white font-bold">free 1 + 2 entry</span>{" "}
-                <span className="text-brand-white/60">(females only)</span> — and you can enquire about a
-                VIP booth for the ultimate hens night. Fill in your details below and we&apos;ll take care
-                of the rest.
+                The bride and her crew get <span className="text-brand-white font-bold">hen + 4 complimentary entry</span>{" "}
+                — and you can enquire about a VIP booth for the ultimate hens night. Fill in your details
+                below and we&apos;ll take care of the rest.
               </p>
             </div>
           </div>

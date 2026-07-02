@@ -24,7 +24,7 @@ export default function HensOfferForm() {
     email: "",
     phone: "",
     celebration_date: "",
-    group_size: "",
+    guests: "",
   });
   const [countryCode, setCountryCode] = useState("+61");
   const [boothInterest, setBoothInterest] = useState(false);
@@ -37,7 +37,7 @@ export default function HensOfferForm() {
   }, []);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -53,9 +53,8 @@ export default function HensOfferForm() {
       fd.append("name", formData.name);
       fd.append("email", formData.email);
       fd.append("phone", `${countryCode}${formData.phone}`);
-      fd.append("gender", "Female");
       fd.append("celebration_date", formData.celebration_date);
-      fd.append("group_size", formData.group_size);
+      fd.append("guests", formData.guests);
       fd.append("booth_interest", boothInterest ? "Yes" : "No");
       fd.append("source_url", currentUrl);
 
@@ -81,10 +80,10 @@ export default function HensOfferForm() {
       <div className="flex flex-col items-center justify-center text-center py-16 px-6 border border-white/10 rounded-xl bg-white/5">
         <p className="text-2xl mb-4">👑</p>
         <h3 className="text-xl font-display font-bold uppercase tracking-tighter text-brand-white mb-3">
-          You&apos;re On The List
+          Details Received
         </h3>
         <p className="text-[10px] sm:text-xs text-brand-gray leading-relaxed max-w-xs tracking-widest uppercase font-bold">
-          We&apos;ve received your details. Keep an eye on your inbox — your hens entry is on its way.
+          We&apos;ve got their details and we will get back to them.
           {boothInterest && " We'll be in touch about VIP booth options too."}
         </p>
       </div>
@@ -149,40 +148,39 @@ export default function HensOfferForm() {
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-        <div>
-          <label className={labelClass}>Hens Night Date *</label>
-          <div className={wrapperClass}>
-            <input
-              type="date"
-              name="celebration_date"
-              value={formData.celebration_date}
-              onChange={handleChange}
-              required
-              className={inputClass}
-            />
-          </div>
+      <div>
+        <label className={labelClass}>Hens Night Date *</label>
+        <div className={wrapperClass}>
+          <input
+            type="date"
+            name="celebration_date"
+            value={formData.celebration_date}
+            onChange={handleChange}
+            required
+            className={inputClass}
+          />
         </div>
-        <div>
-          <label className={labelClass}>Group Size</label>
-          <div className={`${wrapperClass} relative`}>
-            <select
-              name="group_size"
-              value={formData.group_size}
-              onChange={handleChange}
-              className={`w-full bg-transparent text-[9px] sm:text-[10px] md:text-xs font-bold tracking-[0.15em] uppercase focus:outline-none appearance-none cursor-pointer [color-scheme:dark] ${
-                formData.group_size === "" ? "text-brand-gray" : "text-brand-white"
-              }`}
-            >
-              <option value="" disabled className="bg-brand-black">SELECT SIZE</option>
-              <option value="1-3" className="bg-brand-black">1 – 3 (Free Entry)</option>
-              <option value="4-6" className="bg-brand-black">4 – 6</option>
-              <option value="7-10" className="bg-brand-black">7 – 10</option>
-              <option value="10+" className="bg-brand-black">10+</option>
-            </select>
-            <i className="fa-solid fa-chevron-down absolute right-0 top-1 text-[8px] pointer-events-none text-brand-white/50" />
-          </div>
+      </div>
+
+      <div>
+        <label className={labelClass}>Guest List — Hen + 4 Friends *</label>
+        <div className={wrapperClass}>
+          <textarea
+            name="guests"
+            value={formData.guests}
+            onChange={handleChange}
+            required
+            rows={6}
+            placeholder={
+              "List every guest, including the hen — full name + Male/Female/Other, one per line. e.g.\nJane Doe – Female (Hen)\nSam Lee – Female\nAlex Kim – Other"
+            }
+            className={`${inputClass} resize-none normal-case tracking-normal leading-relaxed`}
+          />
         </div>
+        <p className="text-[8px] tracking-[0.15em] uppercase text-brand-white/40 mt-2 font-bold leading-relaxed">
+          Hen + 4 friends, complimentary entry. Once you submit, we review based on
+          availability, allocation and our terms &amp; conditions, then send your tickets.
+        </p>
       </div>
 
       <label className="flex items-start gap-3 cursor-pointer group">
@@ -204,7 +202,7 @@ export default function HensOfferForm() {
       >
         <span className="inline-flex items-center gap-2">
           {formStatus === "loading" && <EqLoader tone="white" bars={4} />}
-          {formStatus === "loading" ? "Submitting..." : "Claim Our Free Entry"}
+          {formStatus === "loading" ? "Submitting..." : "Claim Complimentary Entry"}
         </span>
       </button>
     </form>
