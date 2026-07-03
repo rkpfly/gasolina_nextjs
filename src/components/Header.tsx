@@ -80,7 +80,7 @@ export default function Header() {
         <div className="flex items-center gap-3 sm:gap-4 relative z-[60]">
           <Link
             href="/book"
-            className={`btn-glow glow-on-blue bg-brand-blue text-brand-white hover:bg-brand-white hover:text-brand-black hidden lg:inline-flex items-center text-xs font-bold tracking-[0.14em] uppercase px-5 py-2.5 rounded-full transition-all duration-500 ${revealOnClose}`}
+            className={`btn-glow glow-on-blue bg-brand-blue text-brand-white hover:bg-brand-white hover:text-brand-black hidden lg:inline-flex items-center text-xs font-bold tracking-[0.14em] uppercase px-5 py-2.5 transition-all duration-500 ${revealOnClose}`}
           >
             <span>Reserve</span>
           </Link>

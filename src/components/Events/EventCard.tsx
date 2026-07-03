@@ -148,13 +148,13 @@ export function EventCard({ event, isActive, imgSrc, delay, onReserve, onBookVIP
           <div className="flex flex-col gap-3">
             <button
               onClick={onReserve}
-              className="relative inline-flex items-center justify-center w-full py-3 rounded-full text-xs font-bold tracking-[0.15em] uppercase text-center bg-brand-black text-white hover:bg-gray-800 transition-all duration-300"
+              className="relative inline-flex items-center justify-center w-full py-3 text-xs font-bold tracking-[0.15em] uppercase text-center bg-brand-black text-white hover:bg-gray-800 transition-all duration-300"
             >
               <span>Reserve Tickets</span>
             </button>
             <button
               onClick={onBookVIP}
-              className="relative inline-flex items-center justify-center w-full py-3 rounded-full text-xs font-bold tracking-[0.15em] uppercase text-center bg-transparent text-brand-white border border-brand-white hover:bg-brand-offwhite transition-all duration-300"
+              className="relative inline-flex items-center justify-center w-full py-3 text-xs font-bold tracking-[0.15em] uppercase text-center bg-transparent text-brand-white border border-brand-white hover:bg-brand-offwhite transition-all duration-300"
             >
               Book VIP
             </button>
@@ -162,7 +162,7 @@ export function EventCard({ event, isActive, imgSrc, delay, onReserve, onBookVIP
         ) : (
           <button
             disabled
-            className="w-full py-3 rounded-full text-xs font-bold tracking-[0.15em] uppercase text-center bg-brand-offwhite text-brand-gray cursor-not-allowed mt-auto"
+            className="w-full py-3 text-xs font-bold tracking-[0.15em] uppercase text-center bg-brand-offwhite text-brand-gray cursor-not-allowed mt-auto"
           >
             Unavailable
           </button>

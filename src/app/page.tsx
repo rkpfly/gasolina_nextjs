@@ -2,12 +2,16 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { MediaAsset } from "@/lib/media";
 import MediaSlot from "@/lib/media";
 import LeadForm from "@/components/LeadForm";
 import VIPForm from "@/components/Home/VipForm";
 import FadeUp from "@/components/FadeUp";
+import { EventCard } from "@/components/Events/EventCard";
+import VipModal from "@/components/Events/VIPModal";
+import type { Event, EventsApiResponse } from "@/types/events";
 
 import { fetchActiveThemes } from "@/app/actions/themes";
 
@@ -49,12 +53,17 @@ const GRAIN =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
 
 export default function HomePage() {
+  const router = useRouter();
+
   const [media, setMedia] = useState<Record<string, MediaAsset>>({});
   const [themes, setThemes] = useState<Theme[]>([]);
   const [offers, setOffers] = useState<Offer[]>([]);
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isEventsLoading, setIsEventsLoading] = useState(true);
   const [vipModal, setVipModal] = useState(false);
+  const [vipModalEvent, setVipModalEvent] = useState<Event | null>(null);
 
   const sectionRef = useRef(null);
 
@@ -101,6 +110,24 @@ export default function HomePage() {
     fetchData();
   }, []);
 
+  // Upcoming Louder Club events (proxied → tixmojo, filtered by organizerName).
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await fetch("/api/v1/events?limit=4");
+        if (res.ok) {
+          const data: EventsApiResponse = await res.json();
+          setEvents(data.data ?? data.events ?? []);
+        }
+      } catch (error) {
+        console.error("Failed to fetch events:", error);
+      } finally {
+        setIsEventsLoading(false);
+      }
+    };
+    fetchEvents();
+  }, []);
+
   // Screen-by-screen scroll snapping, scoped to the home page only.
   useEffect(() => {
     const html = document.documentElement;
@@ -110,8 +137,29 @@ export default function HomePage() {
 
   const featured = themes[0];
 
+  // An event is bookable if it's published/active or has a valid publish date.
+  const isEventActive = (event: Event) => {
+    const hasActiveStatus = event.status === "published" || event.status === "active";
+    const hasValidPublishDate = !!event.publishedAt && !isNaN(Date.parse(event.publishedAt));
+    return hasActiveStatus || hasValidPublishDate;
+  };
+
+  // Build a usable image URL from whatever the backend returns.
+  const resolveImage = (event: Event) => {
+    const image = event.media?.coverImage || event.media?.thumbnailImage;
+    const DB_SOURCE = process.env.NEXT_PUBLIC_TICKETING_BACKEND_URL;
+    if (!image)
+      return "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1200&auto=format&fit=crop";
+    return image.startsWith("http") ? image : `${DB_SOURCE}/${image}`;
+  };
+
   return (
     <>
+      {/* Per-event VIP booking modal (self-manages Escape + scroll lock) */}
+      {vipModalEvent && (
+        <VipModal event={vipModalEvent} onClose={() => setVipModalEvent(null)} />
+      )}
+
       <VIPForm vipModal={vipModal} setVipModal={setVipModal} />
 
       {/* ════════════════ HERO ════════════════ */}
@@ -161,13 +209,13 @@ export default function HomePage() {
           <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
             <button
               onClick={() => setVipModal(true)}
-              className="btn-glow glow-on-purple bg-club-purple text-brand-white px-8 md:px-10 py-4 rounded-full text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-center cursor-pointer hover:bg-brand-white hover:text-brand-black transition-colors duration-300 w-full sm:w-auto"
+              className="btn-glow glow-on-purple bg-club-purple text-brand-white px-8 md:px-10 py-4 text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-center cursor-pointer hover:bg-brand-white hover:text-brand-black transition-colors duration-300 w-full sm:w-auto"
             >
               <span>Reserve VIP</span>
             </button>
             <Link
               href="#residency"
-              className="border border-club-green/50 text-brand-white px-8 md:px-10 py-4 rounded-full text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-center hover:bg-club-green hover:text-brand-black hover:shadow-[0_0_28px_-6px_#6CFB13] transition-all duration-300 w-full sm:w-auto"
+              className="border border-club-green/50 text-brand-white px-8 md:px-10 py-4 text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-center hover:bg-club-green hover:text-brand-black hover:shadow-[0_0_28px_-6px_#6CFB13] transition-all duration-300 w-full sm:w-auto"
             >
               The Residency
             </Link>
@@ -289,6 +337,57 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ════════════════ EVENTS / THE LINEUP ════════════════ */}
+      <section
+        id="events"
+        className="min-h-screen flex flex-col justify-center bg-brand-black text-brand-white snap-start px-4 sm:px-6 md:px-12 py-20"
+      >
+        <div className="max-w-[1600px] mx-auto w-full">
+          <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-10">
+            <div>
+              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
+                (03) — The Lineup
+              </p>
+              <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-5xl md:text-7xl">
+                Upcoming Events
+              </h2>
+            </div>
+            <Link
+              href="/events"
+              className="btn-glow glow-on-purple bg-club-purple text-brand-white px-6 py-3 text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
+            >
+              <span>All Events →</span>
+            </Link>
+          </FadeUp>
+
+          <FadeUp delay={150}>
+            {isEventsLoading ? (
+              <div className="w-full py-20 text-center text-brand-gray font-bold tracking-[0.15em] uppercase text-xs sm:text-sm">
+                Loading events…
+              </div>
+            ) : events.length === 0 ? (
+              <div className="w-full py-20 text-center text-brand-gray font-bold tracking-[0.15em] uppercase text-xs sm:text-sm">
+                No upcoming events right now — check back soon.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 border-t border-white/10 pt-10">
+                {events.map((event, index) => (
+                  <EventCard
+                    key={event._id || index}
+                    event={event}
+                    isActive={isEventActive(event)}
+                    imgSrc={resolveImage(event)}
+                    delay={`${index * 100}ms`}
+                    onReserve={() => router.push(`/events/${event._id}`)}
+                    onBookVIP={() => setVipModalEvent(event)}
+                  />
+                ))}
+              </div>
+            )}
+          </FadeUp>
+        </div>
+      </section>
+
       {/* ════════════════ OFFERS ════════════════ */}
       {offers.length > 0 && (
         <section className="min-h-screen flex flex-col justify-center bg-brand-black text-brand-white snap-start px-4 sm:px-6 md:px-12 py-20">
@@ -296,7 +395,7 @@ export default function HomePage() {
             <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-10">
               <div>
                 <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
-                  (03) — The Offers
+                  (04) — The Offers
                 </p>
                 <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-5xl md:text-7xl">
                   Members&apos; Perks
@@ -304,7 +403,7 @@ export default function HomePage() {
               </div>
               <Link
                 href="/offers"
-                className="btn-glow glow-on-purple bg-club-purple text-brand-white px-6 py-3 rounded-full text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
+                className="btn-glow glow-on-purple bg-club-purple text-brand-white px-6 py-3 text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
               >
                 <span>All Offers →</span>
               </Link>
@@ -366,7 +465,7 @@ export default function HomePage() {
             <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-10">
               <div>
                 <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
-                  (04) — The Journal
+                  (05) — The Journal
                 </p>
                 <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-5xl md:text-7xl">
                   Latest Stories
@@ -374,7 +473,7 @@ export default function HomePage() {
               </div>
               <Link
                 href="/blogs"
-                className="btn-glow glow-on-purple bg-club-purple text-brand-white px-6 py-3 rounded-full text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-black hover:text-brand-white transition-colors"
+                className="btn-glow glow-on-purple bg-club-purple text-brand-white px-6 py-3 text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-black hover:text-brand-white transition-colors"
               >
                 <span>Read the Journal →</span>
               </Link>
@@ -431,7 +530,7 @@ export default function HomePage() {
           <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-10">
             <div>
               <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
-                (05) — The Nights
+                (06) — The Nights
               </p>
               <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-5xl md:text-7xl">
                 Inside the Room
@@ -439,7 +538,7 @@ export default function HomePage() {
             </div>
             <Link
               href="/gallery"
-              className="btn-glow glow-on-purple bg-club-purple text-brand-white px-6 py-3 rounded-full text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
+              className="btn-glow glow-on-purple bg-club-purple text-brand-white px-6 py-3 text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
             >
               <span>Full Gallery →</span>
             </Link>
@@ -468,7 +567,7 @@ export default function HomePage() {
         <FadeUp className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-10 md:p-16 lg:p-24">
           <div className="w-full max-w-md">
             <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-gray mb-4">
-              (06) — Inner Circle
+              (07) — Inner Circle
             </p>
             <h2 className="font-display font-extrabold uppercase tracking-tighter text-brand-black text-3xl sm:text-4xl md:text-5xl mb-3">
               Get on the List

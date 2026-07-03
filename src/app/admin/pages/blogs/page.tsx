@@ -75,11 +75,38 @@ function ToolbarBtn({
 // ─── Editor Toolbar ───────────────────────────────────────────────────────────
 
 function EditorToolbar({ editor }: { editor: any }) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+
   if (!editor) return null;
 
   const addImage = () => {
     const url = window.prompt('Image URL');
     if (url) editor.chain().focus().setImage({ src: url }).run();
+  };
+
+  // Upload a local file to the CRM (via /api/admin/blog/upload) and embed the
+  // returned URL into the content.
+  const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/admin/blog/upload', { method: 'POST', body: fd });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || 'Upload failed');
+      }
+      const { url } = await res.json();
+      editor.chain().focus().setImage({ src: url }).run();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Image upload failed');
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
   };
 
   const setLink = () => {
@@ -169,6 +196,30 @@ function EditorToolbar({ editor }: { editor: any }) {
           ))}
         </div>
       ))}
+
+      {/* Upload-from-device button (kept outside the `groups` data so the file
+          input ref isn't captured during render). */}
+      <div className="flex items-center gap-0.5">
+        <div className="w-px h-5 bg-gray-800 mx-1" />
+        <button
+          type="button"
+          title="Upload image from your device"
+          disabled={uploading}
+          onClick={() => fileInputRef.current?.click()}
+          className={`h-8 px-2 flex items-center gap-1 rounded-sm text-[11px] font-mono transition-all
+            ${uploading ? 'opacity-50 cursor-wait text-gray-500' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}
+        >
+          <span>{uploading ? '⏳' : '⬆'}</span>
+          <span>{uploading ? 'Uploading…' : 'Upload'}</span>
+        </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
+          className="hidden"
+          onChange={uploadImage}
+        />
+      </div>
     </div>
   );
 }

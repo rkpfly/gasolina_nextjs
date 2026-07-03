@@ -22,7 +22,7 @@ const HOME_SLOTS = [
 ];
 
 const MAX_IMAGE_SIZE = 30 * 1024 * 1024;  // 30 MB
-const MAX_VIDEO_SIZE = 30 * 1024 * 1024;  // 30 MB
+const MAX_VIDEO_SIZE = 50 * 1024 * 1024;  // 50 MB
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/avif'];
 const ALLOWED_VIDEO_TYPES = [
   'video/mp4', 
@@ -41,7 +41,7 @@ function validateFile(file: File): string | null {
     return `Unsupported file type: ${file.type}. Use JPG, PNG, WebP, GIF, AVIF, MP4, WebM, or MOV.`;
   }
   if (isVideo && file.size > MAX_VIDEO_SIZE) {
-    return `Video exceeds the 30 MB limit (${(file.size / 1024 / 1024).toFixed(1)} MB).`;
+    return `Video exceeds the 50 MB limit (${(file.size / 1024 / 1024).toFixed(1)} MB).`;
   }
   if (isImage && file.size > MAX_IMAGE_SIZE) {
     return `Image exceeds the 30 MB limit (${(file.size / 1024 / 1024).toFixed(1)} MB).`;
@@ -391,7 +391,7 @@ function MediaEditorCard({
                   <p className="text-slate-300 text-sm font-medium mb-1 line-clamp-1">
                     {draggingMain ? 'Drop main media' : 'Browse or drop'}
                   </p>
-                  <p className="text-slate-500 text-xs font-mono truncate">Max: 30MB</p>
+                  <p className="text-slate-500 text-xs font-mono truncate">Max: 30MB image / 50MB video</p>
                 </div>
               ) : (
                 <div className="flex items-center gap-3 px-3 py-3 bg-slate-900 border border-slate-600 rounded-lg h-[108px]">

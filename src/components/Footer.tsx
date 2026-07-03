@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { query } from '@/lib/database/db'; 
+import Image from "next/image";
+import { query } from '@/lib/database/db';
 import FadeUp from "@/components/FadeUp"; // Import the new wrapper
 
 interface FooterCity {
@@ -63,15 +64,22 @@ export default async function Footer() {
     <footer className="bg-brand-white pt-16 sm:pt-20 md:pt-24 pb-8 sm:pb-10 md:pb-12 px-4 sm:px-6 md:px-12">
       {/* Wrapped the main container in the FadeUp component */}
       <FadeUp className="max-w-[1600px] mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12 lg:gap-8 mb-16 sm:mb-20 md:mb-24 text-xs sm:text-sm font-medium">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 sm:gap-10 md:gap-12 lg:gap-8 mb-16 sm:mb-20 md:mb-24 text-xs sm:text-sm font-medium">
 
           {/* Brand & Contact */}
-          <div className="flex flex-col gap-4 sm:gap-6">
+          <div className="col-span-2 lg:col-span-1 flex flex-col gap-4 sm:gap-6">
             <Link
               href="/"
-              className="text-lg sm:text-xl md:text-2xl font-display font-bold tracking-tighter uppercase text-brand-black flex items-center gap-1"
+              aria-label="Louder"
+              className="inline-flex items-center w-fit transition-opacity duration-300 hover:opacity-70"
             >
-              LOUDER CLUB<span className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-brand-accent rounded-full mb-2" />
+              <Image
+                src="/louderSaturdaysLogo.png"
+                alt="Louder"
+                width={814}
+                height={162}
+                className="h-7 sm:h-8 md:h-9 w-auto brightness-0"
+              />
             </Link>
             
             <div className="flex flex-col gap-1.5 sm:gap-2 text-brand-gray text-xs sm:text-sm">
@@ -97,7 +105,7 @@ export default async function Footer() {
           </div>
 
           {/* Territories */}
-          <div className="flex flex-col gap-4 sm:gap-6">
+          {/* <div className="flex flex-col gap-4 sm:gap-6">
             <p className="text-[9px] sm:text-xs font-bold tracking-[0.2em] uppercase text-brand-black">Territories</p>
             <div className="grid grid-cols-2 gap-y-2 sm:gap-y-3 gap-x-3 sm:gap-x-4 text-xs sm:text-sm text-brand-gray">
               {cities.length > 0 ? (
@@ -114,7 +122,8 @@ export default async function Footer() {
                 <span className="col-span-2 text-gray-400 italic">No territories found</span>
               )}
             </div>
-          </div>
+          </div> */}
+          <div className="hidden lg:block"></div>
 
           {/* Legal */}
           <div className="flex flex-col gap-4 sm:gap-6">
@@ -127,7 +136,7 @@ export default async function Footer() {
           </div>
 
           {/* Socials */}
-          <div className="flex flex-col gap-4 sm:gap-6">
+          <div className="flex flex-col gap-4 sm:gap-6 items-end text-right sm:items-start sm:text-left">
             <p className="text-[9px] sm:text-xs font-bold tracking-[0.2em] uppercase text-brand-black">Socials</p>
             <div className="flex gap-3 sm:gap-4 text-lg sm:text-xl text-brand-black">
               {socials.length > 0 ? (

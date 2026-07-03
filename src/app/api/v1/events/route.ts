@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
         forwardedParams.set(param, defaults[param]);
       }
     }
-    forwardedParams.set('organizerName', 'Dami Club');
+    forwardedParams.set('organizerName', 'Louder Club');
 
     const backendUrl = `${TICKETING_BACKEND_URL}/wapi/events?${forwardedParams.toString()}`;
 
