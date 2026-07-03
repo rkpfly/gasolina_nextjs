@@ -269,6 +269,57 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ════════════════ EVENTS / THE LINEUP ════════════════ */}
+      <section
+        id="events"
+        className="min-h-screen flex flex-col justify-center bg-brand-black text-brand-white snap-start px-4 sm:px-6 md:px-12 py-20"
+      >
+        <div className="max-w-[1600px] mx-auto w-full">
+          <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-10">
+            <div>
+              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
+                (02) — The Lineup
+              </p>
+              <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-4xl sm:text-5xl md:text-7xl">
+                Upcoming Events
+              </h2>
+            </div>
+            <Link
+              href="/events"
+              className="btn-glow glow-on-purple bg-club-purple text-brand-white px-6 py-3 text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
+            >
+              <span>All Events →</span>
+            </Link>
+          </FadeUp>
+
+          <FadeUp delay={150}>
+            {isEventsLoading ? (
+              <div className="w-full py-20 text-center text-brand-gray font-bold tracking-[0.15em] uppercase text-xs sm:text-sm">
+                Loading events…
+              </div>
+            ) : events.length === 0 ? (
+              <div className="w-full py-20 text-center text-brand-gray font-bold tracking-[0.15em] uppercase text-xs sm:text-sm">
+                No upcoming events right now — check back soon.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 border-t border-white/10 pt-10">
+                {events.map((event, index) => (
+                  <EventCard
+                    key={event._id || index}
+                    event={event}
+                    isActive={isEventActive(event)}
+                    imgSrc={resolveImage(event)}
+                    delay={`${index * 100}ms`}
+                    onReserve={() => router.push(`/events/${event._id}`)}
+                    onBookVIP={() => setVipModalEvent(event)}
+                  />
+                ))}
+              </div>
+            )}
+          </FadeUp>
+        </div>
+      </section>
+
       {/* ════════════════ RESIDENCY ════════════════ */}
       <section
         id="residency"
@@ -277,7 +328,7 @@ export default function HomePage() {
         <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center">
           <FadeUp>
             <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-6">
-              (02) — The Residency
+              (03) — The Residency
             </p>
             <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-[10vw] md:text-[4.5rem] lg:text-[3.25rem] mb-6">
               Every
@@ -288,7 +339,7 @@ export default function HomePage() {
             </h2>
             <p className="text-brand-gray leading-relaxed max-w-[44ch] text-sm md:text-base">
               {featured?.short_description ??
-                "One night, every week. A curated floor of club bangers cut with R&B and hip hop — built for the people who live for the night. Reserve a table or walk the door."}
+                "One night, every week — club, R&B and hip hop for people who live for the night."}
             </p>
           </FadeUp>
 
@@ -337,55 +388,37 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ════════════════ EVENTS / THE LINEUP ════════════════ */}
-      <section
-        id="events"
-        className="min-h-screen flex flex-col justify-center bg-brand-black text-brand-white snap-start px-4 sm:px-6 md:px-12 py-20"
-      >
-        <div className="max-w-[1600px] mx-auto w-full">
-          <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-10">
-            <div>
-              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
-                (03) — The Lineup
-              </p>
-              <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-5xl md:text-7xl">
-                Upcoming Events
-              </h2>
-            </div>
-            <Link
-              href="/events"
-              className="btn-glow glow-on-purple bg-club-purple text-brand-white px-6 py-3 text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
-            >
-              <span>All Events →</span>
-            </Link>
-          </FadeUp>
+      {/* ════════════════ VIP ════════════════ */}
+      <section className="relative min-h-screen flex items-center snap-start overflow-hidden bg-brand-black pt-28 md:pt-48">
+        {/* Cinematic background */}
+        <img
+          src="/louderclub-vip-cta-img-v1.png"
+          alt="Louder Club VIP experience"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Legibility: uniform scrim on mobile, edge-gradient (clear center) on desktop */}
+        <div className="absolute inset-0 bg-brand-black/55 md:hidden" />
+        <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-brand-black via-transparent to-brand-black" />
 
-          <FadeUp delay={150}>
-            {isEventsLoading ? (
-              <div className="w-full py-20 text-center text-brand-gray font-bold tracking-[0.15em] uppercase text-xs sm:text-sm">
-                Loading events…
-              </div>
-            ) : events.length === 0 ? (
-              <div className="w-full py-20 text-center text-brand-gray font-bold tracking-[0.15em] uppercase text-xs sm:text-sm">
-                No upcoming events right now — check back soon.
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 border-t border-white/10 pt-10">
-                {events.map((event, index) => (
-                  <EventCard
-                    key={event._id || index}
-                    event={event}
-                    isActive={isEventActive(event)}
-                    imgSrc={resolveImage(event)}
-                    delay={`${index * 100}ms`}
-                    onReserve={() => router.push(`/events/${event._id}`)}
-                    onBookVIP={() => setVipModalEvent(event)}
-                  />
-                ))}
-              </div>
-            )}
-          </FadeUp>
-        </div>
+        <FadeUp className="relative z-10 w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-12 py-24">
+          <div className="max-w-lg">
+            <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-4">
+              By Invitation Only
+            </p>
+            <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-brand-white text-4xl sm:text-6xl md:text-7xl mb-5">
+              Rise <span className="text-club-green text-glow-green">Above</span> The Ordinary
+            </h2>
+            <p className="text-brand-gray text-sm md:text-base leading-relaxed mb-8">
+              Priority entry, private booths, bottle service. Skip the queue and own the room.
+            </p>
+            <button
+              onClick={() => setVipModal(true)}
+              className="bg-club-purple text-brand-white px-10 py-4 text-xs md:text-sm font-bold tracking-[0.16em] uppercase hover:bg-club-purple/85 transition-colors cursor-pointer"
+            >
+              Request VIP Access
+            </button>
+          </div>
+        </FadeUp>
       </section>
 
       {/* ════════════════ OFFERS ════════════════ */}
@@ -397,7 +430,7 @@ export default function HomePage() {
                 <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
                   (04) — The Offers
                 </p>
-                <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-5xl md:text-7xl">
+                <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-4xl sm:text-5xl md:text-7xl">
                   Members&apos; Perks
                 </h2>
               </div>
@@ -467,7 +500,7 @@ export default function HomePage() {
                 <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
                   (05) — The Journal
                 </p>
-                <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-5xl md:text-7xl">
+                <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-4xl sm:text-5xl md:text-7xl">
                   Latest Stories
                 </h2>
               </div>
@@ -532,7 +565,7 @@ export default function HomePage() {
               <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
                 (06) — The Nights
               </p>
-              <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-5xl md:text-7xl">
+              <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-4xl sm:text-5xl md:text-7xl">
                 Inside the Room
               </h2>
             </div>
@@ -553,7 +586,7 @@ export default function HomePage() {
                 <MediaSlot
                   id={id}
                   mediaMap={media}
-                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                  className="w-full h-full object-cover grayscale-50 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
