@@ -76,6 +76,19 @@ export default function ContactClient() {
         };
     }, [isLoading]);
 
+    // 3. Deep-link support: once data has loaded, honor a #hash (e.g. /contact#faq)
+    //    arriving from another page — the target section isn't in the DOM until then,
+    //    so the browser's initial hash scroll finds nothing and is lost.
+    useEffect(() => {
+        if (isLoading) return;
+        const id = window.location.hash.slice(1);
+        if (!id) return;
+        const t = setTimeout(() => {
+            document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+        return () => clearTimeout(t);
+    }, [isLoading]);
+
     if (isLoading) {
         // Simple fallback while data loads to prevent layout shift
         return <div className="min-h-screen bg-brand-black" />;
@@ -211,7 +224,7 @@ export default function ContactClient() {
             </section>
 
             {/* ── FAQ SECTION ── */}
-            <section className="py-12 sm:py-16 md:py-24 px-3 sm:px-4 md:px-6 lg:px-12 bg-[#0f0f10] border-t border-white/10">
+            <section id="faq" className="scroll-mt-24 md:scroll-mt-32 py-12 sm:py-16 md:py-24 px-3 sm:px-4 md:px-6 lg:px-12 bg-[#0f0f10] border-t border-white/10">
                 <div className="max-w-[1600px] mx-auto">
 
                     <div className="flex flex-col md:flex-row justify-between items-end mb-10 sm:mb-12 md:mb-16 fade-up">

@@ -123,7 +123,14 @@ export default async function Footer() {
               )}
             </div>
           </div> */}
-          <div className="hidden lg:block"></div>
+          {/* Quick Links */}
+          <div className="flex flex-col gap-4 sm:gap-6">
+            <p className="text-[9px] sm:text-xs font-bold tracking-[0.2em] uppercase text-brand-black">Quick Links</p>
+            <div className="flex flex-col gap-2 sm:gap-3 text-xs sm:text-sm text-brand-gray">
+              <Link href="/contact#faq" className="hover:text-brand-black transition-colors">FAQ</Link>
+              <Link href="/contact" className="hover:text-brand-black transition-colors">Contact Us</Link>
+            </div>
+          </div>
 
           {/* Legal */}
           <div className="flex flex-col gap-4 sm:gap-6">
