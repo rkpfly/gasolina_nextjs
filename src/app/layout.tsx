@@ -4,6 +4,10 @@ import "./globals.css";
 import HeaderWrapper from "@/components/HeaderWrapper"; // Note the new import
 import Footer from "../components/Footer";
 import FooterGate from "@/components/FooterGate";
+import { GoogleTagManager } from "@next/third-parties/google";
+
+// GTM container id. Overridable via env; falls back to the marketing-provided id.
+const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || "GTM-KSX32K55";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -30,6 +34,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
+      <GoogleTagManager gtmId={GTM_ID} />
       <head>
         <link
           rel="stylesheet"
@@ -39,6 +44,17 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${syne.variable} font-sans selection:bg-brand-blue selection:text-brand-white bg-white text-brand-black antialiased`}
       >
+        {/* Google Tag Manager (noscript) — fallback for JS-disabled visitors.
+            The <GoogleTagManager> above injects the JS; this covers no-JS. */}
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
+
         {/* The Client Wrapper handles the logic of showing/hiding the header */}
         <HeaderWrapper />
         
