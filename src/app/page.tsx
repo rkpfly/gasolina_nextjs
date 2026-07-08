@@ -13,17 +13,6 @@ import { EventCard } from "@/components/Events/EventCard";
 import VipModal from "@/components/Events/VIPModal";
 import type { Event, EventsApiResponse } from "@/types/events";
 
-import { fetchActiveThemes } from "@/app/actions/themes";
-
-interface Theme {
-  id: string;
-  slug: string;
-  title: string;
-  short_description: string;
-  hero_image: string;
-  thumbnail_url?: string;
-}
-
 interface Offer {
   id: string;
   slug: string;
@@ -56,7 +45,6 @@ export default function HomePage() {
   const router = useRouter();
 
   const [media, setMedia] = useState<Record<string, MediaAsset>>({});
-  const [themes, setThemes] = useState<Theme[]>([]);
   const [offers, setOffers] = useState<Offer[]>([]);
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
@@ -91,14 +79,12 @@ export default function HomePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [mediaRes, themesData, offersRes, blogsRes] = await Promise.all([
+        const [mediaRes, offersRes, blogsRes] = await Promise.all([
           fetch("/api/media?page=/home"),
-          fetchActiveThemes(),
           fetch("/api/offers"),
           fetch("/api/blogs"),
         ]);
         if (mediaRes.ok) setMedia(await mediaRes.json());
-        setThemes(themesData);
         if (offersRes.ok) setOffers(await offersRes.json());
         if (blogsRes.ok) setBlogs(await blogsRes.json());
       } catch (error) {
@@ -135,7 +121,6 @@ export default function HomePage() {
     return () => html.classList.remove("snap-home");
   }, []);
 
-  const featured = themes[0];
 
   // An event is bookable if it's published/active or has a valid publish date.
   const isEventActive = (event: Event) => {
@@ -214,10 +199,10 @@ export default function HomePage() {
               <span>Reserve VIP</span>
             </button>
             <Link
-              href="#residency"
+              href="#events"
               className="border border-club-green/50 text-brand-white px-8 md:px-10 py-4 text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-center hover:bg-club-green hover:text-brand-black hover:shadow-[0_0_28px_-6px_#6CFB13] transition-all duration-300 w-full sm:w-auto"
             >
-              The Residency
+              Upcoming Events
             </Link>
           </div>
         </FadeUp>
@@ -249,21 +234,36 @@ export default function HomePage() {
             </h2>
           </FadeUp>
           <FadeUp delay={200}>
-            <div className="mt-12 md:mt-16 flex flex-wrap gap-8 md:gap-14 border-t border-brand-border pt-8">
-              {[
-                ["Floor", "L3 Nightclubs"],
-                ["Sound", "Club · R&B · Hip Hop"],
-                ["City", "Melbourne"],
-              ].map(([k, v]) => (
-                <div key={k}>
-                  <span className="text-[11px] tracking-[0.12em] uppercase text-brand-gray">
-                    {k}
-                  </span>
-                  <span className="block font-display font-bold uppercase tracking-tight text-xl md:text-2xl mt-1">
-                    {v}
-                  </span>
-                </div>
-              ))}
+            <div className="mt-12 md:mt-16 border-t border-brand-border pt-8">
+              <span className="text-[11px] tracking-[0.28em] uppercase text-brand-gray">
+                The Venue
+              </span>
+              <div className="mt-5 grid gap-x-14 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+                {[
+                  ["Club", "L3 Nightclubs"],
+                  ["Inside", "Crown Melbourne"],
+                  ["Address", "8 Whiteman Street"],
+                  ["Location", "Southbank VIC 3006"],
+                ].map(([k, v]) => (
+                  <div key={k} className="border-l-2 border-club-purple pl-4">
+                    <span className="block text-[11px] tracking-[0.12em] uppercase text-brand-gray">
+                      {k}
+                    </span>
+                    <span className="block font-display font-bold uppercase tracking-tight text-xl md:text-2xl mt-1.5">
+                      {v}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=L3+Nightclubs+Crown+Melbourne+8+Whiteman+Street+Southbank+VIC+3006"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-10 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.12em] text-club-purple hover:gap-3 transition-all"
+              >
+                Get Directions
+                <span aria-hidden="true">→</span>
+              </a>
             </div>
           </FadeUp>
         </div>
@@ -302,88 +302,35 @@ export default function HomePage() {
                 No upcoming events right now — check back soon.
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 border-t border-white/10 pt-10">
-                {events.map((event, index) => (
-                  <EventCard
-                    key={event._id || index}
-                    event={event}
-                    isActive={isEventActive(event)}
-                    imgSrc={resolveImage(event)}
-                    delay={`${index * 100}ms`}
-                    onReserve={() => router.push(`/events/${event._id}`)}
-                    onBookVIP={() => setVipModalEvent(event)}
-                  />
-                ))}
+              <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.85fr] gap-10 lg:gap-16 border-t border-white/10 pt-10 items-center">
+                <div>
+                  <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-5">
+                    The Season
+                  </p>
+                  <h3 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-3xl sm:text-5xl md:text-7xl">
+                    8 Saturdays
+                  </h3>
+                  <p className="mt-6 text-brand-gray text-sm md:text-base leading-relaxed max-w-[38ch]">
+                    Starting{" "}
+                    <span className="text-brand-white font-semibold">22 August</span>
+                    {" "}— eight consecutive Saturday nights, one home for the movement.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 md:gap-8">
+                  {events.slice(0, 1).map((event, index) => (
+                    <EventCard
+                      key={event._id || index}
+                      event={event}
+                      isActive={isEventActive(event)}
+                      imgSrc={resolveImage(event)}
+                      delay={`${index * 100}ms`}
+                      onReserve={() => router.push(`/events/${event._id}`)}
+                      onBookVIP={() => setVipModalEvent(event)}
+                    />
+                  ))}
+                </div>
               </div>
             )}
-          </FadeUp>
-        </div>
-      </section>
-
-      {/* ════════════════ RESIDENCY ════════════════ */}
-      <section
-        id="residency"
-        className="min-h-screen flex items-center bg-brand-black text-brand-white snap-start px-4 sm:px-6 md:px-12 py-20"
-      >
-        <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center">
-          <FadeUp>
-            <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-6">
-              (03) — The Residency
-            </p>
-            <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-[10vw] md:text-[4.5rem] lg:text-[3.25rem] mb-6">
-              Every
-              <br />
-              <span className="text-transparent [-webkit-text-stroke:1.5px_white]">
-              Saturday
-              </span>
-            </h2>
-            <p className="text-brand-gray leading-relaxed max-w-[44ch] text-sm md:text-base">
-              {featured?.short_description ??
-                "One night, every week — club, R&B and hip hop for people who live for the night."}
-            </p>
-          </FadeUp>
-
-          <FadeUp delay={150}>
-            <div className="relative border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent p-8">
-              <span className="absolute top-0 left-0 w-full h-1 bg-club-purple shadow-[0_0_16px_0_rgba(114,60,244,0.7)]" />
-              {[
-                ["Event", featured?.title ?? "Louder Club", false],
-                ["When", "Every Saturday · 10PM", true],
-                ["Venue", "Therapy · L3 Nightclubs", false],
-                ["Location", "Crown, Melbourne", false],
-                ["Dress", "Smart / Statement", false],
-              ].map(([label, value, accent]) => (
-                <div
-                  key={label as string}
-                  className="flex justify-between items-baseline gap-4 py-4 border-b border-dashed border-white/10 last:border-0"
-                >
-                  <span className="text-[11px] tracking-[0.16em] uppercase text-brand-gray">
-                    {label}
-                  </span>
-                  <span
-                    className={`font-display font-bold uppercase tracking-tight text-right text-base md:text-lg ${
-                      accent ? "text-club-green text-glow-green" : "text-brand-white"
-                    }`}
-                  >
-                    {value}
-                  </span>
-                </div>
-              ))}
-              <div className="mt-6 flex flex-col sm:flex-row gap-3">
-                <Link
-                  href="/book"
-                  className="btn-glow glow-on-purple flex-1 bg-club-purple text-brand-white text-center py-4 text-xs font-bold tracking-[0.16em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
-                >
-                  <span>Book Tickets</span>
-                </Link>
-                <button
-                  onClick={() => setVipModal(true)}
-                  className="flex-1 border border-club-green/40 text-brand-white text-center py-4 text-xs font-bold tracking-[0.16em] uppercase hover:bg-club-green hover:text-brand-black transition-all cursor-pointer"
-                >
-                  Request VIP
-                </button>
-              </div>
-            </div>
           </FadeUp>
         </div>
       </section>
@@ -431,7 +378,7 @@ export default function HomePage() {
                   (04) — The Offers
                 </p>
                 <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-4xl sm:text-5xl md:text-7xl">
-                  Members&apos; Perks
+                  Offers
                 </h2>
               </div>
               <Link
