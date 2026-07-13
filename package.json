@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "qr": "node scripts/url-to-qr.js",
     "migrate:registrations": "node scripts/create-registrations-table.js"
   },
   "dependencies": {

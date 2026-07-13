@@ -1,16 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { CountryCodePicker } from "@/components/CountryCodePicker";
 import { EqLoader } from "@/components/Loader";
-
-const COUNTRY_CODES = [
-  { code: "+61", label: "AU" },
-  { code: "+64", label: "NZ" },
-  { code: "+65", label: "SG" },
-  { code: "+91", label: "IN" },
-  { code: "+44", label: "GB" },
-  { code: "+1", label: "US" },
-];
 
 const inputClass =
   "w-full bg-transparent text-[9px] sm:text-[10px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-white placeholder-brand-gray focus:outline-none [color-scheme:dark]";
@@ -131,20 +123,7 @@ export default function BirthdayOfferForm() {
       </div>
 
       <div className={`${wrapperClass} flex items-center gap-3 sm:gap-4`}>
-        <div className="relative shrink-0 flex items-center">
-          <select
-            value={countryCode}
-            onChange={(e) => setCountryCode(e.target.value)}
-            className="bg-transparent text-[9px] sm:text-[10px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-white focus:outline-none appearance-none cursor-pointer pr-4 [color-scheme:dark]"
-          >
-            {COUNTRY_CODES.map((c) => (
-              <option key={c.label} value={c.code} className="bg-brand-black">
-                {c.label} {c.code}
-              </option>
-            ))}
-          </select>
-          <i className="fa-solid fa-chevron-down absolute right-0 text-[8px] pointer-events-none text-brand-white/50" />
-        </div>
+        <CountryCodePicker value={countryCode} onChange={setCountryCode} dark />
         <input
           type="tel"
           name="phone"

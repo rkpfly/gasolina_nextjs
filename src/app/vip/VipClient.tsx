@@ -137,7 +137,7 @@ export default function VipClient() {
 
                             <LeadForm
                                 formType="vip_table_request"
-                                fields={['f_name', 'l_name', 'email', 'phone', 'dob', 'total_guests', 'booking_date']}
+                                fields={['f_name', 'l_name', 'email', 'phone', 'total_guests', 'booking_date']}
                                 buttonText="Request Table"
                                 tone="dark"
                             />
