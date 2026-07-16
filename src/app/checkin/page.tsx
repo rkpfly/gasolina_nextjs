@@ -23,7 +23,7 @@ export default async function CheckinPage({ searchParams }: Props) {
         ) : (
           <div className="flex w-full max-w-md flex-col items-center text-center">
             <Image
-              src="/dc-logo-black-v1.png"
+              src="/louderSaturdaysLogo.png"
               alt="Dami Club"
               width={160}
               height={48}

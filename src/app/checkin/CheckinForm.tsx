@@ -77,7 +77,7 @@ export default function CheckinForm({ city }: { city: CheckinCity }) {
     <div className="w-full max-w-md">
       {/* Dami Club logo — source PNG is black, inverted to white for the dark kiosk */}
       <Image
-        src="/dc-logo-black-v1.png"
+        src="/louderSaturdaysLogo.png"
         alt="Dami Club"
         width={160}
         height={48}

@@ -18,6 +18,12 @@ const ACCOUNTS = `https://accounts.zoho.${REGION}`;
 // never trusted from the client. Override with ZOHO_LEAD_OWNER if needed.
 export const LEAD_OWNER = process.env.ZOHO_LEAD_OWNER || 'DamiClub';
 
+// Whether the Zoho check-in path can run. Only checks that credentials are
+// PRESENT — it does not verify the service is reachable.
+export function isZohoConfigured(): boolean {
+  return !!(CLIENT_ID && CLIENT_SECRET && REFRESH_TOKEN);
+}
+
 // In-memory token cache. On serverless this lives per warm instance — each cold
 // start just refreshes once, which is fine.
 let cached: { token: string; apiDomain: string; expiresAt: number } | null = null;
@@ -159,7 +165,10 @@ export async function createContact(c: NewContact): Promise<{ id: string }> {
     throw new Error('DUPLICATE');
   }
   if (!res.ok || row?.code !== 'SUCCESS') {
-    throw new Error(row?.message || data?.message || `Contact create failed (${res.status})`);
+    // Zoho names the offending column in `details` (api_name / expected_data_type);
+    // keep it — "invalid data" alone is not actionable in the server log.
+    const detail = row?.details ? ` ${JSON.stringify(row.details)}` : '';
+    throw new Error(`${row?.message || data?.message || `Contact create failed (${res.status})`}${detail}`);
   }
   return { id: row.details.id };
 }
