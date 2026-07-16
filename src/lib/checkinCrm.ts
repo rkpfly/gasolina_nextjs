@@ -24,13 +24,32 @@ function orgObjectId(): Types.ObjectId {
   return new Types.ObjectId(ORGANIZATION_ID);
 }
 
+// Mirrors the owning app's Mongoose `fanProfile` schema (Louder/CRM). We write
+// this exact shape — displayName, flat phone + phones[], email + emails[],
+// location[], status/source, consent — so records surface in the CRM's
+// leads/contacts list, not just the raw fan count. Legacy phone/name aliases
+// are kept in the read type so older documents still resolve on lookup.
 type FanProfileDocument = Document & {
   firstName?: string | null; lastName?: string | null; fullName?: string | null; name?: string | null;
   displayName?: string | null;
-  email?: string | null; phoneE164?: string | null; phone?: string | null; mobile?: string | null;
-  mobileNumber?: string | null; phoneNumber?: string | null; gender?: string | null; dob?: string | Date | null;
-  place?: string | null; zohoContactId?: string | null;
+  email?: string | null; emails?: string[] | null;
+  phoneE164?: string | null; phone?: string | null; phones?: string[] | null;
+  mobile?: string | null; mobileNumber?: string | null; phoneNumber?: string | null;
+  gender?: string | null; dob?: string | Date | null;
+  place?: string | null;
+  location?: Array<{ city?: string | null; state?: string | null; country?: string | null; isPrimary?: boolean }> | null;
+  zohoContactId?: string | null;
+  customFields?: Record<string, unknown> | null;
 };
+
+// gender is an enum in the owning schema; anything outside it is dropped rather
+// than written (raw-driver writes bypass Mongoose validation, so we guard here).
+const VALID_GENDERS = ['male', 'female', 'non-binary', 'other', 'prefer_not_to_say'];
+function toGenderEnum(gender: string | null | undefined): string | undefined {
+  if (!gender) return undefined;
+  const value = String(gender).trim().toLowerCase();
+  return VALID_GENDERS.includes(value) ? value : undefined;
+}
 
 // Mongo stores dob as a Date, but Zoho's Date_of_Birth accepts only 'YYYY-MM-DD'
 // and rejects a full ISO timestamp with "invalid data". Both shapes appear in the
@@ -61,43 +80,91 @@ async function getFanProfiles() {
   return connection.connection.db!.collection<FanProfileDocument>(COLLECTION_NAME);
 }
 
-// Names live in `displayName` on these documents, not fullName/name — keep all
-// three in the fallback chain so a hit returns a real firstName, not "null".
+// Name lives in `displayName`; number in the flat `phone` (with `phones[]` as a
+// fallback); city in `location[0]`. Legacy aliases stay in the chain so older
+// documents still resolve. The Zoho id is mirrored to `customFields.zohoRecordId`
+// — the field the owning app reads — as well as our own `zohoContactId`.
 function asProfile(profile: FanProfileDocument): CrmFanProfile {
   const [nameFirst, ...nameRest] = (profile.fullName || profile.name || profile.displayName || '').trim().split(/\s+/);
   return {
     id: profile._id.toString(), firstName: profile.firstName ?? nameFirst ?? null,
-    lastName: profile.lastName ?? (nameRest.join(' ') || null), email: profile.email ?? null,
-    phoneE164: profile.phoneE164 || profile.phone || profile.mobile || profile.mobileNumber || profile.phoneNumber || '',
-    gender: profile.gender ?? null, dob: asDateOnly(profile.dob), place: profile.place ?? null,
-    zohoContactId: profile.zohoContactId ?? null,
+    lastName: profile.lastName ?? (nameRest.join(' ') || null),
+    email: profile.email ?? profile.emails?.[0] ?? null,
+    phoneE164: profile.phoneE164 || profile.phone || profile.phones?.[0] || profile.mobile || profile.mobileNumber || profile.phoneNumber || '',
+    gender: profile.gender ?? null, dob: asDateOnly(profile.dob),
+    place: profile.place ?? profile.location?.[0]?.city ?? null,
+    zohoContactId: profile.zohoContactId ?? (profile.customFields?.zohoRecordId as string | undefined) ?? null,
   };
 }
 
-const phoneQuery = (phoneE164: string) => ({ organizationId: orgObjectId(), $or: [
-  { phoneE164 }, { phone: phoneE164 }, { mobile: phoneE164 }, { mobileNumber: phoneE164 }, { phoneNumber: phoneE164 },
-] });
+// Match a guest within our org by any known phone shape (or email, when given),
+// skipping soft-deleted records. Mirrors the owning app's dedup on phone/email.
+function identityQuery(phoneE164: string, email?: string | null) {
+  const or: Record<string, unknown>[] = [
+    { phoneE164 }, { phone: phoneE164 }, { phones: phoneE164 },
+    { mobile: phoneE164 }, { mobileNumber: phoneE164 }, { phoneNumber: phoneE164 },
+  ];
+  if (email) or.push({ email }, { emails: email });
+  return { organizationId: orgObjectId(), deletedAt: null, $or: or };
+}
 
 export async function findFanProfileByPhone(phoneE164: string): Promise<CrmFanProfile | null> {
-  const profile = await (await getFanProfiles()).findOne(phoneQuery(phoneE164));
+  const profile = await (await getFanProfiles()).findOne(identityQuery(phoneE164));
   return profile ? asProfile(profile) : null;
 }
 
-// Upsert preserves CRM-only fields and makes phoneE164 the shared sync key.
+// Upsert in the owning app's schema shape. Identity fields are refreshed on
+// every call (so Zoho ↔ Mongo converge); CRM metadata + consent are stamped
+// only on first insert (first-touch wins). The raw driver bypasses Mongoose,
+// so schema defaults and timestamps are written explicitly here.
 export async function upsertFanProfile(input: FanProfileInput): Promise<CrmFanProfile> {
   const profiles = await getFanProfiles();
-  const existing = await profiles.findOne(phoneQuery(input.phoneE164));
-  const fields = Object.fromEntries(Object.entries(input).filter(([, value]) => value !== undefined && value !== null && value !== ''));
-  const now = new Date();
-  if (existing) {
-    await profiles.updateOne({ _id: existing._id }, { $set: { ...fields, updatedAt: now } });
-    return asProfile({ ...existing, ...fields, updatedAt: now } as FanProfileDocument);
-  }
   const organizationId = orgObjectId();
-  const inserted = await profiles.findOneAndUpdate(
-    { organizationId, phoneE164: input.phoneE164 },
-    { $set: { ...fields, updatedAt: now }, $setOnInsert: { organizationId, createdAt: now } },
-    { upsert: true, returnDocument: 'after' }
-  );
+  const now = new Date();
+
+  const phone = input.phoneE164;
+  const email = input.email ? input.email.trim().toLowerCase() : undefined;
+  const displayName = [input.firstName, input.lastName].filter(Boolean).join(' ').trim() || undefined;
+  const gender = toGenderEnum(input.gender);
+  const dob = input.dob ? new Date(input.dob) : undefined;
+
+  // Identity snapshot — always refreshed.
+  const $set: Record<string, unknown> = { updatedAt: now, lastSyncedAt: now };
+  if (displayName) $set.displayName = displayName;
+  if (email) $set.email = email;
+  if (phone) $set.phone = phone;
+  if (gender) $set.gender = gender;
+  if (dob && !Number.isNaN(dob.getTime())) $set.dob = dob;
+  if (input.place) $set.location = [{ city: input.place, isPrimary: true }];
+  if (input.zohoContactId) {
+    $set['customFields.zohoRecordId'] = input.zohoContactId;
+    $set.zohoContactId = input.zohoContactId;
+  }
+
+  const $addToSet: Record<string, unknown> = {};
+  if (email) $addToSet.emails = email;
+  if (phone) $addToSet.phones = phone;
+
+  // CRM metadata + consent + schema defaults — first-touch only.
+  const $setOnInsert: Record<string, unknown> = {
+    organizationId,
+    createdAt: now,
+    source: 'checkin',
+    status: 'new_lead',
+    tags: ['checkin'],
+    hasAttended: false,
+    vip: false,
+    deletedAt: null,
+    consent: { emailOptIn: true, smsOptIn: false, whatsappOptIn: false, consentedAt: now },
+  };
+
+  const update: Record<string, unknown> = { $set, $setOnInsert };
+  if (Object.keys($addToSet).length) update.$addToSet = $addToSet;
+
+  // Update an existing guest in place (by _id) to avoid clobbering the owning
+  // app's fields; otherwise insert a fresh, fully-shaped document.
+  const existing = await profiles.findOne(identityQuery(phone, email));
+  const filter = existing ? { _id: existing._id } : { organizationId, phone };
+  const inserted = await profiles.findOneAndUpdate(filter, update, { upsert: true, returnDocument: 'after' });
   return asProfile(inserted!);
 }
