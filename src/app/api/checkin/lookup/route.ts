@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createContact, findContactByPhone, isZohoConfigured, normalizePhone } from '@/lib/zoho';
-import { findFanProfileByPhone, isCrmConfigured, upsertFanProfile } from '@/lib/checkinCrm';
+import { findFanProfileByPhone, isCrmConfigured, upsertFanProfile } from '@/lib/crmFanProfiles';
 import { resolveCity, CITY_DIAL_CODE } from '@/app/checkin/cities';
 
 // Step 1: look in Zoho first, then the local Mongo CRM. A record found in one is
@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
           phoneE164,
           place: city,
           zohoContactId: zohoContact.id,
+          source: 'website_checkin',
         });
       }
       return NextResponse.json({ found: true, firstName: zohoContact.firstName });
@@ -62,7 +63,7 @@ export async function POST(req: NextRequest) {
           dob: crmProfile.dob,
           city,
         });
-        await upsertFanProfile({ ...crmProfile, phoneE164, place: city, zohoContactId: id });
+        await upsertFanProfile({ ...crmProfile, phoneE164, place: city, zohoContactId: id, source: 'website_checkin' });
       }
       return NextResponse.json({ found: true, firstName: crmProfile.firstName });
     }

@@ -6,6 +6,7 @@ import {
   createRegistrationContact,
 } from '@/lib/zoho';
 import { ensureRegistrationsTable, insertRegistration } from '@/lib/database/registrations';
+import { syncFanProfile } from '@/lib/crmFanProfiles';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -96,6 +97,18 @@ export async function POST(req: NextRequest) {
   } catch (e) {
     console.error('[v1/registration] db', e);
   }
+
+  // 4. Mirror into the Mongo CRM, carrying the Zoho id when we have one so the
+  // two systems stay cross-referenced. Best-effort: step 3 already captured the
+  // submission, so a CRM outage must not fail the registration.
+  await syncFanProfile({
+    firstName,
+    lastName,
+    email,
+    phoneE164,
+    zohoContactId,
+    source: 'website_registration',
+  });
 
   // If both sinks failed there's nothing captured to retry against → error.
   if (!dbOk && zohoStatus === 'error') {

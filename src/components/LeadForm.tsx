@@ -61,6 +61,10 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
     const payload = {
       ...formData,
       phone: finalPhone,
+      // Sent alongside the concatenated `phone` so the server can split the dial
+      // code back off and build a correct E.164 number for the CRM. Not stored
+      // in Postgres — `phone` there stays exactly as it always was.
+      country_code: countryCode,
       form_type: formType,
       city: finalCity,
       source_url: currentUrl,

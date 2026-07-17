@@ -1,5 +1,24 @@
 import { query } from '@/lib/database/db';
 import { NextResponse } from 'next/server';
+import { syncFanProfile } from '@/lib/crmFanProfiles';
+import { normalizePhone } from '@/lib/zoho';
+
+// LeadForm posts `phone` as the picker's dial code concatenated with whatever
+// the visitor typed, plus the dial code itself as `country_code`. Split them
+// back apart so a locally-formatted number ("0412…") becomes real E.164
+// ("+61412…") rather than "+610412…", which would never match the check-in
+// path's lookup. Returns null when there is no actual number — a form that
+// omits the phone field still posts the bare dial code.
+function toE164(phone: unknown, countryCode: unknown): string | null {
+  const raw = String(phone ?? '').replace(/[\s()-]/g, '').trim();
+  const dial = String(countryCode ?? '').replace(/[\s()-]/g, '').trim();
+  if (!raw) return null;
+
+  const local = dial && raw.startsWith(dial) ? raw.slice(dial.length) : raw;
+  if (local.replace(/\D/g, '').length < 5) return null;
+
+  return normalizePhone(local, dial || '+61');
+}
 
 export async function POST(request: Request) {
   try {
@@ -8,7 +27,8 @@ export async function POST(request: Request) {
     // 1. Extract fields (city, dob and booking_date are all optional — forms opt in)
     const {
       form_type, f_name, l_name, email, phone, city, dob, booking_date,
-      total_guests, description, company_name, source_url: body_source_url
+      total_guests, description, company_name, source_url: body_source_url,
+      country_code
     } = body;
 
     // 2. Validate required fields (city is optional so newsletter/DOB forms work)
@@ -50,6 +70,19 @@ export async function POST(request: Request) {
     ];
 
     await query(sql, values);
+
+    // 5. Mirror the lead into the Mongo CRM. Best-effort by design: the row is
+    // already committed above, so a CRM outage must not fail the submission.
+    await syncFanProfile({
+      firstName: f_name || null,
+      lastName: l_name || null,
+      email: email || null,
+      phoneE164: toE164(phone, country_code),
+      dob: dob || null,
+      place: city || null,
+      source: 'website_lead',
+      formType: form_type,
+    });
 
     return NextResponse.json({ success: true, message: 'Lead captured' }, { status: 200 });
 

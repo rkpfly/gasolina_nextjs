@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createContact, isZohoConfigured, normalizePhone, splitName } from '@/lib/zoho';
-import { isCrmConfigured, upsertFanProfile } from '@/lib/checkinCrm';
+import { isCrmConfigured, upsertFanProfile } from '@/lib/crmFanProfiles';
 import { resolveCity, CITY_DIAL_CODE } from '@/app/checkin/cities';
 
 // Step 2: write each first-time guest to both Zoho and the local Mongo CRM. The
@@ -34,6 +34,7 @@ export async function POST(req: NextRequest) {
       gender: gender || null,
       dob: dob || null,
       place: city,
+      source: 'website_checkin' as const,
     };
 
     try {
