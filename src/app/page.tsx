@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
 import { MediaAsset } from "@/lib/media";
 import MediaSlot from "@/lib/media";
 import LeadForm from "@/components/LeadForm";
@@ -52,6 +52,7 @@ export default function HomePage() {
   const [isEventsLoading, setIsEventsLoading] = useState(true);
   const [vipModal, setVipModal] = useState(false);
   const [vipModalEvent, setVipModalEvent] = useState<Event | null>(null);
+  const [enquireOpen, setEnquireOpen] = useState(false);
 
   const sectionRef = useRef(null);
 
@@ -100,7 +101,14 @@ export default function HomePage() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await fetch("/api/v1/events?limit=4");
+        const query = new URLSearchParams({
+          limit: "100",
+          sortBy: "basicInfo.date",
+          status: "published",
+          excludePast: "true",
+          publicOnly: "false",
+        });
+        const res = await fetch(`/api/v1/events?${query.toString()}`);
         if (res.ok) {
           const data: EventsApiResponse = await res.json();
           setEvents(data.data ?? data.events ?? []);
@@ -280,7 +288,7 @@ export default function HomePage() {
               <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
                 (02) — The Lineup
               </p>
-              <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-4xl sm:text-5xl md:text-7xl">
+              <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-3xl min-[360px]:text-4xl sm:text-5xl md:text-7xl">
                 Upcoming Events
               </h2>
             </div>
@@ -302,28 +310,31 @@ export default function HomePage() {
                 No upcoming events right now — check back soon.
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.85fr] gap-10 lg:gap-16 border-t border-white/10 pt-10 items-center">
-                <div>
+              <div className="border-t border-white/10 pt-10">
+                {/* Season lead-in */}
+                <div className="mb-12 max-w-[38ch]">
                   <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-5">
                     The Season
                   </p>
                   <h3 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-3xl sm:text-5xl md:text-7xl">
                     8 Saturdays
                   </h3>
-                  <p className="mt-6 text-brand-gray text-sm md:text-base leading-relaxed max-w-[38ch]">
+                  <p className="mt-6 text-brand-gray text-sm md:text-base leading-relaxed">
                     Starting{" "}
                     <span className="text-brand-white font-semibold">22 August</span>
                     {" "}— eight consecutive Saturday nights, one home for the movement.
                   </p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 md:gap-8">
-                  {events.slice(0, 1).map((event, index) => (
+
+                {/* All upcoming events */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+                  {events.map((event, index) => (
                     <EventCard
                       key={event._id || index}
                       event={event}
                       isActive={isEventActive(event)}
                       imgSrc={resolveImage(event)}
-                      delay={`${index * 100}ms`}
+                      delay={`${(index % 4) * 100}ms`}
                       onReserve={() => router.push(`/events/${event._id}`)}
                       onBookVIP={() => setVipModalEvent(event)}
                     />
@@ -339,7 +350,7 @@ export default function HomePage() {
       <section className="relative min-h-screen flex items-center snap-start overflow-hidden bg-brand-black pt-28 md:pt-48">
         {/* Cinematic background */}
         <img
-          src="/louderclub-vip-cta-img-v1.png"
+          src="/vip.png"
           alt="Louder Club VIP experience"
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -543,25 +554,52 @@ export default function HomePage() {
       </section>
 
       {/* ════════════════ INNER CIRCLE (newsletter) ════════════════ */}
-      <section className="flex flex-col lg:flex-row bg-brand-white border-y border-brand-border">
-        <FadeUp className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-10 md:p-16 lg:p-24">
-          <div className="w-full max-w-md">
+      <section className="flex min-h-[60svh] sm:min-h-[70svh] md:min-h-[80svh] bg-brand-white border-y border-brand-border">
+        <FadeUp className="w-full flex items-center justify-center p-6 sm:p-10 md:p-16 lg:p-24">
+          <motion.div layout className="w-full max-w-md text-center">
             <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-gray mb-4">
               (07) — Inner Circle
             </p>
             <h2 className="font-display font-extrabold uppercase tracking-tighter text-brand-black text-3xl sm:text-4xl md:text-5xl mb-3">
-              Get on the List
+              Join the team
             </h2>
             <p className="text-brand-gray font-medium text-xs sm:text-sm mb-8 md:mb-10">
               Priority access to ticket drops, VIP tables, and the next Louder
               Club night — straight to your inbox.
             </p>
-            <LeadForm
-              formType="home_newsletter"
-              fields={["f_name", "l_name", "email", "phone", "dob"]}
-              buttonText="Join the Club"
-            />
-          </div>
+
+            <AnimatePresence initial={false} mode="wait">
+              {!enquireOpen ? (
+                <motion.button
+                  key="enquire-btn"
+                  layout
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                  onClick={() => setEnquireOpen(true)}
+                  className="bg-club-purple text-brand-white px-10 py-4 text-xs md:text-sm font-bold tracking-[0.16em] uppercase hover:bg-brand-black transition-colors cursor-pointer"
+                >
+                  Enquire
+                </motion.button>
+              ) : (
+                <motion.div
+                  key="enquire-form"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  className="overflow-hidden text-left"
+                >
+                  <LeadForm
+                    formType="home_newsletter"
+                    fields={["f_name", "l_name", "email", "phone", "dob"]}
+                    buttonText="Join the Club"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
         </FadeUp>
       </section>
 
