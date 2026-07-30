@@ -119,7 +119,7 @@ export default function JournalClient({ initialPosts }: { initialPosts: BlogPost
         <main className="w-full bg-brand-black text-brand-white">
 
             {/* HERO SECTION */}
-            <section className="relative w-full px-3 sm:px-4 md:px-6 lg:px-8 pt-16 sm:pt-24 md:pt-28 pb-0 flex flex-col snap-start">
+            <section className="relative w-full px-3 sm:px-4 md:px-6 lg:px-8 pt-16 sm:pt-24 md:pt-20 pb-0 flex flex-col snap-start">
                 <div className="relative w-full h-[30svh] sm:h-[45svh] md:h-[50svh] min-h-[300px] sm:min-h-[350px] rounded-t-xl md:rounded-t-[2rem] overflow-hidden bg-brand-black img-reveal shadow-2xl img-wrapper flex items-center justify-center text-center border border-white/10 border-b-0">
                     <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/60 to-transparent"></div>
 

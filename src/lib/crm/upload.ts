@@ -4,7 +4,7 @@ import 'server-only';
 // Mirrors the upload forwarding in /api/admin/upload (same CRM_API_URL / secret).
 const CRM_UPLOAD_URL = process.env.CRM_API_URL
   ? `${process.env.CRM_API_URL}/api/media`
-  : 'http://localhost:9000/api/media';
+  : 'https://147.79.70.30.nip.io:8990/api/media';
 
 /**
  * Upload `file` under `folder` (e.g. "offer-submissions/birthday").

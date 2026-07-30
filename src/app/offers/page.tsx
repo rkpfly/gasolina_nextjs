@@ -30,7 +30,7 @@ export default async function OffersPage() {
   }
 
   return (
-    <main className="bg-brand-black min-h-screen mt-22 relative">
+    <main className="bg-brand-black min-h-screen mt-22 md:mt-16 relative">
 
       {/* HEADER */}
       <section className="py-6 text-center border-b border-white/10">

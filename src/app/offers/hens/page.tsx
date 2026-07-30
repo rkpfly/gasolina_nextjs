@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function HensOfferPage() {
   return (
-    <main className="bg-brand-black min-h-screen pt-24 sm:pt-32 pb-16 px-4 sm:px-6 flex justify-center items-start">
+    <main className="bg-brand-black min-h-screen pt-24 sm:pt-32 md:pt-24 pb-16 px-4 sm:px-6 flex justify-center items-start">
       <div className="w-full max-w-4xl bg-brand-black border border-white/10 rounded-xl shadow-2xl overflow-hidden relative mt-8">
         <HensOfferForm />
       </div>

@@ -55,7 +55,7 @@ export default function PrivateEventsPage() {
   return (
     <>
       {/* ════════════════ HERO ════════════════ */}
-      <section className="relative min-h-screen w-full flex flex-col justify-end bg-brand-black overflow-hidden px-4 sm:px-6 md:px-12 pt-28 md:pt-32 pb-10 md:pb-16">
+      <section className="relative min-h-screen w-full flex flex-col justify-end bg-brand-black overflow-hidden px-4 sm:px-6 md:px-12 pt-28 md:pt-24 pb-10 md:pb-16">
         {/* Ambient glow + grain */}
         <div className="pointer-events-none absolute inset-0 z-0">
           <div className="absolute -top-1/4 right-0 w-[60vw] h-[60vw] max-w-[700px] max-h-[700px] rounded-full bg-brand-blue/10 blur-[120px]" />

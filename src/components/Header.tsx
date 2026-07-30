@@ -25,7 +25,7 @@ export default function Header() {
     <>
       <header
         id="navbar"
-        className={`fixed top-0 left-0 w-full z-9999 py-2 sm:py-4 md:py-6 px-4 sm:px-6 md:px-12 flex justify-between items-center transition-colors duration-300 ${
+        className={`fixed top-0 left-0 w-full z-9999 py-2 sm:py-3 md:py-3 lg:py-3 px-4 sm:px-6 md:px-12 flex justify-between items-center transition-colors duration-300 ${
           isMenuOpen ? "bg-transparent" : "bg-brand-black/90 backdrop-blur-md border-b border-white/10"
         }`}
       >
@@ -33,7 +33,7 @@ export default function Header() {
           href="/"
           onClick={closeMenu}
           aria-label="Louder"
-          className={`flex items-center mt-1 sm:mt-1.5 md:mt-2 ml-1 sm:ml-2 md:ml-3 transition-opacity duration-500 ${
+          className={`flex items-center mt-0.5 sm:mt-1 md:mt-0.5 ml-1 sm:ml-2 md:ml-3 transition-opacity duration-500 ${
             isMenuOpen
               ? "opacity-0 pointer-events-none delay-0"
               : "opacity-100 pointer-events-auto delay-200"
@@ -45,7 +45,7 @@ export default function Header() {
             width={814}
             height={162}
             priority
-            className="h-6 sm:h-7 md:h-9 w-auto transition-opacity duration-500 hover:opacity-80"
+            className="h-6 sm:h-7 md:h-7 w-auto transition-opacity duration-500 hover:opacity-80"
           />
         </Link>
 
@@ -78,12 +78,12 @@ export default function Header() {
 
         {/* Right cluster: Party & Earn + Reserve + hamburger */}
         <div className="flex items-center gap-3 sm:gap-4 relative z-[60]">
-          <Link
+          {/* <Link
             href="/book"
-            className={`btn-glow glow-on-blue bg-brand-blue text-brand-white hover:bg-brand-white hover:text-brand-black hidden lg:inline-flex items-center text-xs font-bold tracking-[0.14em] uppercase px-5 py-2.5 transition-all duration-500 ${revealOnClose}`}
+            className={`btn-glow glow-on-blue bg-brand-blue text-brand-white hover:bg-brand-white hover:text-brand-black hidden lg:inline-flex items-center text-xs font-bold tracking-[0.14em] uppercase px-5 py-2 transition-all duration-500 ${revealOnClose}`}
           >
             <span>Reserve</span>
-          </Link>
+          </Link> */}
 
           <button
             id="menu-btn"

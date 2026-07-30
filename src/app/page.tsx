@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { MediaAsset } from "@/lib/media";
 import MediaSlot from "@/lib/media";
 import LeadForm from "@/components/LeadForm";
@@ -23,17 +23,6 @@ interface Offer {
   expiry_date: string;
 }
 
-interface BlogPost {
-  id: string;
-  slug: string;
-  title: string;
-  excerpt: string;
-  cover_image: string;
-  tags: string[];
-  published_at: string;
-  created_at: string;
-}
-
 // Left-to-right fade so the poster melts into the black hero
 const POSTER_MASK =
   "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.3) 38%, #000 85%)";
@@ -46,13 +35,11 @@ export default function HomePage() {
 
   const [media, setMedia] = useState<Record<string, MediaAsset>>({});
   const [offers, setOffers] = useState<Offer[]>([]);
-  const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isEventsLoading, setIsEventsLoading] = useState(true);
   const [vipModal, setVipModal] = useState(false);
   const [vipModalEvent, setVipModalEvent] = useState<Event | null>(null);
-  const [enquireOpen, setEnquireOpen] = useState(false);
 
   const sectionRef = useRef(null);
 
@@ -80,14 +67,12 @@ export default function HomePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [mediaRes, offersRes, blogsRes] = await Promise.all([
+        const [mediaRes, offersRes] = await Promise.all([
           fetch("/api/media?page=/home"),
           fetch("/api/offers"),
-          fetch("/api/blogs"),
         ]);
         if (mediaRes.ok) setMedia(await mediaRes.json());
         if (offersRes.ok) setOffers(await offersRes.json());
-        if (blogsRes.ok) setBlogs(await blogsRes.json());
       } catch (error) {
         console.error("Failed to fetch page data:", error);
       } finally {
@@ -156,7 +141,7 @@ export default function HomePage() {
       <VIPForm vipModal={vipModal} setVipModal={setVipModal} />
 
       {/* ════════════════ HERO ════════════════ */}
-      <section className="relative min-h-[80svh] md:min-h-[90svh] w-full flex flex-col bg-brand-black overflow-hidden snap-start px-4 sm:px-6 md:px-12 pt-28 md:pt-32 pb-6 md:pb-10">
+      <section className="relative min-h-[80svh] md:min-h-[90svh] w-full flex flex-col bg-brand-black overflow-hidden snap-start px-4 sm:px-6 md:px-12 pt-28 md:pt-24 pb-6 md:pb-10">
         {/* Hero visual (CMS-driven) — full section height, fading to black toward the left */}
         <div
           aria-hidden
@@ -227,125 +212,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* ════════════════ STATEMENT ════════════════ */}
-      <section className="min-h-screen flex flex-col justify-center bg-brand-offwhite text-brand-black snap-start px-4 sm:px-6 md:px-12 py-20">
-        <div className="max-w-[1600px] mx-auto w-full">
-          <FadeUp>
-            <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-gray mb-8 md:mb-12">
-              (01) — The Movement
-            </p>
-          </FadeUp>
-          <FadeUp delay={120}>
-            <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[1.02] text-[7vw] md:text-[4.6vw] max-w-[18ch]">
-              Melbourne&apos;s <span className="bg-club-purple text-brand-white px-1.5">louder</span>
-              <br /> nights &amp; big sound.
-            </h2>
-          </FadeUp>
-          <FadeUp delay={200}>
-            <div className="mt-12 md:mt-16 border-t border-brand-border pt-8">
-              <span className="text-[11px] tracking-[0.28em] uppercase text-brand-gray">
-                The Venue
-              </span>
-              <div className="mt-5 grid gap-x-14 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-                {[
-                  ["Club", "L3 Nightclubs"],
-                  ["Inside", "Crown Melbourne"],
-                  ["Address", "8 Whiteman Street"],
-                  ["Location", "Southbank VIC 3006"],
-                ].map(([k, v]) => (
-                  <div key={k} className="border-l-2 border-club-purple pl-4">
-                    <span className="block text-[11px] tracking-[0.12em] uppercase text-brand-gray">
-                      {k}
-                    </span>
-                    <span className="block font-display font-bold uppercase tracking-tight text-xl md:text-2xl mt-1.5">
-                      {v}
-                    </span>
-                  </div>
-                ))}
-              </div>
-              <a
-                href="https://www.google.com/maps/search/?api=1&query=L3+Nightclubs+Crown+Melbourne+8+Whiteman+Street+Southbank+VIC+3006"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-10 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.12em] text-club-purple hover:gap-3 transition-all"
-              >
-                Get Directions
-                <span aria-hidden="true">→</span>
-              </a>
-            </div>
-          </FadeUp>
-        </div>
-      </section>
-
-      {/* ════════════════ EVENTS / THE LINEUP ════════════════ */}
-      <section
-        id="events"
-        className="min-h-screen flex flex-col justify-center bg-brand-black text-brand-white snap-start px-4 sm:px-6 md:px-12 py-20"
-      >
-        <div className="max-w-[1600px] mx-auto w-full">
-          <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-10">
-            <div>
-              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
-                (02) — The Lineup
-              </p>
-              <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-3xl min-[360px]:text-4xl sm:text-5xl md:text-7xl">
-                Upcoming Events
-              </h2>
-            </div>
-            <Link
-              href="/events"
-              className="btn-glow glow-on-purple bg-club-purple text-brand-white px-6 py-3 text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
-            >
-              <span>All Events →</span>
-            </Link>
-          </FadeUp>
-
-          <FadeUp delay={150}>
-            {isEventsLoading ? (
-              <div className="w-full py-20 text-center text-brand-gray font-bold tracking-[0.15em] uppercase text-xs sm:text-sm">
-                Loading events…
-              </div>
-            ) : events.length === 0 ? (
-              <div className="w-full py-20 text-center text-brand-gray font-bold tracking-[0.15em] uppercase text-xs sm:text-sm">
-                No upcoming events right now — check back soon.
-              </div>
-            ) : (
-              <div className="border-t border-white/10 pt-10">
-                {/* Season lead-in */}
-                <div className="mb-12 max-w-[38ch]">
-                  <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-5">
-                    The Season
-                  </p>
-                  <h3 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-3xl sm:text-5xl md:text-7xl">
-                    8 Saturdays
-                  </h3>
-                  <p className="mt-6 text-brand-gray text-sm md:text-base leading-relaxed">
-                    Starting{" "}
-                    <span className="text-brand-white font-semibold">22 August</span>
-                    {" "}— eight consecutive Saturday nights, one home for the movement.
-                  </p>
-                </div>
-
-                {/* All upcoming events */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
-                  {events.map((event, index) => (
-                    <EventCard
-                      key={event._id || index}
-                      event={event}
-                      isActive={isEventActive(event)}
-                      imgSrc={resolveImage(event)}
-                      delay={`${(index % 4) * 100}ms`}
-                      onReserve={() => router.push(`/events/${event._id}`)}
-                      onBookVIP={() => setVipModalEvent(event)}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-          </FadeUp>
-        </div>
-      </section>
-
       {/* ════════════════ VIP ════════════════ */}
       <section className="relative min-h-screen flex items-center snap-start overflow-hidden bg-brand-black pt-28 md:pt-48">
         {/* Cinematic background */}
@@ -386,7 +252,7 @@ export default function HomePage() {
             <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-10">
               <div>
                 <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
-                  (04) — The Offers
+                  (01) — The Offers
                 </p>
                 <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-4xl sm:text-5xl md:text-7xl">
                   Offers
@@ -449,157 +315,121 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* ════════════════ JOURNAL / BLOGS ════════════════ */}
-      {blogs.length > 0 && (
-        <section className="min-h-screen flex flex-col justify-center bg-brand-offwhite text-brand-black snap-start px-4 sm:px-6 md:px-12 py-20">
-          <div className="max-w-[1600px] mx-auto w-full">
-            <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-10">
-              <div>
-                <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
-                  (05) — The Journal
-                </p>
-                <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-4xl sm:text-5xl md:text-7xl">
-                  Latest Stories
-                </h2>
-              </div>
-              <Link
-                href="/blogs"
-                className="btn-glow glow-on-purple bg-club-purple text-brand-white px-6 py-3 text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-black hover:text-brand-white transition-colors"
-              >
-                <span>Read the Journal →</span>
-              </Link>
-            </FadeUp>
-
-            <FadeUp delay={150} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {blogs.slice(0, 3).map((post) => (
-                <Link
-                  key={post.id}
-                  href={`/blogs/${post.slug}`}
-                  className="flex flex-col group"
-                >
-                  {/* Image */}
-                  <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-brand-black/5 mb-5">
-                    <img
-                      src={post.cover_image}
-                      alt={post.title}
-                      className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
-                    />
-                    {post.tags?.[0] && (
-                      <span className="absolute top-4 left-4 z-10 bg-club-purple text-brand-white px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] rounded-full">
-                        {post.tags[0]}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Text */}
-                  <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-gray mb-3">
-                    {new Date(post.published_at || post.created_at).toLocaleDateString("en-AU", {
-                      month: "short",
-                      day: "2-digit",
-                      year: "numeric",
-                    })}
-                  </p>
-                  <h3 className="text-lg md:text-2xl font-display font-bold uppercase tracking-tighter text-brand-black leading-tight mb-2 group-hover:text-club-purple transition-colors">
-                    {post.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm font-medium text-brand-gray leading-relaxed mb-4 line-clamp-2">
-                    {post.excerpt}
-                  </p>
-                  <span className="mt-auto text-[10px] font-bold uppercase tracking-[0.15em] text-brand-black group-hover:text-club-purple transition-colors">
-                    Read Article &rarr;
-                  </span>
-                </Link>
-              ))}
-            </FadeUp>
-          </div>
-        </section>
-      )}
-
-      {/* ════════════════ GALLERY / THE NIGHTS ════════════════ */}
-      <section className="min-h-screen flex flex-col justify-center bg-[#0f0f10] text-brand-white snap-start px-4 sm:px-6 md:px-12 py-20">
-        <div className="max-w-[1600px] mx-auto w-full">
-          <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-10">
-            <div>
-              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
-                (06) — The Nights
-              </p>
-              <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-4xl sm:text-5xl md:text-7xl">
-                Inside the Room
-              </h2>
-            </div>
-            <Link
-              href="/gallery"
-              className="btn-glow glow-on-purple bg-club-purple text-brand-white px-6 py-3 text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
-            >
-              <span>Full Gallery →</span>
-            </Link>
-          </FadeUp>
-
-          <FadeUp delay={150} className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-            {["cinematic-1", "cinematic-2"].map((id) => (
-              <div
-                key={id}
-                className="group relative aspect-video overflow-hidden bg-white/5"
-              >
-                <MediaSlot
-                  id={id}
-                  mediaMap={media}
-                  className="w-full h-full object-cover grayscale-50 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              </div>
-            ))}
-          </FadeUp>
-        </div>
-      </section>
-
-      {/* ════════════════ INNER CIRCLE (newsletter) ════════════════ */}
-      <section className="flex min-h-[60svh] sm:min-h-[70svh] md:min-h-[80svh] bg-brand-white border-y border-brand-border">
+      {/* ════════════════ JOIN THE TEAM (careers CTA) ════════════════ */}
+      <section className="flex min-h-[50svh] sm:min-h-[55svh] md:min-h-[60svh] bg-brand-white border-y border-brand-border">
         <FadeUp className="w-full flex items-center justify-center p-6 sm:p-10 md:p-16 lg:p-24">
-          <motion.div layout className="w-full max-w-md text-center">
+          <div className="w-full max-w-md text-center">
             <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-gray mb-4">
-              (07) — Inner Circle
+              (02) — Join the Team
             </p>
             <h2 className="font-display font-extrabold uppercase tracking-tighter text-brand-black text-3xl sm:text-4xl md:text-5xl mb-3">
               Join the team
             </h2>
             <p className="text-brand-gray font-medium text-xs sm:text-sm mb-8 md:mb-10">
+              Want to run the night with us? Bar, security, promo, hosting and more
+              — bring the energy, we&apos;ll bring the stage.
+            </p>
+            <Link
+              href="/careers#apply"
+              className="btn-glow glow-on-purple inline-block bg-club-purple text-brand-white px-10 py-4 text-xs md:text-sm font-bold tracking-[0.16em] uppercase hover:bg-brand-black transition-colors"
+            >
+              <span>Join the team</span>
+            </Link>
+          </div>
+        </FadeUp>
+      </section>
+
+      {/* ════════════════ EVENTS / THE LINEUP ════════════════ */}
+      <section
+        id="events"
+        className="min-h-screen flex flex-col justify-center bg-brand-black text-brand-white snap-start px-4 sm:px-6 md:px-12 py-20"
+      >
+        <div className="max-w-[1600px] mx-auto w-full">
+          <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-10">
+            <div>
+              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
+                (03) — The Lineup
+              </p>
+              <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-3xl min-[360px]:text-4xl sm:text-5xl md:text-7xl">
+                Upcoming Events
+              </h2>
+            </div>
+            <Link
+              href="/events"
+              className="btn-glow glow-on-purple bg-club-purple text-brand-white px-6 py-3 text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
+            >
+              <span>All Events →</span>
+            </Link>
+          </FadeUp>
+
+          <FadeUp delay={150}>
+            {isEventsLoading ? (
+              <div className="w-full py-20 text-center text-brand-gray font-bold tracking-[0.15em] uppercase text-xs sm:text-sm">
+                Loading events…
+              </div>
+            ) : events.length === 0 ? (
+              <div className="w-full py-20 text-center text-brand-gray font-bold tracking-[0.15em] uppercase text-xs sm:text-sm">
+                No upcoming events right now — check back soon.
+              </div>
+            ) : (
+              <div className="border-t border-white/10 pt-10">
+                {/* Season lead-in */}
+                <div className="mb-12 max-w-[38ch]">
+                  <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-5">
+                    The Season
+                  </p>
+                  <h3 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-3xl sm:text-5xl md:text-7xl">
+                    Weekly Every Saturday
+                  </h3>
+                  <p className="mt-6 text-brand-gray text-sm md:text-base leading-relaxed">
+                    Starting{" "}
+                    <span className="text-brand-white font-semibold">22 August</span>
+                    {" "}— Saturday night, every week, one home for the movement.
+                  </p>
+                </div>
+
+                {/* All upcoming events */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+                  {events.map((event, index) => (
+                    <EventCard
+                      key={event._id || index}
+                      event={event}
+                      isActive={isEventActive(event)}
+                      imgSrc={resolveImage(event)}
+                      delay={`${(index % 4) * 100}ms`}
+                      onReserve={() => router.push(`/events/${event._id}`)}
+                      onBookVIP={() => setVipModalEvent(event)}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+          </FadeUp>
+        </div>
+      </section>
+
+      {/* ════════════════ INNER CIRCLE (newsletter) ════════════════ */}
+      <section className="flex min-h-[50svh] sm:min-h-[55svh] md:min-h-[60svh] bg-[#BFC9D1] border-b border-brand-border">
+        <FadeUp className="w-full flex items-center justify-center p-6 sm:p-10 md:p-16 lg:p-24">
+          <div className="w-full max-w-md text-center">
+            <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-gray mb-4">
+              Inner Circle
+            </p>
+            <h3 className="font-display font-extrabold uppercase tracking-tighter text-brand-black text-2xl sm:text-3xl md:text-4xl mb-3">
+              Get on the List
+            </h3>
+            <p className="text-brand-gray font-medium text-xs sm:text-sm mb-8 md:mb-10">
               Priority access to ticket drops, VIP tables, and the next Louder
               Club night — straight to your inbox.
             </p>
-
-            <AnimatePresence initial={false} mode="wait">
-              {!enquireOpen ? (
-                <motion.button
-                  key="enquire-btn"
-                  layout
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.25 }}
-                  onClick={() => setEnquireOpen(true)}
-                  className="bg-club-purple text-brand-white px-10 py-4 text-xs md:text-sm font-bold tracking-[0.16em] uppercase hover:bg-brand-black transition-colors cursor-pointer"
-                >
-                  Enquire
-                </motion.button>
-              ) : (
-                <motion.div
-                  key="enquire-form"
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  className="overflow-hidden text-left"
-                >
-                  <LeadForm
-                    formType="home_newsletter"
-                    fields={["f_name", "l_name", "email", "phone", "dob"]}
-                    buttonText="Join the Club"
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
+            <div className="text-left">
+              <LeadForm
+                formType="home_newsletter"
+                fields={["f_name", "l_name", "email", "phone", "dob"]}
+                buttonText="Join the Club"
+              />
+            </div>
+          </div>
         </FadeUp>
       </section>
 

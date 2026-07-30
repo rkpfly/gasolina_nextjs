@@ -115,7 +115,7 @@ export default function GalleryClient({
     return (
         <main className="w-full bg-brand-black text-brand-white">
             {/* HERO SECTION */}
-            <section className="relative h-[85svh] w-full px-4 md:px-8 pt-20 md:pt-28 pb-12 flex flex-col snap-start">
+            <section className="relative h-[85svh] w-full px-4 md:px-8 pt-20 md:pt-20 pb-12 flex flex-col snap-start">
                 <div className="relative w-full h-full min-h-[500px] rounded-[2rem] overflow-hidden bg-brand-black img-reveal shadow-2xl img-wrapper">
 
                     {/* Correctly Implemented Media Slot */}

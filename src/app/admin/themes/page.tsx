@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import {
   getThemes,
   createTheme,
@@ -8,6 +8,16 @@ import {
   deleteTheme,
 } from './actions';
 import RichTextEditor from '@/components/RichTextEditor';
+
+const ALLOWED_IMAGE_TYPES = [
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/gif',
+  'image/avif',
+];
+
+const MAX_UPLOAD_SIZE = 10 * 1024 * 1024; // 10MB
 
 type Theme = {
   id: string;
@@ -69,12 +79,16 @@ function ThemeForm({
         <Field label="Template name" required>
           <input value={form.template_name} onChange={set('template_name')} placeholder="default" />
         </Field>
-        <Field label="Hero image URL">
-          <input value={form.hero_image} onChange={set('hero_image')} placeholder="https://…" />
-        </Field>
-        <Field label="Thumbnail URL">
-          <input value={form.thumbnail_url} onChange={set('thumbnail_url')} placeholder="https://…" />
-        </Field>
+        <MediaUploadField
+          label="Hero image"
+          value={form.hero_image}
+          onChange={(url) => setForm((f) => ({ ...f, hero_image: url }))}
+        />
+        <MediaUploadField
+          label="Thumbnail"
+          value={form.thumbnail_url}
+          onChange={(url) => setForm((f) => ({ ...f, thumbnail_url: url }))}
+        />
         <Field label="Short description" className="sm:col-span-2">
           <textarea
             value={form.short_description}
@@ -141,6 +155,93 @@ function Field({
         {children}
       </div>
     </label>
+  );
+}
+
+// Upload an image to the VPS (via the CRM media pipeline) and store its URL on
+// the theme, or paste a URL directly. Mirrors the upload UX used elsewhere in
+// the admin (offers / footer): "Upload" button + free-text URL fallback.
+function MediaUploadField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (url: string) => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  const handleFile = async (file: File) => {
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      setErr('Unsupported type (use JPG, PNG, WEBP, GIF or AVIF)');
+      return;
+    }
+    if (file.size > MAX_UPLOAD_SIZE) {
+      setErr('File must be under 10MB');
+      return;
+    }
+    setUploading(true);
+    setErr(null);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/admin/themes/upload', { method: 'POST', body: fd });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error ?? 'Upload failed');
+      onChange(data.url);
+    } catch (e: any) {
+      setErr(e?.message ?? 'Upload failed');
+    } finally {
+      setUploading(false);
+      if (inputRef.current) inputRef.current.value = '';
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-1">
+      <span className="text-xs font-medium text-[#6b7280] uppercase tracking-wider">{label}</span>
+
+      {value && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={value}
+          alt={label}
+          className="w-full h-32 object-cover rounded-md border border-[#2a2d36] bg-[#0d0f13]"
+        />
+      )}
+
+      <div className="flex gap-2">
+        <input
+          ref={inputRef}
+          type="file"
+          accept={ALLOWED_IMAGE_TYPES.join(',')}
+          className="hidden"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) handleFile(f);
+          }}
+        />
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          disabled={uploading}
+          className="flex-shrink-0 px-4 py-2 text-sm font-medium rounded-md bg-[#0d0f13] border border-[#2a2d36] text-[#e2e5ed] hover:border-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        >
+          {uploading ? 'Uploading…' : 'Upload'}
+        </button>
+        <input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="https://… or upload a file"
+          className="w-full bg-[#0d0f13] border border-[#2a2d36] rounded-md px-3 py-2 text-sm text-[#e2e5ed] placeholder-[#3d4150] focus:outline-none focus:border-indigo-500 transition-colors"
+        />
+      </div>
+
+      {err && <span className="text-xs text-red-400">{err}</span>}
+    </div>
   );
 }
 

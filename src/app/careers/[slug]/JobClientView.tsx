@@ -86,7 +86,7 @@ export default function JobClientView({ job }: { job: any }) {
     <main className="w-full selection:bg-brand-black selection:text-white bg-brand-white min-h-screen relative">
       
       {/* ── HERO SECTION ── */}
-      <section className="bg-brand-black text-brand-white pt-40 pb-20 px-6 md:px-12 relative overflow-hidden">
+      <section className="bg-brand-black text-brand-white pt-40 md:pt-32 pb-20 px-6 md:px-12 relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5 mix-blend-overlay pointer-events-none"></div>
         
         <div className="max-w-[1000px] mx-auto relative z-10 fade-up">

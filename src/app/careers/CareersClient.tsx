@@ -208,7 +208,7 @@ export default function CareersClient() {
         <main className="w-full bg-brand-black text-brand-white selection:bg-brand-blue selection:text-brand-white">
 
             {/* ── APPLICATION FORM SECTION (top of page) ── */}
-            <section id="apply" className="scroll-mt-24 pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-3 sm:px-4 md:px-6 lg:px-12 bg-[#0f0f10]">
+            <section id="apply" className="scroll-mt-24 pt-24 sm:pt-28 md:pt-24 pb-12 sm:pb-16 md:pb-20 px-3 sm:px-4 md:px-6 lg:px-12 bg-[#0f0f10]">
                 <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-8 sm:gap-10 md:gap-12 lg:gap-16 items-stretch">
 
                     {/* Left Image Reveal */}

@@ -49,7 +49,7 @@ export default async function SingleOfferPage({ params }: Props) {
   }
 
   return (
-    <main className="bg-brand-black min-h-screen pt-24 sm:pt-32 pb-16 px-4 sm:px-6 flex justify-center items-start">
+    <main className="bg-brand-black min-h-screen pt-24 sm:pt-32 md:pt-24 pb-16 px-4 sm:px-6 flex justify-center items-start">
       
       {/* Expanded max-width for side-by-side layout.
         Uses flex-col on mobile, flex-row on desktop.

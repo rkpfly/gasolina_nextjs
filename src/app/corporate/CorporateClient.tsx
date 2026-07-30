@@ -94,7 +94,7 @@ export default function CorporateClient() {
         <main className="w-full bg-brand-black text-brand-white selection:bg-brand-blue selection:text-brand-white">
 
             {/* ── HERO SECTION ── */}
-            <section className="relative h-[88svh] md:h-[100svh] min-h-[400px] sm:min-h-[450px] w-full md:px-6 lg:px-12 pt-16 sm:pt-24 md:pt-28 pb-6 sm:pb-8 md:pb-12 flex flex-col">
+            <section className="relative h-[88svh] md:h-[100svh] min-h-[400px] sm:min-h-[450px] w-full md:px-6 lg:px-12 pt-16 sm:pt-24 md:pt-20 pb-6 sm:pb-8 md:pb-12 flex flex-col">
                 <div
                     className={`relative w-full h-full md:rounded-[2rem] overflow-hidden bg-brand-black shadow-xl transition-[clip-path] duration-[1200ms] ease-custom ${
                         isRevealed ? '[clip-path:polygon(0_0,_100%_0,_100%_100%,_0_100%)]' : '[clip-path:polygon(0_100%,_100%_100%,_100%_100%,_0_100%)]'

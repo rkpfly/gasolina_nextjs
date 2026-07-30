@@ -6,7 +6,6 @@ import {
   updateTheme as dbUpdateTheme,
   deleteTheme as dbDeleteTheme,
 } from '@/lib/database/db';
-
 export async function getThemes() {
   return dbGetThemes();
 }

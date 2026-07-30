@@ -65,7 +65,7 @@ export default function ThemePage() {
   }
 
   return (
-    <div className="min-h-screen bg-brand-white pt-16 md:pt-24">
+    <div className="min-h-screen bg-brand-white pt-16 md:pt-16">
       {/* ── Theme Hero ── */}
       <section className="relative h-[60vh] md:h-[70vh] w-full flex flex-col justify-end">
         <div className="absolute inset-0 z-0">

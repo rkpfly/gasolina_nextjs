@@ -77,28 +77,7 @@ export default function ThemePage() {
       : themeData.hero_image;
 
   return (
-    <div className="min-h-screen bg-brand-white pt-16 md:pt-24">
-      {/* ── Theme Hero ── */}
-      <section className="relative h-[60vh] md:h-[70vh] w-full flex flex-col justify-end">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src={themeData.hero_image} 
-            alt={themeData.title} 
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/40 to-transparent" />
-        </div>
-
-        <FadeUp className="relative z-10 px-4 md:px-12 pb-12 max-w-[1600px] mx-auto w-full">
-          <h1 className="text-4xl sm:text-6xl md:text-8xl font-display font-extrabold tracking-tighter uppercase text-white mb-4">
-            {themeData.title}
-          </h1>
-          <p className="text-white/80 max-w-2xl text-sm md:text-lg font-medium leading-relaxed">
-            {themeData.short_description}
-          </p>
-        </FadeUp>
-      </section>
-
+    <div className="min-h-screen bg-brand-white pt-16 md:pt-16">
       {/* ── Booking Section (Refactored) ── */}
       <section className="py-12 md:py-24 px-4 md:px-12 bg-brand-black text-white">
         <div className="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-center">
@@ -201,6 +180,24 @@ export default function ThemePage() {
             )}
           </div>
         </div>
+      </section>
+
+      {/* ── Theme Hero (Media) ── */}
+      <section className="relative h-[60vh] md:h-[90vh] w-full flex flex-col justify-end bg-black">
+        <div className="absolute inset-0 z-0">
+          <img
+            src={themeData.hero_image}
+            alt={themeData.title}
+            className="w-full h-full object-contain"
+          />
+          {/* <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/40 to-transparent" /> */}
+        </div>
+
+        <FadeUp className="relative z-10 px-4 md:px-12 pb-12 max-w-[1600px] mx-auto w-full">
+          <p className="text-white/80 max-w-2xl text-sm md:text-lg font-medium leading-relaxed">
+            {themeData.short_description}
+          </p>
+        </FadeUp>
       </section>
 
       {/* ── Theme Details & Content ── */}
