@@ -62,7 +62,7 @@ export default function HomePage() {
   });
 
   // 👇 Use the smoothProgress here instead of the raw scrollYProgress
-  const overlayOpacity = useTransform(smoothProgress, [0, 1], [0.9, 0.70]);
+  const overlayOpacity = useTransform(smoothProgress, [0, 1], [0.9, 1.0]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -474,7 +474,7 @@ export default function HomePage() {
         {/* Dynamic Opacity Color Overlay Layer */}
           <motion.div 
             style={{ opacity: overlayOpacity }} // Opacity controlled by scroll
-            className="absolute inset-0 bg-club-purple -z-10 pointer-events-none"
+            className="absolute inset-0 bg-[#462C7D] -z-10 pointer-events-none"
           ></motion.div>
 
         {/* Foreground Content */}
