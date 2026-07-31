@@ -213,7 +213,7 @@ export default function HomePage() {
       </div>
 
       {/* ════════════════ VIP ════════════════ */}
-      <section className="relative min-h-screen flex items-center snap-start overflow-hidden bg-brand-black pt-28 md:pt-48">
+      <section className="relative min-h-screen flex items-center snap-start overflow-hidden bg-brand-black pt-28 md:pt-0 md:py-10">
         {/* Cinematic background */}
         <img
           src="/vip.png"
@@ -224,15 +224,16 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-brand-black/55 md:hidden" />
         <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-brand-black via-transparent to-brand-black" />
 
-        <FadeUp className="relative z-10 w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-12 py-4 md:py-24">
+        <FadeUp className="relative z-10 w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-10 lg:px-16 py-4 md:py-8">
           {/* Mobile: title pinned high, copy + CTA pushed low so the art shows
-              between them. Desktop: single centered block (md:block). */}
-          <div className="max-w-lg flex flex-col justify-between min-h-[86svh] pb-12 md:pb-0 md:min-h-0 md:block">
-            <div>
+              between them. Desktop: heading in the top-left corner, CTA in the
+              opposite (bottom-right) corner. */}
+          <div className="max-w-lg md:max-w-none flex flex-col justify-between min-h-[86svh] pb-12 md:pb-0 md:min-h-[74svh]">
+            <div className="md:max-w-2xl">
               <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-4">
                 By Invitation Only
               </p>
-              <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-brand-white text-[1.9rem] min-[380px]:text-4xl sm:text-6xl md:text-7xl mb-5">
+              <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-brand-white text-[1.9rem] min-[380px]:text-4xl sm:text-5xl md:text-6xl mb-5">
                 {/* Mobile: "Rise Above" / "The" / "Ordinary" (3 lines, first line
                     unbreakable). Desktop (md+): each word on its own line (4 lines). */}
                 <span className="whitespace-nowrap">
@@ -243,7 +244,7 @@ export default function HomePage() {
                 Ordinary
               </h2>
             </div>
-            <div>
+            <div className="md:self-end md:text-right md:max-w-sm md:translate-y-8">
               <p className="text-brand-gray text-sm md:text-base leading-relaxed mb-8">
                 Priority entry, private booths, bottle service. Skip the queue and own the room.
               </p>
