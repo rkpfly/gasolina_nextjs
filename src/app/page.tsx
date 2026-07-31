@@ -224,23 +224,36 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-brand-black/55 md:hidden" />
         <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-brand-black via-transparent to-brand-black" />
 
-        <FadeUp className="relative z-10 w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-12 py-24">
-          <div className="max-w-lg">
-            <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-4">
-              By Invitation Only
-            </p>
-            <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-brand-white text-4xl sm:text-6xl md:text-7xl mb-5">
-              Rise <span className="text-club-green text-glow-green">Above</span> The Ordinary
-            </h2>
-            <p className="text-brand-gray text-sm md:text-base leading-relaxed mb-8">
-              Priority entry, private booths, bottle service. Skip the queue and own the room.
-            </p>
-            <button
-              onClick={() => setVipModal(true)}
-              className="bg-club-purple text-brand-white px-10 py-4 text-xs md:text-sm font-bold tracking-[0.16em] uppercase hover:bg-club-purple/85 transition-colors cursor-pointer"
-            >
-              Request VIP Access
-            </button>
+        <FadeUp className="relative z-10 w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-12 py-4 md:py-24">
+          {/* Mobile: title pinned high, copy + CTA pushed low so the art shows
+              between them. Desktop: single centered block (md:block). */}
+          <div className="max-w-lg flex flex-col justify-between min-h-[86svh] pb-12 md:pb-0 md:min-h-0 md:block">
+            <div>
+              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-4">
+                By Invitation Only
+              </p>
+              <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-brand-white text-[1.9rem] min-[380px]:text-4xl sm:text-6xl md:text-7xl mb-5">
+                {/* Mobile: "Rise Above" / "The" / "Ordinary" (3 lines, first line
+                    unbreakable). Desktop (md+): each word on its own line (4 lines). */}
+                <span className="whitespace-nowrap">
+                  Rise<br className="hidden md:inline" /> <span className="text-club-green text-glow-green">Above</span>
+                </span>
+                <br />
+                The<br />
+                Ordinary
+              </h2>
+            </div>
+            <div>
+              <p className="text-brand-gray text-sm md:text-base leading-relaxed mb-8">
+                Priority entry, private booths, bottle service. Skip the queue and own the room.
+              </p>
+              <button
+                onClick={() => setVipModal(true)}
+                className="bg-club-purple text-brand-white px-10 py-4 text-xs md:text-sm font-bold tracking-[0.16em] uppercase hover:bg-club-purple/85 transition-colors cursor-pointer"
+              >
+                Request VIP Access
+              </button>
+            </div>
           </div>
         </FadeUp>
       </section>
@@ -388,18 +401,22 @@ export default function HomePage() {
                   </p>
                 </div>
 
-                {/* All upcoming events */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+                {/* All upcoming events — horizontal scroll */}
+                <div className="flex gap-6 md:gap-8 overflow-x-auto snap-x snap-mandatory pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                   {events.map((event, index) => (
-                    <EventCard
+                    <div
                       key={event._id || index}
-                      event={event}
-                      isActive={isEventActive(event)}
-                      imgSrc={resolveImage(event)}
-                      delay={`${(index % 4) * 100}ms`}
-                      onReserve={() => router.push(`/events/${event._id}`)}
-                      onBookVIP={() => setVipModalEvent(event)}
-                    />
+                      className="shrink-0 w-[260px] sm:w-[300px] md:w-[320px] snap-start"
+                    >
+                      <EventCard
+                        event={event}
+                        isActive={isEventActive(event)}
+                        imgSrc={resolveImage(event)}
+                        delay={`${(index % 4) * 100}ms`}
+                        onReserve={() => router.push(`/events/${event._id}`)}
+                        onBookVIP={() => setVipModalEvent(event)}
+                      />
+                    </div>
                   ))}
                 </div>
               </div>
