@@ -39,8 +39,8 @@ export default async function DressCodePage() {
       {/* w-full on mobile, fixed width on desktop */}
       {doc.image_url && (
         <div className="w-full lg:w-[350px] xl:w-[500px] flex-shrink-0 mb-6 lg:mb-0 lg:mr-8 xl:mr-12">
-        {/* aspect-[21/29.7] creates the perfect A4 ratio */}
-            <div className="relative w-full aspect-[21/29.7] rounded-lg md:rounded-xl overflow-hidden shadow-xl bg-gray-100">
+        {/* aspect ratio matches the dress-code artwork (1600×2666) so it fills the box with no cropping or letterboxing */}
+            <div className="relative w-full aspect-[1600/2666] rounded-lg md:rounded-xl overflow-hidden shadow-xl bg-gray-100">
                 {/* Using standard <img> for external URLs. If using Next/Image, update accordingly */}
                 <img
                 src={doc.image_url}

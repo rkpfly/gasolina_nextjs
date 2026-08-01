@@ -365,7 +365,7 @@ export default function HomePage() {
                 (03) — The Lineup
               </p>
               <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-3xl min-[360px]:text-4xl sm:text-5xl md:text-7xl">
-                Upcoming Events
+                Weekly Every Saturday
               </h2>
             </div>
             <Link
@@ -392,10 +392,7 @@ export default function HomePage() {
                   <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-5">
                     The Season
                   </p>
-                  <h3 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-3xl sm:text-5xl md:text-7xl">
-                    Weekly Every Saturday
-                  </h3>
-                  <p className="mt-6 text-brand-gray text-sm md:text-base leading-relaxed">
+                  <p className="text-brand-gray text-sm md:text-base leading-relaxed">
                     Starting{" "}
                     <span className="text-brand-white font-semibold">22 August</span>
                     {" "}— Saturday night, every week, one home for the movement.
