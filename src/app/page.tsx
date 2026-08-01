@@ -389,9 +389,9 @@ export default function HomePage() {
               <div className="border-t border-white/10 pt-10">
                 {/* Season lead-in */}
                 <div className="mb-12 max-w-[38ch]">
-                  <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-5">
+                  {/* <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-5">
                     The Season
-                  </p>
+                  </p> */}
                   <p className="text-brand-gray text-sm md:text-base leading-relaxed">
                     Starting{" "}
                     <span className="text-brand-white font-semibold">22 August</span>

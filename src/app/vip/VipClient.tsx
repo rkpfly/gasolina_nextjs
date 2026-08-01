@@ -108,7 +108,7 @@ export default function VipClient() {
 
                     {/* 1. Added 'bg-brand-black' here so the box itself is always black */}
                     <div
-                        className={`w-full lg:w-1/2 relative bg-brand-black rounded-sm overflow-hidden min-h-[300px] md:min-h-[600px] transition-[clip-path] duration-[1200ms] ease-custom ${
+                        className={`w-full lg:w-1/2 relative bg-brand-black rounded-sm overflow-hidden min-h-[300px] md:min-h-0 md:aspect-[2048/1365] lg:self-start transition-[clip-path] duration-[1200ms] ease-custom ${
                             isRevealed ? '[clip-path:polygon(0_0,_100%_0,_100%_100%,_0_100%)]' : '[clip-path:polygon(0_100%,_100%_100%,_100%_100%,_0_100%)]'
                         }`}
                     >
