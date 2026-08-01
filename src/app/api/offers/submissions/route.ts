@@ -63,12 +63,17 @@ export async function POST(request: NextRequest) {
       source_url: (formData.get('source_url') as string) || null,
     };
 
+    // NOTE: `guests` is stored inside the `payload` JSONB (above) rather than a
+    // dedicated column — the live VPS DB never had migration 005 applied and the
+    // app role (louder_club_boss) can't ALTER the postgres-owned table. Reading
+    // it back is done via payload->>'guests'. If the column is later added by the
+    // postgres owner, this insert can be reverted to include it explicitly.
     const sql = `
-      INSERT INTO offer_submissions (offer_key, email, phone, guests, payload)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO offer_submissions (offer_key, email, phone, payload)
+      VALUES ($1, $2, $3, $4)
       RETURNING id, submitted_at;
     `;
-    const result = await query(sql, [offer_key, email, phone, guests, JSON.stringify(payload)]);
+    const result = await query(sql, [offer_key, email, phone, JSON.stringify(payload)]);
 
     // Best-effort push to Zoho CRM as a Lead (no-op if not configured).
     await pushLeadToZoho({
