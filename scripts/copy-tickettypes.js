@@ -5,14 +5,9 @@
 const SOURCE_EVENT = ObjectId('6a6da7c37903f3738c2bf0b7');
 const TARGET_EVENT = ObjectId('6a6de7c57903f3738c2dc004');
 
-// Safety: don't run twice by accident.
-const existing = db.tickettypes.countDocuments({ event: TARGET_EVENT });
-if (existing > 0) {
-  throw new Error(
-    `Target event already has ${existing} ticket type(s). Aborting to avoid duplicates. ` +
-    `Delete them first if you want a clean copy.`
-  );
-}
+// Clear out any existing ticket types on the target event first, so this is a clean copy.
+const removed = db.tickettypes.deleteMany({ event: TARGET_EVENT });
+print(`Deleted ${removed.deletedCount} existing ticket type(s) from target event ${TARGET_EVENT}.`);
 
 const source = db.tickettypes.find({ event: SOURCE_EVENT }).toArray();
 if (source.length === 0) {
