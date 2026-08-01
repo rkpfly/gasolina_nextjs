@@ -7,6 +7,9 @@ import {
   VipReservation,
   Column,
   DataTable,
+  DetailModal,
+  DetailField,
+  recordToFields,
   FormTypeBadge,
   StatusBadge,
   formTypeLabel,
@@ -34,6 +37,8 @@ export default function SubmissionsPage() {
   const [tab, setTab] = useState<Tab>("leads");
   const [typeFilter, setTypeFilter] = useState<string>("all"); // "all" | a form_type
   const [search, setSearch] = useState("");
+  const [selectedLead, setSelectedLead] = useState<LeadSubmission | null>(null);
+  const [selectedVip, setSelectedVip] = useState<VipReservation | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -121,6 +126,46 @@ export default function SubmissionsPage() {
     { key: "event_date", header: "Event Date", render: (r) => <span className="whitespace-nowrap text-slate-400">{formatDate(r.event_date)}</span> },
     { key: "event_location", header: "Location", render: (r) => <span className="whitespace-nowrap">{r.event_location || "—"}</span> },
     { key: "status", header: "Status", render: (r) => <StatusBadge status={r.status} /> },
+  ];
+
+  // ─── Detail fields (row → modal) ──────────────────────────────────────────────
+  const leadDetailFields = (r: LeadSubmission): DetailField[] => {
+    const known = new Set([
+      "id", "form_type", "f_name", "l_name", "email", "phone", "city", "region",
+      "country", "total_guests", "description", "company_name", "source_url",
+      "ip_address", "created_at",
+    ]);
+    const extras = Object.fromEntries(
+      Object.entries(r as unknown as Record<string, unknown>).filter(([k]) => !known.has(k))
+    );
+    return [
+      { label: "Submitted", value: formatDateTime(r.created_at) },
+      { label: "Type", value: formTypeLabel(r.form_type) },
+      { label: "Name", value: fullName(r.f_name, r.l_name) },
+      { label: "Email", value: r.email ? <EmailCell email={r.email} /> : "—" },
+      { label: "Phone", value: <PhoneCell phone={r.phone} /> },
+      { label: "City", value: r.city || "—" },
+      { label: "Region", value: r.region || "—" },
+      { label: "Country", value: r.country || "—" },
+      { label: "Company", value: r.company_name || "—" },
+      { label: "Guests", value: r.total_guests ?? "—" },
+      { label: "Notes", value: r.description || "—", full: true },
+      { label: "Source", value: <SourceCell url={r.source_url} />, full: true },
+      { label: "IP Address", value: r.ip_address || "—" },
+      ...recordToFields(extras),
+    ];
+  };
+
+  const vipDetailFields = (r: VipReservation): DetailField[] => [
+    { label: "Requested", value: formatDateTime(r.created_at) },
+    { label: "Status", value: r.status || "—" },
+    { label: "Name", value: r.full_name || "—" },
+    { label: "Email", value: r.email ? <EmailCell email={r.email} /> : "—" },
+    { label: "Phone", value: <PhoneCell phone={r.phone} /> },
+    { label: "Guests", value: r.guests ?? "—" },
+    { label: "Event", value: r.event_name || "—" },
+    { label: "Event Date", value: formatDate(r.event_date) },
+    { label: "Location", value: r.event_location || "—", full: true },
   ];
 
   // ─── CSV exports ──────────────────────────────────────────────────────────────
@@ -212,7 +257,7 @@ export default function SubmissionsPage() {
         ) : (
           <>
             <p className="text-xs text-slate-500 mb-3">{filteredLeads.length} result{filteredLeads.length === 1 ? "" : "s"}</p>
-            <DataTable columns={leadColumns} rows={filteredLeads} />
+            <DataTable columns={leadColumns} rows={filteredLeads} onRowClick={setSelectedLead} />
           </>
         )
       ) : filteredVip.length === 0 ? (
@@ -220,9 +265,24 @@ export default function SubmissionsPage() {
       ) : (
         <>
           <p className="text-xs text-slate-500 mb-3">{filteredVip.length} result{filteredVip.length === 1 ? "" : "s"}</p>
-          <DataTable columns={vipColumns} rows={filteredVip} />
+          <DataTable columns={vipColumns} rows={filteredVip} onRowClick={setSelectedVip} />
         </>
       )}
+
+      <DetailModal
+        open={!!selectedLead}
+        onClose={() => setSelectedLead(null)}
+        title={selectedLead ? fullName(selectedLead.f_name, selectedLead.l_name) : ""}
+        subtitle={selectedLead ? formTypeLabel(selectedLead.form_type) : undefined}
+        fields={selectedLead ? leadDetailFields(selectedLead) : []}
+      />
+      <DetailModal
+        open={!!selectedVip}
+        onClose={() => setSelectedVip(null)}
+        title={selectedVip?.full_name || "VIP Reservation"}
+        subtitle={selectedVip?.event_name}
+        fields={selectedVip ? vipDetailFields(selectedVip) : []}
+      />
     </div>
   );
 }

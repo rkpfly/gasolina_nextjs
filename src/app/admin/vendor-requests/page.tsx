@@ -5,6 +5,8 @@ import Link from "next/link";
 import {
   Column,
   DataTable,
+  DetailModal,
+  DetailField,
   formatDateTime,
   formatDate,
   fullName,
@@ -85,6 +87,7 @@ export default function VendorRequestsPage() {
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("all");
+  const [selected, setSelected] = useState<VendorRequest | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -135,6 +138,21 @@ export default function VendorRequestsPage() {
     { key: "collaboration_date", header: "Preferred Date", render: (r) => <span className="whitespace-nowrap text-slate-400">{formatDate(r.collaboration_date)}</span> },
     { key: "portfolio_link", header: "Portfolio", render: (r) => <PortfolioCell url={r.portfolio_link} /> },
     { key: "source_url", header: "Source", render: (r) => <SourceCell url={r.source_url} /> },
+  ];
+
+  const detailFields = (r: VendorRequest): DetailField[] => [
+    { label: "Submitted", value: formatDateTime(r.created_at) },
+    { label: "Role", value: roleLabel(r.role) },
+    { label: "Name", value: fullName(r.first_name, r.last_name) },
+    { label: "Email", value: r.email ? <EmailCell email={r.email} /> : "—" },
+    {
+      label: "Phone",
+      value: <PhoneCell phone={r.country_code ? `${r.country_code} ${r.phone ?? ""}`.trim() : r.phone} />,
+    },
+    { label: "Preferred Date", value: formatDate(r.collaboration_date) },
+    { label: "Portfolio", value: r.portfolio_link ? <PortfolioCell url={r.portfolio_link} /> : "—", full: true },
+    { label: "Source", value: <SourceCell url={r.source_url} />, full: true },
+    { label: "IP Address", value: r.ip_address || "—" },
   ];
 
   const exportCsv = () => {
@@ -214,9 +232,17 @@ export default function VendorRequestsPage() {
       ) : (
         <>
           <p className="text-xs text-slate-500 mb-3">{filtered.length} result{filtered.length === 1 ? "" : "s"}</p>
-          <DataTable columns={columns} rows={filtered} />
+          <DataTable columns={columns} rows={filtered} onRowClick={setSelected} />
         </>
       )}
+
+      <DetailModal
+        open={!!selected}
+        onClose={() => setSelected(null)}
+        title={selected ? fullName(selected.first_name, selected.last_name) : ""}
+        subtitle={selected ? roleLabel(selected.role) : undefined}
+        fields={selected ? detailFields(selected) : []}
+      />
     </div>
   );
 }

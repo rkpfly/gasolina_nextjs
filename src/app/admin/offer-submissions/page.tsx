@@ -6,6 +6,9 @@ import {
   LeadSubmission,
   Column,
   DataTable,
+  DetailModal,
+  DetailField,
+  recordToFields,
   formatDateTime,
   fullName,
   EmailCell,
@@ -23,6 +26,7 @@ export default function OfferSubmissionsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState<LeadSubmission | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -62,6 +66,34 @@ export default function OfferSubmissionsPage() {
     { key: "city", header: "City", render: (r) => <span className="whitespace-nowrap">{r.city || "—"}</span> },
     { key: "source_url", header: "Source", render: (r) => <SourceCell url={r.source_url} /> },
   ];
+
+  const detailFields = (r: LeadSubmission): DetailField[] => {
+    // Any extra columns returned by SELECT * (e.g. a JSON payload/metadata with
+    // the offer-specific answers) are surfaced generically so nothing is hidden.
+    const known = new Set([
+      "id", "form_type", "f_name", "l_name", "email", "phone", "city", "region",
+      "country", "total_guests", "description", "company_name", "source_url",
+      "ip_address", "created_at",
+    ]);
+    const extras = Object.fromEntries(
+      Object.entries(r as unknown as Record<string, unknown>).filter(([k]) => !known.has(k))
+    );
+    return [
+      { label: "Submitted", value: formatDateTime(r.created_at) },
+      { label: "Name", value: fullName(r.f_name, r.l_name) },
+      { label: "Email", value: r.email ? <EmailCell email={r.email} /> : "—" },
+      { label: "Phone", value: <PhoneCell phone={r.phone} /> },
+      { label: "City", value: r.city || "—" },
+      { label: "Region", value: r.region || "—" },
+      { label: "Country", value: r.country || "—" },
+      { label: "Company", value: r.company_name || "—" },
+      { label: "Guests", value: r.total_guests ?? "—" },
+      { label: "Notes", value: r.description || "—", full: true },
+      { label: "Source", value: <SourceCell url={r.source_url} />, full: true },
+      { label: "IP Address", value: r.ip_address || "—" },
+      ...recordToFields(extras),
+    ];
+  };
 
   const exportCsv = () => {
     const headers = ["Date", "First Name", "Last Name", "Email", "Phone", "City", "Source"];
@@ -113,9 +145,17 @@ export default function OfferSubmissionsPage() {
       ) : (
         <>
           <p className="text-xs text-slate-500 mb-3">{filtered.length} result{filtered.length === 1 ? "" : "s"}</p>
-          <DataTable columns={columns} rows={filtered} />
+          <DataTable columns={columns} rows={filtered} onRowClick={setSelected} />
         </>
       )}
+
+      <DetailModal
+        open={!!selected}
+        onClose={() => setSelected(null)}
+        title={selected ? fullName(selected.f_name, selected.l_name) : ""}
+        subtitle={selected?.email}
+        fields={selected ? detailFields(selected) : []}
+      />
     </div>
   );
 }

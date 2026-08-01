@@ -172,9 +172,13 @@ export interface Column<T> {
 export function DataTable<T extends { id: string | number }>({
   columns,
   rows,
+  onRowClick,
 }: {
   columns: Column<T>[];
   rows: T[];
+  /** When provided, rows become clickable. Clicks on links inside a row are
+   *  ignored so mailto:/tel:/source links keep working without opening details. */
+  onRowClick?: (row: T) => void;
 }) {
   return (
     <div className="overflow-x-auto rounded-xl border border-slate-700 bg-slate-800/40">
@@ -195,9 +199,18 @@ export function DataTable<T extends { id: string | number }>({
           {rows.map((row, i) => (
             <tr
               key={row.id}
+              onClick={
+                onRowClick
+                  ? (e) => {
+                      // Don't hijack clicks on interactive elements inside the row.
+                      if ((e.target as HTMLElement).closest("a,button")) return;
+                      onRowClick(row);
+                    }
+                  : undefined
+              }
               className={`border-b border-slate-800 transition-colors hover:bg-slate-700/30 ${
                 i % 2 === 1 ? "bg-slate-800/20" : ""
-              }`}
+              } ${onRowClick ? "cursor-pointer" : ""}`}
             >
               {columns.map((c) => (
                 <td key={c.key} className={`px-4 py-3 align-top text-slate-200 ${c.className ?? ""}`}>
@@ -210,6 +223,113 @@ export function DataTable<T extends { id: string | number }>({
       </table>
     </div>
   );
+}
+
+// ─── Detail modal ─────────────────────────────────────────────────────────────
+// Row-detail popup shared across the Submissions, Offer Submissions and Vendor
+// Requests admin tables. Pages compose a list of DetailField entries; the modal
+// handles layout, backdrop/Esc close and body-scroll lock.
+export interface DetailField {
+  label: string;
+  value: React.ReactNode;
+  /** Span the full width — use for long text like notes or a guest list. */
+  full?: boolean;
+}
+
+function isEmptyValue(v: React.ReactNode): boolean {
+  return v === null || v === undefined || v === "" || v === "—";
+}
+
+export function DetailModal({
+  open,
+  onClose,
+  title,
+  subtitle,
+  fields,
+}: {
+  open: boolean;
+  onClose: () => void;
+  title: React.ReactNode;
+  subtitle?: React.ReactNode;
+  fields: DetailField[];
+}) {
+  React.useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  // Drop empty fields so the panel only shows what was actually captured.
+  const visible = fields.filter((f) => !isEmptyValue(f.value));
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      onClick={onClose}
+      className="fixed inset-0 z-[100] flex items-start sm:items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-y-auto"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-2xl my-8 rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl"
+      >
+        {/* Header */}
+        <div className="sticky top-0 z-10 flex items-start justify-between gap-4 px-6 py-4 border-b border-slate-700 bg-slate-900/95 backdrop-blur rounded-t-2xl">
+          <div>
+            <h3 className="text-lg font-bold text-slate-100">{title}</h3>
+            {subtitle && <div className="text-xs text-slate-400 mt-0.5">{subtitle}</div>}
+          </div>
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className="shrink-0 -mr-1 -mt-1 h-8 w-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition-colors text-xl leading-none"
+          >
+            ×
+          </button>
+        </div>
+
+        {/* Body */}
+        <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 px-6 py-5">
+          {visible.length === 0 ? (
+            <p className="text-sm text-slate-500 col-span-full">No further details captured.</p>
+          ) : (
+            visible.map((f, i) => (
+              <div key={i} className={f.full ? "sm:col-span-2" : ""}>
+                <dt className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                  {f.label}
+                </dt>
+                <dd className="text-sm text-slate-100 break-words whitespace-pre-wrap">{f.value}</dd>
+              </div>
+            ))
+          )}
+        </dl>
+      </div>
+    </div>
+  );
+}
+
+// Turn an arbitrary record (e.g. an offer submission `payload`) into detail
+// fields with prettified labels. Skips null/empty entries and stringifies
+// nested objects so nothing is silently dropped.
+export function recordToFields(obj: Record<string, unknown> | null | undefined): DetailField[] {
+  if (!obj || typeof obj !== "object") return [];
+  return Object.entries(obj)
+    .filter(([, v]) => v !== null && v !== undefined && v !== "")
+    .map(([k, v]) => ({
+      label: prettify(k),
+      value: typeof v === "object" ? JSON.stringify(v, null, 2) : String(v),
+      full: typeof v === "string" && v.length > 40,
+    }));
 }
 
 // ─── Small UI atoms ───────────────────────────────────────────────────────────
