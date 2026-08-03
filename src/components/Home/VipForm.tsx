@@ -78,7 +78,7 @@ export default function VIPForm({
             </div>
 
             <LeadForm
-              fields={['f_name', 'l_name', 'email', 'phone', 'city', 'dob', 'total_guests']}
+              fields={['f_name', 'l_name', 'email', 'phone', 'total_guests']}
               formType="vip_table_request"
               buttonText="Become a VIP"
               tone="dark"

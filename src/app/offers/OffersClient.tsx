@@ -93,7 +93,7 @@ export default function OffersClient({ initialOffers }: OffersClientProps) {
 
               {/* Text Content */}
               <div className="pr-4">
-                <h3 className="text-lg sm:text-xl md:text-2xl font-display font-bold uppercase tracking-tighter text-brand-white mb-2 group-hover:text-transparent group-hover:[-webkit-text-stroke:1px_#FFFFFF] transition-colors duration-300">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-display font-bold uppercase tracking-tighter lining-nums proportional-nums text-brand-white mb-2 group-hover:text-transparent group-hover:[-webkit-text-stroke:1px_#FFFFFF] transition-colors duration-300">
                   {offer.offer_title}
                 </h3>
                 <p className="text-[10px] sm:text-xs text-brand-gray leading-relaxed font-medium mb-4 line-clamp-2">

@@ -131,6 +131,45 @@ export default function HomePage() {
     return image.startsWith("http") ? image : `${DB_SOURCE}/${image}`;
   };
 
+  // Mobile shows a short, stacked preview: birthday + hens only (max 2).
+  const featuredOffers = offers
+    .filter((o) => /birthday|hens/i.test(o.slug) || /birthday|hens/i.test(o.offer_title))
+    .slice(0, 2);
+
+  // Single offer card, reused by the mobile column and the desktop scroller.
+  const renderOfferCard = (offer: Offer) => (
+    <Link
+      key={offer.id}
+      href={`/offers/${offer.slug}`}
+      className="snap-start shrink-0 w-full md:w-[340px] flex flex-col group"
+    >
+      {/* Image */}
+      <div className="aspect-[4/5] w-full overflow-hidden relative mb-4 bg-white/5">
+        <img
+          src={offer.thumbnail_url}
+          alt={offer.offer_title}
+          className="absolute inset-0 w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+        />
+        {offer.category && (
+          <span className="absolute top-3 left-3 z-10 bg-brand-black/80 backdrop-blur-sm text-brand-white text-[9px] font-bold tracking-widest uppercase px-3 py-1.5">
+            {offer.category}
+          </span>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-black/90 via-transparent to-transparent opacity-80" />
+      </div>
+
+      {/* Text */}
+      <h3 className="text-lg md:text-xl font-display font-bold uppercase tracking-tighter lining-nums proportional-nums text-brand-white mb-2 group-hover:text-transparent group-hover:[-webkit-text-stroke:1px_#FFFFFF] transition-colors duration-300">
+        {offer.offer_title}
+      </h3>
+      <div className="flex items-center mt-auto pt-4 border-t border-white/10">
+        <span className="text-[9px] font-bold tracking-widest uppercase text-club-green group-hover:text-brand-white transition-colors">
+          View Details &rarr;
+        </span>
+      </div>
+    </Link>
+  );
+
   return (
     <>
       {/* Per-event VIP booking modal (self-manages Escape + scroll lock) */}
@@ -168,8 +207,10 @@ export default function HomePage() {
           SATURDAYS
         </span>
 
-        {/* Title block (bottom) */}
-        <FadeUp className="relative z-10 mt-auto w-full max-w-[1600px] mx-auto">
+        {/* Title block (bottom) — plain div (not FadeUp): a transform on the
+            wrapper would isolate the button's mix-blend-difference from the
+            hero video, so we avoid one here. */}
+        <div className="relative z-10 mt-auto w-full max-w-[1600px] mx-auto">
           {/* <h1 className="font-display font-extrabold uppercase tracking-tighter text-brand-white leading-[0.82] text-[8vw] sm:text-[8.5vw] md:text-[9vw] lg:text-[8rem]">
             LOUDER<span className="text-club-green text-glow-green">.</span><br />EVERY <span className="text-club-green text-glow-green">SATURDAY</span>
           </h1> */}
@@ -190,7 +231,7 @@ export default function HomePage() {
           <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
             <button
               onClick={() => setVipModal(true)}
-              className="group self-end sm:self-start inline-flex items-center gap-2 border-b border-white/40 text-brand-white px-1 pb-1 text-xs md:text-sm font-extrabold tracking-[0.22em] uppercase text-center cursor-pointer hover:text-brand-white/80 transition-colors duration-300"
+              className="group self-end sm:self-start inline-flex items-center gap-2.5 border-b-2 border-white/40 mix-blend-difference text-white px-1 pb-2 text-base md:text-xl font-[900] tracking-[0.1em] uppercase text-center cursor-pointer hover:text-white/80 transition-colors duration-300"
             >
               <span>Reserve VIP</span>
               <svg
@@ -201,7 +242,7 @@ export default function HomePage() {
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                 aria-hidden="true"
               >
                 <line x1="7" y1="17" x2="17" y2="7" />
@@ -215,7 +256,7 @@ export default function HomePage() {
               Upcoming Events
             </Link> */}
           </div>
-        </FadeUp>
+        </div>
       </section>
 
       {/* ════════════════ MARQUEE ════════════════ */}
@@ -367,50 +408,17 @@ export default function HomePage() {
               </Link>
             </FadeUp>
 
+            {/* Mobile: stacked column, birthday + hens only (max 2) */}
+            <FadeUp delay={150} className="flex flex-col gap-8 md:hidden">
+              {featuredOffers.map(renderOfferCard)}
+            </FadeUp>
+
+            {/* Desktop: horizontal scroller with every active offer */}
             <FadeUp
               delay={150}
-              className="flex overflow-x-auto gap-4 sm:gap-6 pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+              className="hidden md:flex overflow-x-auto gap-4 sm:gap-6 pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
             >
-              {offers.map((offer) => (
-                <Link
-                  key={offer.id}
-                  href={`/offers/${offer.slug}`}
-                  className="snap-start shrink-0 w-[260px] sm:w-[300px] md:w-[340px] flex flex-col group"
-                >
-                  {/* Image */}
-                  <div className="aspect-[4/5] w-full overflow-hidden relative mb-4 bg-white/5">
-                    <img
-                      src={offer.thumbnail_url}
-                      alt={offer.offer_title}
-                      className="absolute inset-0 w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
-                    />
-                    {offer.category && (
-                      <span className="absolute top-3 left-3 z-10 bg-brand-black/80 backdrop-blur-sm text-brand-white text-[9px] font-bold tracking-widest uppercase px-3 py-1.5">
-                        {offer.category}
-                      </span>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-brand-black/90 via-transparent to-transparent opacity-80" />
-                  </div>
-
-                  {/* Text */}
-                  <h3 className="text-lg md:text-xl font-display font-bold uppercase tracking-tighter text-brand-white mb-2 group-hover:text-transparent group-hover:[-webkit-text-stroke:1px_#FFFFFF] transition-colors duration-300">
-                    {offer.offer_title}
-                  </h3>
-                  <p className="text-[11px] sm:text-xs text-brand-gray leading-relaxed font-medium mb-4 line-clamp-2">
-                    {offer.short_description}
-                  </p>
-                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/10">
-                    <span className="text-[9px] uppercase tracking-[0.2em] text-brand-white/50 font-bold">
-                      {offer.expiry_date
-                        ? `Expires ${new Date(offer.expiry_date).toLocaleDateString()}`
-                        : "Ongoing"}
-                    </span>
-                    <span className="text-[9px] font-bold tracking-widest uppercase text-club-green group-hover:text-brand-white transition-colors">
-                      View Details &rarr;
-                    </span>
-                  </div>
-                </Link>
-              ))}
+              {offers.map(renderOfferCard)}
             </FadeUp>
           </div>
         </section>

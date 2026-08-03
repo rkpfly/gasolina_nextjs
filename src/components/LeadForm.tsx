@@ -181,8 +181,13 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
             );
           case 'dob':
             return (
-              <div key={field} className={wrapperClass}>
-                <input type="date" name="dob" placeholder="DATE OF BIRTH" value={formData.dob} onChange={handleChange} className={inputClass} />
+              <div key={field} className="flex flex-col gap-2">
+                <label htmlFor="dob" className={`text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase ${dark ? 'text-white' : 'text-brand-black'}`}>
+                  Date of Birth
+                </label>
+                <div className={wrapperClass}>
+                  <input type="date" id="dob" name="dob" placeholder="DATE OF BIRTH" value={formData.dob} onChange={handleChange} className={inputClass} />
+                </div>
               </div>
             );
           case 'booking_date':
