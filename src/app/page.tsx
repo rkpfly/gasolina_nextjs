@@ -141,11 +141,11 @@ export default function HomePage() {
       <VIPForm vipModal={vipModal} setVipModal={setVipModal} />
 
       {/* ════════════════ HERO ════════════════ */}
-      <section className="relative min-h-[80svh] md:min-h-[90svh] w-full flex flex-col bg-brand-black overflow-hidden snap-start px-4 sm:px-6 md:px-12 pt-28 md:pt-24 pb-6 md:pb-10">
+      <section className="relative min-h-[80svh] md:min-h-[90svh] w-full flex flex-col justify-between bg-brand-black overflow-hidden snap-start px-4 sm:px-6 md:px-10 pt-12 md:pt-16 pb-6 md:pb-10">
         {/* Hero visual (CMS-driven) — full section height, fading to black toward the left */}
         <div
           aria-hidden
-          className="pointer-events-none absolute top-0 right-0 h-full w-full sm:w-[64%] md:w-[58%] max-w-[720px] z-0"
+          className="pointer-events-none absolute top-0 right-0 h-full w-full sm:w-[64%] md:w-[60%] max-w-[720px] md:max-w-none z-0"
           style={{ WebkitMaskImage: POSTER_MASK, maskImage: POSTER_MASK }}
         >
           <MediaSlot
@@ -164,45 +164,62 @@ export default function HomePage() {
         />
 
         {/* Kicker banner (top) */}
-        <span className="relative z-10 self-start bg-club-purple text-brand-white font-bold uppercase tracking-[0.18em] text-[10px] sm:text-xs md:text-sm px-4 py-2 glow-purple">
-          A New Clubbing Era Begins
+        <span className="relative z-10 self-start text-brand-white font-[1000] uppercase leading-none -tracking-[0.08em] -md:tracking-[0.01em] text-5xl sm:text-6xl md:text-8xl md:px-4">
+          SATURDAYS
         </span>
 
         {/* Title block (bottom) */}
         <FadeUp className="relative z-10 mt-auto w-full max-w-[1600px] mx-auto">
-          <h1 className="font-display font-extrabold uppercase tracking-tighter text-brand-white leading-[0.82] text-[8vw] sm:text-[8.5vw] md:text-[9vw] lg:text-[8rem]">
+          {/* <h1 className="font-display font-extrabold uppercase tracking-tighter text-brand-white leading-[0.82] text-[8vw] sm:text-[8.5vw] md:text-[9vw] lg:text-[8rem]">
             LOUDER<span className="text-club-green text-glow-green">.</span><br />EVERY <span className="text-club-green text-glow-green">SATURDAY</span>
-          </h1>
-          <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+          </h1> */}
+          {/* <span className="relative z-10 self-start bg-club-purple text-brand-white font-bold uppercase tracking-[0.18em] text-[10px] sm:text-xs md:text-sm px-4 py-2 glow-purple">
+            A New Clubbing Era Begins
+          </span> */}
+          {/* <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
             {["DANCE", "POP", "HOUSE"].map((g, i) => (
               <span key={g} className="flex items-center gap-5">
-                {i > 0 && <span className={`w-1.5 h-1.5 rounded-full ${i === 1 ? "bg-club-green shadow-[0_0_8px_#6CFB13]" : "bg-club-purple shadow-[0_0_8px_#723CF4]"}`} />}
+                {i > 0 && <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_#ffffff]" />}
                 <span className="text-[11px] sm:text-sm font-semibold tracking-[0.22em] uppercase text-brand-offwhite">
                   {g}
                 </span>
               </span>
             ))}
-          </div>
+          </div> */}
 
-          <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
+          <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
             <button
               onClick={() => setVipModal(true)}
-              className="btn-glow glow-on-purple bg-club-purple text-brand-white px-8 md:px-10 py-4 text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-center cursor-pointer hover:bg-brand-white hover:text-brand-black transition-colors duration-300 w-full sm:w-auto"
+              className="group self-end sm:self-start inline-flex items-center gap-2 border-b border-white/40 text-brand-white px-1 pb-1 text-xs md:text-sm font-extrabold tracking-[0.22em] uppercase text-center cursor-pointer hover:text-brand-white/80 transition-colors duration-300"
             >
               <span>Reserve VIP</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                aria-hidden="true"
+              >
+                <line x1="7" y1="17" x2="17" y2="7" />
+                <polyline points="7 7 17 7 17 17" />
+              </svg>
             </button>
-            <Link
+            {/* <Link
               href="#events"
               className="border border-club-green/50 text-brand-white px-8 md:px-10 py-4 text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-center hover:bg-club-green hover:text-brand-black hover:shadow-[0_0_28px_-6px_#6CFB13] transition-all duration-300 w-full sm:w-auto"
             >
               Upcoming Events
-            </Link>
+            </Link> */}
           </div>
         </FadeUp>
       </section>
 
       {/* ════════════════ MARQUEE ════════════════ */}
-      <div className="bg-club-purple border-y border-brand-black overflow-hidden whitespace-nowrap">
+      <div className="bg-brand-black border-y border-white/10 overflow-hidden whitespace-nowrap">
         <div className="flex w-max animate-marquee">
           {[0, 1, 2].map((g) => (
             <div key={g} className="flex items-center gap-8 py-3 pr-8 text-brand-white">
@@ -211,6 +228,76 @@ export default function HomePage() {
           ))}
         </div>
       </div>
+
+      {/* ════════════════ EVENTS / THE LINEUP ════════════════ */}
+      <section
+        id="events"
+        className="min-h-screen flex flex-col justify-center bg-brand-black text-brand-white snap-start px-4 sm:px-6 md:px-12 py-20"
+      >
+        <div className="max-w-[1600px] mx-auto w-full">
+          <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-4 md:mb-10">
+            <div>
+              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
+                (01) — The Lineup
+              </p>
+              <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-3xl min-[360px]:text-4xl sm:text-5xl md:text-7xl">
+                Weekly Every Saturday
+              </h2>
+            </div>
+            <Link
+              href="/events"
+              className="btn-glow glow-on-purple border-b text-brand-white px-3 py-3 text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
+            >
+              <span>All Events →</span>
+            </Link>
+          </FadeUp>
+
+          <FadeUp delay={150}>
+            {isEventsLoading ? (
+              <div className="w-full py-20 text-center text-brand-gray font-bold tracking-[0.15em] uppercase text-xs sm:text-sm">
+                Loading events…
+              </div>
+            ) : events.length === 0 ? (
+              <div className="w-full py-20 text-center text-brand-gray font-bold tracking-[0.15em] uppercase text-xs sm:text-sm">
+                No upcoming events right now — check back soon.
+              </div>
+            ) : (
+              <div className="pt-2">
+                {/* Season lead-in */}
+                <div className="max-w-[38ch]">
+                  {/* <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-5">
+                    The Season
+                  </p> */}
+                  {/* <p className="text-brand-gray text-sm md:text-base leading-relaxed">
+                    Starting{" "}
+                    <span className="text-brand-white font-semibold">22 August</span>
+                    {" "}— Saturday night, every week, one home for the movement.
+                  </p> */}
+                </div>
+
+                {/* All upcoming events — horizontal scroll */}
+                <div className="flex gap-6 md:gap-8 overflow-x-auto snap-x snap-mandatory pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                  {events.map((event, index) => (
+                    <div
+                      key={event._id || index}
+                      className="shrink-0 w-[260px] sm:w-[300px] md:w-[320px] snap-start"
+                    >
+                      <EventCard
+                        event={event}
+                        isActive={isEventActive(event)}
+                        imgSrc={resolveImage(event)}
+                        delay={`${(index % 4) * 100}ms`}
+                        onReserve={() => router.push(`/events/${event._id}`)}
+                        onBookVIP={() => setVipModalEvent(event)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </FadeUp>
+        </div>
+      </section>
 
       {/* ════════════════ VIP ════════════════ */}
       <section className="relative min-h-screen flex items-center snap-start overflow-hidden bg-brand-black pt-28 md:pt-0 md:py-10">
@@ -266,7 +353,7 @@ export default function HomePage() {
             <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-10">
               <div>
                 <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
-                  (01) — The Offers
+                  (02) — The Offers
                 </p>
                 <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-4xl sm:text-5xl md:text-7xl">
                   Offers
@@ -329,123 +416,56 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* ════════════════ JOIN THE TEAM (careers CTA) ════════════════ */}
-      <section className="flex min-h-[50svh] sm:min-h-[55svh] md:min-h-[60svh] bg-brand-white border-y border-brand-border">
-        <FadeUp className="w-full flex items-center justify-center p-6 sm:p-10 md:p-16 lg:p-24">
-          <div className="w-full max-w-md text-center">
-            <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-gray mb-4">
-              (02) — Join the Team
-            </p>
-            <h2 className="font-display font-extrabold uppercase tracking-tighter text-brand-black text-3xl sm:text-4xl md:text-5xl mb-3">
-              Join the team
-            </h2>
-            <p className="text-brand-gray font-medium text-xs sm:text-sm mb-8 md:mb-10">
-              Want to run the night with us? Bar, security, promo, hosting and more
-              — bring the energy, we&apos;ll bring the stage.
-            </p>
-            <Link
-              href="/careers#apply"
-              className="btn-glow glow-on-purple inline-block bg-club-purple text-brand-white px-10 py-4 text-xs md:text-sm font-bold tracking-[0.16em] uppercase hover:bg-brand-black transition-colors"
-            >
-              <span>Join the team</span>
-            </Link>
-          </div>
-        </FadeUp>
-      </section>
-
-      {/* ════════════════ EVENTS / THE LINEUP ════════════════ */}
-      <section
-        id="events"
-        className="min-h-screen flex flex-col justify-center bg-brand-black text-brand-white snap-start px-4 sm:px-6 md:px-12 py-20"
-      >
-        <div className="max-w-[1600px] mx-auto w-full">
-          <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-10">
-            <div>
-              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
-                (03) — The Lineup
+      {/* ════════════════ JOIN THE TEAM + NEWSLETTER (flex row on desktop, stacked on mobile) ════════════════ */}
+      <section className="flex flex-col md:flex-row border-y border-brand-border">
+        {/* Join the Team */}
+        <div className="w-full md:w-1/2 flex min-h-[50svh] sm:min-h-[55svh] md:min-h-[60svh] bg-brand-white border-b md:border-b-0 md:border-r border-brand-border">
+          <FadeUp className="w-full flex items-center justify-center p-6 sm:p-10 md:p-16 lg:p-24">
+            <div className="w-full max-w-md text-center">
+              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-gray mb-4">
+                (03) — Join the Team
               </p>
-              <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-3xl min-[360px]:text-4xl sm:text-5xl md:text-7xl">
-                Weekly Every Saturday
+              <h2 className="font-display font-extrabold uppercase tracking-tighter text-brand-black text-3xl sm:text-4xl md:text-5xl mb-3">
+                Join the team
               </h2>
+              <p className="text-brand-gray font-medium text-xs sm:text-sm mb-8 md:mb-10">
+                Want to run the night with us? Bar, security, promo, hosting and more
+                — bring the energy, we&apos;ll bring the stage.
+              </p>
+              <Link
+                href="/careers#apply"
+                className="btn-glow glow-on-purple inline-block bg-club-purple text-brand-white px-10 py-4 text-xs md:text-sm font-bold tracking-[0.16em] uppercase hover:bg-brand-black transition-colors"
+              >
+                <span>Join the team</span>
+              </Link>
             </div>
-            <Link
-              href="/events"
-              className="btn-glow glow-on-purple bg-club-purple text-brand-white px-6 py-3 text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
-            >
-              <span>All Events →</span>
-            </Link>
-          </FadeUp>
-
-          <FadeUp delay={150}>
-            {isEventsLoading ? (
-              <div className="w-full py-20 text-center text-brand-gray font-bold tracking-[0.15em] uppercase text-xs sm:text-sm">
-                Loading events…
-              </div>
-            ) : events.length === 0 ? (
-              <div className="w-full py-20 text-center text-brand-gray font-bold tracking-[0.15em] uppercase text-xs sm:text-sm">
-                No upcoming events right now — check back soon.
-              </div>
-            ) : (
-              <div className="border-t border-white/10 pt-10">
-                {/* Season lead-in */}
-                <div className="mb-12 max-w-[38ch]">
-                  {/* <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-5">
-                    The Season
-                  </p> */}
-                  <p className="text-brand-gray text-sm md:text-base leading-relaxed">
-                    Starting{" "}
-                    <span className="text-brand-white font-semibold">22 August</span>
-                    {" "}— Saturday night, every week, one home for the movement.
-                  </p>
-                </div>
-
-                {/* All upcoming events — horizontal scroll */}
-                <div className="flex gap-6 md:gap-8 overflow-x-auto snap-x snap-mandatory pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-                  {events.map((event, index) => (
-                    <div
-                      key={event._id || index}
-                      className="shrink-0 w-[260px] sm:w-[300px] md:w-[320px] snap-start"
-                    >
-                      <EventCard
-                        event={event}
-                        isActive={isEventActive(event)}
-                        imgSrc={resolveImage(event)}
-                        delay={`${(index % 4) * 100}ms`}
-                        onReserve={() => router.push(`/events/${event._id}`)}
-                        onBookVIP={() => setVipModalEvent(event)}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </FadeUp>
         </div>
-      </section>
 
-      {/* ════════════════ INNER CIRCLE (newsletter) ════════════════ */}
-      <section className="flex min-h-[50svh] sm:min-h-[55svh] md:min-h-[60svh] bg-[#BFC9D1] border-b border-brand-border">
-        <FadeUp className="w-full flex items-center justify-center p-6 sm:p-10 md:p-16 lg:p-24">
-          <div className="w-full max-w-md text-center">
-            <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-gray mb-4">
-              Inner Circle
-            </p>
-            <h3 className="font-display font-extrabold uppercase tracking-tighter text-brand-black text-2xl sm:text-3xl md:text-4xl mb-3">
-              Get on the List
-            </h3>
-            <p className="text-brand-gray font-medium text-xs sm:text-sm mb-8 md:mb-10">
-              Priority access to ticket drops, VIP tables, and the next Louder
-              Club night — straight to your inbox.
-            </p>
-            <div className="text-left">
-              <LeadForm
-                formType="home_newsletter"
-                fields={["f_name", "l_name", "email", "phone", "dob"]}
-                buttonText="Join the Club"
-              />
+        {/* Inner Circle (newsletter) */}
+        <div className="w-full md:w-1/2 flex min-h-[50svh] sm:min-h-[55svh] md:min-h-[60svh] bg-[#C9BEFF]">
+          <FadeUp className="w-full flex items-center justify-center p-6 sm:p-10 md:p-16 lg:p-24">
+            <div className="w-full max-w-md text-center">
+              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-white mb-4">
+                Inner Circle
+              </p>
+              <h3 className="font-display font-extrabold uppercase tracking-tighter text-brand-black text-2xl sm:text-3xl md:text-4xl mb-3">
+                Get on the List
+              </h3>
+              <p className="text-brand-white font-medium text-xs sm:text-sm mb-8 md:mb-10">
+                Priority access to ticket drops, VIP tables, and the next Louder
+                Club night — straight to your inbox.
+              </p>
+              <div className="text-left">
+                <LeadForm
+                  formType="home_newsletter"
+                  fields={["f_name", "l_name", "email", "phone", "dob"]}
+                  buttonText="Join the Club"
+                />
+              </div>
             </div>
-          </div>
-        </FadeUp>
+          </FadeUp>
+        </div>
       </section>
 
       {/* ════════════════ CTA ════════════════ */}
@@ -489,7 +509,7 @@ export default function HomePage() {
         {/* Dynamic Opacity Color Overlay Layer */}
           <motion.div 
             style={{ opacity: overlayOpacity }} // Opacity controlled by scroll
-            className="absolute inset-0 bg-[#462C7D] -z-10 pointer-events-none"
+            className="absolute inset-0 bg-[#330043] -z-10 pointer-events-none"
           ></motion.div>
 
         {/* Foreground Content */}

@@ -114,7 +114,7 @@ export default function HensOfferForm() {
             <div className="w-full md:w-1/2 relative order-2 md:order-1 border-t md:border-t-0 md:border-r border-white/10 bg-[#0b0b10] flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/offers/louder-hens-v2.png"
+                src="/offers/louder-hens-v3.png"
                 alt="Hens offer — hen + 4 girls free entry"
                 className="w-full h-auto object-contain"
               />

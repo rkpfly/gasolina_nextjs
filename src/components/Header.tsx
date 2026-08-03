@@ -25,7 +25,7 @@ export default function Header() {
     <>
       <header
         id="navbar"
-        className={`fixed top-0 left-0 w-full z-9999 py-2 sm:py-3 md:py-3 lg:py-3 px-4 sm:px-6 md:px-12 flex justify-between items-center transition-colors duration-300 ${
+        className={`fixed top-0 left-0 w-full z-9999 py-1.5 sm:py-3 md:py-3 lg:py-3 px-4 sm:px-6 md:px-12 flex justify-between items-center transition-colors duration-300 ${
           isMenuOpen ? "bg-transparent" : "bg-brand-black/90 backdrop-blur-md border-b border-white/10"
         }`}
       >
@@ -88,7 +88,7 @@ export default function Header() {
           <button
             id="menu-btn"
             onClick={() => setIsMenuOpen((prev) => !prev)}
-            className={`w-9 h-9 sm:w-10 sm:h-10 flex flex-col justify-center items-end gap-1 sm:gap-1.5 group cursor-pointer ${
+            className={`w-8 h-8 sm:w-10 sm:h-10 flex flex-col justify-center items-end gap-1 sm:gap-1.5 group cursor-pointer ${
               isMenuOpen ? " menu-open" : ""
             }`}
             aria-label="Toggle Menu"
