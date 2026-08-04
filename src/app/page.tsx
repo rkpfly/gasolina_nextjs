@@ -23,10 +23,6 @@ interface Offer {
   expiry_date: string;
 }
 
-// Left-to-right fade so the poster melts into the black hero
-const POSTER_MASK =
-  "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.3) 38%, #000 85%)";
-
 const GRAIN =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
 
@@ -163,7 +159,7 @@ export default function HomePage() {
         {offer.offer_title}
       </h3>
       <div className="flex items-center mt-auto pt-4 border-t border-white/10">
-        <span className="text-[9px] font-bold tracking-widest uppercase text-club-green group-hover:text-brand-white transition-colors">
+        <span className="text-[9px] font-bold tracking-widest uppercase text-club-red group-hover:text-brand-white transition-colors">
           View Details &rarr;
         </span>
       </div>
@@ -181,20 +177,33 @@ export default function HomePage() {
 
       {/* ════════════════ HERO ════════════════ */}
       <section className="relative min-h-[80svh] md:min-h-[90svh] w-full flex flex-col justify-between bg-brand-black overflow-hidden snap-start px-4 sm:px-6 md:px-10 pt-12 md:pt-16 pb-6 md:pb-10">
-        {/* Hero visual (CMS-driven) — full section height, fading to black toward the left */}
+        {/* Crimson nebula ambiance — echoes the FUEGO poster's red sky glow */}
         <div
           aria-hidden
-          className="pointer-events-none absolute top-0 right-0 h-full w-full sm:w-[64%] md:w-[60%] max-w-[720px] md:max-w-none z-0"
-          style={{ WebkitMaskImage: POSTER_MASK, maskImage: POSTER_MASK }}
+          className="pointer-events-none absolute inset-0 z-0"
+          style={{
+            background:
+              "radial-gradient(120% 80% at 78% 8%, rgba(255,35,35,0.28) 0%, rgba(176,0,16,0.14) 34%, rgba(10,10,10,0) 62%)",
+          }}
+        />
+        <div className="hidden md:block absolute top-0 left-0 h-full md:w-[40%] z-5 bg-gradient-to-r from-brand-black to-transparent from-70%" />
+        {/* Hero visual — full section height */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute top-0 right-0 h-full w-full sm:w-[64%] md:w-[75%] max-w-[720px] md:max-w-none z-0 pt-11 md:pt-16"
         >
-          <MediaSlot
-            id="hero-video"
-            mediaMap={media}
-            autoPlayVideo
-            className="w-full h-full object-cover"
+          <video
+            src="/gasolina-hero-v2.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover object-right md:object-center"
           />
-          {/* Purple theme tint over the hero video (masked + fades with it) */}
-          <div className="absolute inset-0 bg-club-purple/25 mix-blend-overlay" />
+          {/* Red theme tint over the hero video (masked + fades with it) */}
+          <div className="absolute inset-0 bg-club-red/25 mix-blend-overlay" />
+          {/* Warm crimson multiply pass — pushes the footage toward FUEGO red */}
+          <div className="absolute inset-0 bg-club-crimson/30 mix-blend-multiply" />
         </div>
         {/* Grain */}
         <div
@@ -202,10 +211,12 @@ export default function HomePage() {
           style={{ backgroundImage: GRAIN }}
         />
 
-        {/* Kicker banner (top) */}
-        <span className="relative z-10 self-start text-brand-white font-[1000] uppercase leading-none -tracking-[0.08em] -md:tracking-[0.01em] text-5xl sm:text-6xl md:text-8xl md:px-4">
-          SATURDAYS
-        </span>
+        {/* Kicker banner (top) — Saturdays wordmark image */}
+        <img
+          src="/Saturdays-V1.png"
+          alt="Saturdays"
+          className="relative z-10 self-start w-auto h-24 sm:h-32 md:h-44 -ml-5 sm:-ml-3 md:-ml-6 -mt-6 sm:-mt-8 md:-mt-6 -rotate-2"
+        />
 
         {/* Title block (bottom) — plain div (not FadeUp): a transform on the
             wrapper would isolate the button's mix-blend-difference from the
@@ -231,9 +242,9 @@ export default function HomePage() {
           <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
             <button
               onClick={() => setVipModal(true)}
-              className="group self-end sm:self-start inline-flex items-center gap-2.5 border-b-2 border-white/40 mix-blend-difference text-white px-1 pb-2 text-base md:text-xl font-[900] tracking-[0.1em] uppercase text-center cursor-pointer hover:text-white/80 transition-colors duration-300"
+              className="group self-end sm:self-start inline-flex items-center gap-2.5 border-b-2 border-club-red text-brand-white px-1 pb-2 text-base md:text-xl font-[900] tracking-[0.1em] uppercase text-center cursor-pointer hover:opacity-80 transition-opacity duration-300"
             >
-              <span>Reserve VIP</span>
+              <span>Reserve <span className="text-club-red">VIP</span></span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -278,7 +289,7 @@ export default function HomePage() {
         <div className="max-w-[1600px] mx-auto w-full">
           <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-4 md:mb-10">
             <div>
-              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
+              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-red mb-3">
                 (01) — The Lineup
               </p>
               <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-3xl min-[360px]:text-4xl sm:text-5xl md:text-7xl">
@@ -287,7 +298,7 @@ export default function HomePage() {
             </div>
             <Link
               href="/events"
-              className="btn-glow glow-on-purple border-b text-brand-white px-3 py-3 text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
+              className="border-b border-club-red text-brand-white px-3 py-3 text-xs font-bold tracking-[0.14em] uppercase hover:bg-club-red hover:text-brand-white transition-colors"
             >
               <span>All Events →</span>
             </Link>
@@ -343,10 +354,11 @@ export default function HomePage() {
       {/* ════════════════ VIP ════════════════ */}
       <section className="relative min-h-screen flex items-center snap-start overflow-hidden bg-brand-black pt-28 md:pt-0 md:py-10">
         {/* Cinematic background */}
+        <div className="hidden md:block absolute top-0 left-0 h-full md:w-[40%] z-5 bg-gradient-to-r from-brand-black to-transparent from-50%" />
         <img
-          src="/vip.png"
-          alt="Louder Club VIP experience"
-          className="absolute inset-0 w-full h-full object-cover"
+          src="/gasolina_vip_v2.png"
+          alt="Gasolina VIP experience"
+          className="absolute inset-0 w-full h-full object-cover object-center md:top-auto md:h-[90%] md:object-contain md:object-bottom-right"
         />
         {/* Legibility: uniform scrim on mobile, edge-gradient (clear center) on desktop */}
         <div className="absolute inset-0 bg-brand-black/55 md:hidden" />
@@ -358,14 +370,14 @@ export default function HomePage() {
               opposite (bottom-right) corner. */}
           <div className="max-w-lg md:max-w-none flex flex-col justify-between min-h-[86svh] pb-12 md:pb-0 md:min-h-[74svh]">
             <div className="md:max-w-2xl">
-              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-4">
+              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-red mb-4">
                 By Invitation Only
               </p>
               <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-brand-white text-[1.9rem] min-[380px]:text-4xl sm:text-5xl md:text-6xl mb-5">
                 {/* Mobile: "Rise Above" / "The" / "Ordinary" (3 lines, first line
                     unbreakable). Desktop (md+): each word on its own line (4 lines). */}
                 <span className="whitespace-nowrap">
-                  Rise<br className="hidden md:inline" /> <span className="text-club-green text-glow-green">Above</span>
+                  Rise<br className="hidden md:inline" /> <span className="text-club-red">Above</span>
                 </span>
                 <br />
                 The<br />
@@ -378,7 +390,7 @@ export default function HomePage() {
               </p>
               <button
                 onClick={() => setVipModal(true)}
-                className="bg-club-purple text-brand-white px-10 py-4 text-xs md:text-sm font-bold tracking-[0.16em] uppercase hover:bg-club-purple/85 transition-colors cursor-pointer"
+                className="bg-club-red text-brand-white px-10 py-4 text-xs md:text-sm font-bold tracking-[0.16em] uppercase hover:bg-club-red/85 transition-colors cursor-pointer"
               >
                 Request VIP Access
               </button>
@@ -393,7 +405,7 @@ export default function HomePage() {
           <div className="max-w-[1600px] mx-auto w-full">
             <FadeUp className="flex justify-between items-end gap-4 flex-wrap mb-10">
               <div>
-                <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-purple mb-3">
+                <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-red mb-3">
                   (02) — The Offers
                 </p>
                 <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-4xl sm:text-5xl md:text-7xl">
@@ -402,7 +414,7 @@ export default function HomePage() {
               </div>
               <Link
                 href="/offers"
-                className="btn-glow glow-on-purple bg-club-purple text-brand-white px-6 py-3 text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
+                className="bg-club-red text-brand-white px-6 py-3 text-xs font-bold tracking-[0.14em] uppercase hover:bg-brand-white hover:text-brand-black transition-colors"
               >
                 <span>All Offers →</span>
               </Link>
@@ -442,7 +454,7 @@ export default function HomePage() {
               </p>
               <Link
                 href="/careers#apply"
-                className="btn-glow glow-on-purple inline-block bg-club-purple text-brand-white px-10 py-4 text-xs md:text-sm font-bold tracking-[0.16em] uppercase hover:bg-brand-black transition-colors"
+                className="inline-block bg-club-red text-brand-white px-10 py-4 text-xs md:text-sm font-bold tracking-[0.16em] uppercase hover:bg-brand-black transition-colors"
               >
                 <span>Join the team</span>
               </Link>
@@ -451,16 +463,16 @@ export default function HomePage() {
         </div>
 
         {/* Inner Circle (newsletter) */}
-        <div className="w-full md:w-1/2 flex min-h-[50svh] sm:min-h-[55svh] md:min-h-[60svh] bg-[#C9BEFF]">
+        <div className="w-full md:w-1/2 flex min-h-[50svh] sm:min-h-[55svh] md:min-h-[60svh] bg-club-cream">
           <FadeUp className="w-full flex items-center justify-center p-6 sm:p-10 md:p-16 lg:p-24">
             <div className="w-full max-w-md text-center">
-              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-brand-white mb-4">
+              <p className="text-xs font-semibold tracking-[0.28em] uppercase text-club-red mb-4">
                 Inner Circle
               </p>
               <h3 className="font-display font-extrabold uppercase tracking-tighter text-brand-black text-2xl sm:text-3xl md:text-4xl mb-3">
                 Get on the List
               </h3>
-              <p className="text-brand-white font-medium text-xs sm:text-sm mb-8 md:mb-10">
+              <p className="text-brand-black/70 font-medium text-xs sm:text-sm mb-8 md:mb-10">
                 Priority access to ticket drops, VIP tables, and the next Louder
                 Club night — straight to your inbox.
               </p>
@@ -515,9 +527,9 @@ export default function HomePage() {
         </motion.video> */}
 
         {/* Dynamic Opacity Color Overlay Layer */}
-          <motion.div 
+          <motion.div
             style={{ opacity: overlayOpacity }} // Opacity controlled by scroll
-            className="absolute inset-0 bg-[#330043] -z-10 pointer-events-none"
+            className="absolute inset-0 bg-[#3A0008] -z-10 pointer-events-none"
           ></motion.div>
 
         {/* Foreground Content */}
@@ -532,7 +544,7 @@ export default function HomePage() {
           </h2>
           <button
             onClick={() => setVipModal(true)}
-            className="mt-10 bg-brand-black text-brand-white px-12 py-4 text-sm font-bold tracking-[0.16em] uppercase border border-club-green/40 shadow-[0_0_30px_-6px_#6CFB13] hover:-translate-y-1 hover:shadow-[0_0_46px_-6px_#6CFB13] transition-all duration-300 cursor-pointer"
+            className="mt-10 bg-brand-black text-brand-white px-12 py-4 text-sm font-bold tracking-[0.16em] uppercase border border-club-red hover:bg-club-red hover:-translate-y-1 transition-all duration-300 cursor-pointer"
           >
             Reserve Your Spot
           </button>
@@ -543,7 +555,7 @@ export default function HomePage() {
 }
 
 function MarqueeSet() {
-  const items = ["Every Saturday", "Therapy · L3 Nightclubs", "Crown, Melbourne"];
+  const items = ["Every Saturday", "The Loft · L3 Nightclubs", "Crown, Melbourne"];
   return (
     <>
       {items.map((t) => (

@@ -43,8 +43,10 @@ export async function POST(req: NextRequest) {
     const resumeUrl = uploadData.resume.url;
 
     // 4. Save the complete record to Neon DB
+    // Schema-qualified: Neon HTTP driver is stateless, so we can't pin
+    // search_path per-connection. This clone writes to the "gasolina" schema.
     const result = await sql`
-      INSERT INTO job_applications (
+      INSERT INTO gasolina.job_applications (
         job_id, first_name, last_name, email, phone, resume_url
       ) VALUES (
         ${parseInt(jobId, 10)}, ${firstName}, ${lastName}, ${email}, ${phone}, ${resumeUrl}

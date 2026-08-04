@@ -61,7 +61,7 @@ export default async function Footer() {
   const formatPhoneHref = (phone: string) => `tel:${phone.replace(/\s+/g, '')}`;
 
   return (
-    <footer className="bg-brand-white pt-16 sm:pt-20 md:pt-24 pb-8 sm:pb-10 md:pb-12 px-4 sm:px-6 md:px-12">
+    <footer className="bg-brand-black pt-16 sm:pt-20 md:pt-24 pb-8 sm:pb-10 md:pb-12 px-4 sm:px-6 md:px-12">
       {/* Wrapped the main container in the FadeUp component */}
       <FadeUp className="max-w-[1600px] mx-auto">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 sm:gap-10 md:gap-12 lg:gap-8 mb-16 sm:mb-20 md:mb-24 text-xs sm:text-sm font-medium">
@@ -74,29 +74,29 @@ export default async function Footer() {
               className="inline-flex items-center w-fit transition-opacity duration-300 hover:opacity-70"
             >
               <Image
-                src="/louderSaturdaysLogo.png"
-                alt="Louder"
-                width={814}
-                height={162}
-                className="h-7 sm:h-8 md:h-9 w-auto brightness-0"
+                src="/gasolina-neon.png"
+                alt="Gasolina"
+                width={1536}
+                height={1024}
+                className="h-16 sm:h-20 md:h-24 w-auto"
               />
             </Link>
             
             <div className="flex flex-col gap-1.5 sm:gap-2 text-brand-gray text-xs sm:text-sm">
               {contact?.phone1 && (
-                <a href={formatPhoneHref(contact.phone1)} className="hover:text-brand-black transition-colors">
+                <a href={formatPhoneHref(contact.phone1)} className="hover:text-brand-white transition-colors">
                   {contact.phone1}
                 </a>
               )}
               {contact?.phone2 && (
-                <a href={formatPhoneHref(contact.phone2)} className="hover:text-brand-black transition-colors">
+                <a href={formatPhoneHref(contact.phone2)} className="hover:text-brand-white transition-colors">
                   {contact.phone2}
                 </a>
               )}
               {contact?.email && (
                 <a
                   href={`mailto:${contact.email}`}
-                  className="hover:text-brand-black transition-colors mt-1 sm:mt-2 text-brand-black font-semibold underline underline-offset-4"
+                  className="hover:text-brand-white transition-colors mt-1 sm:mt-2 text-brand-white font-semibold underline underline-offset-4"
                 >
                   {contact.email}
                 </a>
@@ -106,14 +106,14 @@ export default async function Footer() {
 
           {/* Territories */}
           {/* <div className="flex flex-col gap-4 sm:gap-6">
-            <p className="text-[9px] sm:text-xs font-bold tracking-[0.2em] uppercase text-brand-black">Territories</p>
+            <p className="text-[9px] sm:text-xs font-bold tracking-[0.2em] uppercase text-brand-white">Territories</p>
             <div className="grid grid-cols-2 gap-y-2 sm:gap-y-3 gap-x-3 sm:gap-x-4 text-xs sm:text-sm text-brand-gray">
               {cities.length > 0 ? (
                 cities.map((city) => (
                   <Link 
                     key={city.slug} 
                     href={`/city/${city.slug}`} 
-                    className="hover:text-brand-black transition-colors"
+                    className="hover:text-brand-white transition-colors"
                   >
                     {city.display_name}
                   </Link>
@@ -125,27 +125,27 @@ export default async function Footer() {
           </div> */}
           {/* Quick Links */}
           <div className="flex flex-col gap-4 sm:gap-6">
-            <p className="text-[9px] sm:text-xs font-bold tracking-[0.2em] uppercase text-brand-black">Quick Links</p>
+            <p className="text-[9px] sm:text-xs font-bold tracking-[0.2em] uppercase text-brand-white">Quick Links</p>
             <div className="flex flex-col gap-2 sm:gap-3 text-xs sm:text-sm text-brand-gray">
-              <Link href="/contact#faq" className="hover:text-brand-black transition-colors">FAQ</Link>
-              <Link href="/contact" className="hover:text-brand-black transition-colors">Contact Us</Link>
+              <Link href="/contact#faq" className="hover:text-brand-white transition-colors">FAQ</Link>
+              <Link href="/contact" className="hover:text-brand-white transition-colors">Contact Us</Link>
             </div>
           </div>
 
           {/* Legal */}
           <div className="flex flex-col gap-4 sm:gap-6">
-            <p className="text-[9px] sm:text-xs font-bold tracking-[0.2em] uppercase text-brand-black">Legal</p>
+            <p className="text-[9px] sm:text-xs font-bold tracking-[0.2em] uppercase text-brand-white">Legal</p>
             <div className="flex flex-col gap-2 sm:gap-3 text-xs sm:text-sm text-brand-gray">
-              <Link href="/privacy-policy" className="hover:text-brand-black transition-colors">Privacy Policy</Link>
-              <Link href="/dress-code" className="hover:text-brand-black transition-colors">Dress Code</Link>
-              <Link href="/terms" className="hover:text-brand-black transition-colors">Terms &amp; Conditions</Link>
+              <Link href="/privacy-policy" className="hover:text-brand-white transition-colors">Privacy Policy</Link>
+              <Link href="/dress-code" className="hover:text-brand-white transition-colors">Dress Code</Link>
+              <Link href="/terms" className="hover:text-brand-white transition-colors">Terms &amp; Conditions</Link>
             </div>
           </div>
 
           {/* Socials */}
           <div className="flex flex-col gap-4 sm:gap-6 items-end text-right sm:items-start sm:text-left">
-            <p className="text-[9px] sm:text-xs font-bold tracking-[0.2em] uppercase text-brand-black">Socials</p>
-            <div className="flex gap-3 sm:gap-4 text-lg sm:text-xl text-brand-black">
+            <p className="text-[9px] sm:text-xs font-bold tracking-[0.2em] uppercase text-brand-white">Socials</p>
+            <div className="flex gap-3 sm:gap-4 text-lg sm:text-xl text-brand-white">
               {socials.length > 0 ? (
                 socials.map((social) => (
                   <a 
@@ -154,7 +154,7 @@ export default async function Footer() {
                     aria-label={social.label} 
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-brand-accent transition-colors"
+                    className="hover:text-club-red transition-colors"
                   >
                     <i className={social.icon_class} />
                   </a>
@@ -168,11 +168,11 @@ export default async function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex flex-col sm:flex-row justify-between items-center pt-6 sm:pt-8 border-t border-brand-border gap-3 sm:gap-4">
+        <div className="flex flex-col sm:flex-row justify-between items-center pt-6 sm:pt-8 border-t border-white/10 gap-3 sm:gap-4">
           <p className="text-[8px] sm:text-[9px] md:text-[10px] font-bold tracking-[0.15em] uppercase text-brand-gray text-center sm:text-left">
             © {contact?.copy_year || 2026} Louder Club. Owned by Louder World Pty Ltd.
           </p>
-          <p className="text-[8px] sm:text-[9px] md:text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black">
+          <p className="text-[8px] sm:text-[9px] md:text-[10px] font-bold tracking-[0.2em] uppercase text-brand-white">
             Designed for Nightlife
           </p>
         </div>

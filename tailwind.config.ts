@@ -24,6 +24,15 @@ const config: Config = {
           coral: "#FF6B4A",
           purple: "#7C5CFF",
         },
+        club: {
+          purple: "#723CF4",
+          green: "#6CFB13",
+          // FUEGO red rebrand
+          red: "#FF2323",
+          ember: "#FF5A2E",
+          crimson: "#B00010",
+          cream: "#FDFBD4",
+        },
       },
       fontFamily: {
         sans: ["var(--font-inter)", "sans-serif"],

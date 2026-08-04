@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import HeaderWrapper from "@/components/HeaderWrapper"; // Note the new import
 import Footer from "../components/Footer";
@@ -15,9 +15,10 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const syne = Syne({
+// Montserrat — free geometric sans standing in for Gotham Bold (display/headings)
+const montserrat = Montserrat({
   subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
+  weight: ["400", "500", "600", "700", "800", "900"],
   variable: "--font-syne",
 });
 
@@ -42,7 +43,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} ${syne.variable} font-sans selection:bg-brand-blue selection:text-brand-white bg-white text-brand-black antialiased`}
+        className={`${inter.variable} ${montserrat.variable} font-sans selection:bg-club-red selection:text-brand-white bg-white text-brand-black antialiased`}
       >
         {/* Google Tag Manager (noscript) — fallback for JS-disabled visitors.
             The <GoogleTagManager> above injects the JS; this covers no-JS. */}

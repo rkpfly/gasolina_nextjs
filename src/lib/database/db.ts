@@ -4,9 +4,16 @@ import { Pool } from 'pg';
 import 'server-only';
 import { PAGE_MAP, PageSlug } from '../config/page-map';
 
+// This project is a clone that shares the Postgres server with the original
+// Louder Club site. To keep its data isolated, every connection runs with its
+// search_path pinned to a dedicated schema (default: "gasolina") instead of
+// "public". All unqualified queries below therefore hit the gasolina tables.
+const DB_SCHEMA = process.env.DB_SCHEMA || "gasolina";
+
 export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false } // Keep this if your VPS Postgres enforces SSL
+  ssl: { rejectUnauthorized: false }, // Keep this if your VPS Postgres enforces SSL
+  options: `-c search_path=${DB_SCHEMA}`,
 });
 
 export const query = (text: string, params?: any[]) => pool.query(text, params);

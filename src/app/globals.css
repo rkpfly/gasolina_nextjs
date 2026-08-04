@@ -21,6 +21,12 @@
   --color-club-purple:    #723CF4;   /* electric violet — home PRIMARY accent */
   --color-club-green:     #6CFB13;   /* neon green — home POP accent */
 
+  /* ─── FUEGO red rebrand ────────────────────────────────── */
+  --color-club-red:       #FF2323;   /* red — PRIMARY accent */
+  --color-club-ember:     #FF5A2E;   /* warm ember — POP accent */
+  --color-club-crimson:   #B00010;   /* deep crimson — gradient base / ambiance */
+  --color-club-cream:     #FDFBD4;   /* cream — soft light surface for contrast */
+
   /* Fonts */
   --font-sans:    var(--font-inter);
   --font-display: var(--font-syne);
@@ -171,8 +177,8 @@ body {
 }
 #menu-overlay .menu-primary:hover {
   color: transparent;
-  -webkit-text-stroke: 1.5px var(--color-brand-blue);
-  filter: drop-shadow(0 0 14px rgba(114, 60, 244, 0.45));
+  -webkit-text-stroke: 1.5px var(--color-club-red);
+  filter: drop-shadow(0 0 14px rgba(255, 35, 35, 0.5));
 }
 #menu-overlay .menu-secondary {
   transition: color 0.3s ease, transform 0.3s ease;
@@ -348,6 +354,8 @@ body {
 .glow-coral { box-shadow: 0 10px 36px -8px rgba(255, 107, 74, 0.55), 0 0 22px -4px rgba(255, 107, 74, 0.45); }
 .glow-purple { box-shadow: 0 10px 36px -8px rgba(114, 60, 244, 0.55), 0 0 22px -4px rgba(114, 60, 244, 0.45); }
 .glow-green  { box-shadow: 0 10px 36px -8px rgba(108, 251, 19, 0.50), 0 0 22px -4px rgba(108, 251, 19, 0.40); }
+.glow-red    { box-shadow: 0 10px 36px -8px rgba(255, 35, 35, 0.55), 0 0 22px -4px rgba(255, 35, 35, 0.45); }
+.glow-ember  { box-shadow: 0 10px 36px -8px rgba(255, 90, 46, 0.52), 0 0 22px -4px rgba(255, 90, 46, 0.42); }
 
 /* ─── Neon text glow ────────────────────────────────────────────── */
 .text-glow-lime  { text-shadow: 0 0 10px rgba(108, 251, 19, 0.55), 0 0 30px rgba(108, 251, 19, 0.3); }
@@ -355,6 +363,8 @@ body {
 .text-glow-blue  { text-shadow: 0 0 10px rgba(114, 60, 244, 0.55), 0 0 30px rgba(114, 60, 244, 0.3); }
 .text-glow-green  { text-shadow: 0 0 10px rgba(108, 251, 19, 0.60), 0 0 26px rgba(108, 251, 19, 0.35); }
 .text-glow-purple { text-shadow: 0 0 10px rgba(114, 60, 244, 0.60), 0 0 28px rgba(114, 60, 244, 0.35); }
+/* FUEGO neon-red — layered shadow mimics a glass neon tube */
+.text-glow-red    { text-shadow: 0 0 8px rgba(255, 60, 60, 0.65), 0 0 22px rgba(255, 35, 35, 0.55), 0 0 46px rgba(255, 20, 20, 0.4); }
 
 /* ─── Animated neon gradient text ───────────────────────────────── */
 .text-gradient-neon {
@@ -401,6 +411,7 @@ body {
 .btn-glow.glow-on-blue:hover { box-shadow: 0 14px 44px -10px rgba(114, 60, 244, 0.6), 0 0 26px -4px rgba(114, 60, 244, 0.5); }
 .btn-glow.glow-on-purple:hover { box-shadow: 0 14px 44px -10px rgba(114, 60, 244, 0.62), 0 0 26px -4px rgba(114, 60, 244, 0.5); }
 .btn-glow.glow-on-green:hover  { box-shadow: 0 14px 44px -10px rgba(108, 251, 19, 0.55), 0 0 26px -4px rgba(108, 251, 19, 0.45); }
+.btn-glow.glow-on-red:hover    { box-shadow: 0 14px 44px -10px rgba(255, 35, 35, 0.62), 0 0 26px -4px rgba(255, 35, 35, 0.5); }
 
 /* VIP modal — squared corners + purple-themed submit (scoped; leaves shared LeadForm intact) */
 .vip-form button[type="submit"] { border-radius: 0; background-color: #723CF4; }

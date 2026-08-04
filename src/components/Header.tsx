@@ -7,8 +7,8 @@ import Image from "next/image";
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Brand runs electric-blue across the public site.
-  const navHover = "hover:text-brand-blue";
+  // Brand runs FUEGO neon-red across the public site.
+  const navHover = "hover:text-club-red";
 
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? "hidden" : "";
@@ -40,7 +40,7 @@ export default function Header() {
           }`}
         >
           <Image
-            src="/louderSaturdaysLogo.png"
+            src="/GASOLINA_LOGO_V1.png"
             alt="Louder Saturdays"
             width={814}
             height={162}
@@ -129,7 +129,7 @@ export default function Header() {
           </nav>
 
           <nav className="flex flex-col space-y-4 md:space-y-6 border-t md:border-t-0 md:border-l border-white/10 pt-8 md:pt-0 md:pl-12">
-            <span className="text-[10px] font-semibold tracking-[0.25em] uppercase text-brand-blue mb-1">
+            <span className="text-[10px] font-semibold tracking-[0.25em] uppercase text-club-red mb-1">
               Index
             </span>
             {[

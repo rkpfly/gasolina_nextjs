@@ -20,9 +20,11 @@ export default async function JobDetailsPage({ params }: PageProps) {
   const { slug } = await params;
 
   // 2. Use the unwrapped slug in your query
+  // Schema-qualified: the Neon HTTP driver is stateless, so search_path can't be
+  // pinned per-connection like the pg pools. This clone lives in "gasolina".
   const result = await sql`
-    SELECT * FROM jobs 
-    WHERE slug = ${slug} AND status = 'active' 
+    SELECT * FROM gasolina.jobs
+    WHERE slug = ${slug} AND status = 'active'
     LIMIT 1
   `;
   

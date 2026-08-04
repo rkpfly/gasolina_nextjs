@@ -2,6 +2,8 @@ import { Pool } from 'pg';
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
+  // Isolate this clone to its own schema (see src/lib/database/db.ts).
+  options: `-c search_path=${process.env.DB_SCHEMA || "gasolina"}`,
 });
 
 export async function getLegalContentBySlug(slug: string) {

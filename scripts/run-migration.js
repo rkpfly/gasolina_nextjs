@@ -31,6 +31,8 @@ const { Pool } = require('pg');
   const pool = new Pool({
     connectionString,
     ssl: { rejectUnauthorized: false }, // matches src/lib/database/db.ts
+    // Apply migrations to this project's schema, not "public".
+    options: `-c search_path=${process.env.DB_SCHEMA || 'gasolina'}`,
   });
 
   try {
