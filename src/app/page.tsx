@@ -355,10 +355,17 @@ export default function HomePage() {
       <section className="relative min-h-screen flex items-center snap-start overflow-hidden bg-brand-black pt-28 md:pt-0 md:py-10">
         {/* Cinematic background */}
         <div className="hidden md:block absolute top-0 left-0 h-full md:w-[40%] z-5 bg-gradient-to-r from-brand-black to-transparent from-50%" />
+        {/* Mobile: dedicated portrait art, full-bleed */}
+        <img
+          src="/gasolina_vip_mobile_v1.png"
+          alt="Gasolina VIP experience"
+          className="md:hidden absolute inset-0 w-full h-full object-cover object-center"
+        />
+        {/* Desktop: contained art anchored bottom-right */}
         <img
           src="/gasolina_vip_v2.png"
           alt="Gasolina VIP experience"
-          className="absolute inset-0 w-full h-full object-cover object-center md:top-auto md:h-[90%] md:object-contain md:object-bottom-right"
+          className="hidden md:block absolute inset-x-0 bottom-0 w-full h-[90%] object-contain object-bottom-right"
         />
         {/* Legibility: uniform scrim on mobile, edge-gradient (clear center) on desktop */}
         <div className="absolute inset-0 bg-brand-black/55 md:hidden" />
