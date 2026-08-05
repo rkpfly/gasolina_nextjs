@@ -7,6 +7,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
 import Placeholder from '@tiptap/extension-placeholder';
+import { TableKit } from '@tiptap/extension-table';
 import { RawHtml } from '@/lib/RawHtmlExtension'; // Make sure this path is correct
 
 interface BlogEditorProps {
@@ -34,6 +35,11 @@ export function BlogEditor({ onSave, initialContent = '', isLoading = false }: B
       }),
       Placeholder.configure({
         placeholder: 'Start writing your blog post...',
+      }),
+      // Registers table/row/header/cell nodes so pasted HTML tables are
+      // recognised instead of being flattened to plain text.
+      TableKit.configure({
+        table: { resizable: true, HTMLAttributes: { class: 'editor-table' } },
       }),
       RawHtml
     ],
@@ -172,6 +178,15 @@ function EditorToolbar({ editor, onSave, isLoading }: EditorToolbarProps) {
           title="Code Block"
         >
           &lt;&gt;
+        </button>
+        <button
+          onClick={() =>
+            editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
+          }
+          className={`toolbar-btn ${editor.isActive('table') ? 'active' : ''}`}
+          title="Insert Table"
+        >
+          ▦
         </button>
       </div>
 
@@ -435,6 +450,55 @@ const editorStyles = `
   border-radius: var(--radius-md);
   margin: 1rem 0;
   cursor: pointer;
+}
+
+/* Tables (pasted or inserted) */
+.editor-content table,
+.editor-content .editor-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  overflow: hidden;
+  table-layout: fixed;
+}
+
+.editor-content th,
+.editor-content td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  vertical-align: top;
+  text-align: left;
+  position: relative;
+  min-width: 3rem;
+}
+
+.editor-content th {
+  background: var(--tertiary);
+  font-weight: 700;
+}
+
+/* Cell selection highlight while editing */
+.editor-content .selectedCell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(59, 130, 246, 0.15);
+  pointer-events: none;
+}
+
+/* Column-resize handle */
+.editor-content .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: -2px;
+  width: 4px;
+  background: var(--accent);
+  cursor: col-resize;
+}
+
+.editor-content .tableWrapper {
+  overflow-x: auto;
 }
 
 .editor-loading {

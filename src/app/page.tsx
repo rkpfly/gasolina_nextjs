@@ -293,7 +293,7 @@ export default function HomePage() {
                 (01) — The Lineup
               </p>
               <h2 className="font-display font-extrabold uppercase tracking-tighter leading-[0.9] text-3xl min-[360px]:text-4xl sm:text-5xl md:text-7xl">
-                Weekly Every Saturday
+                Weekly
               </h2>
             </div>
             <Link
@@ -567,7 +567,10 @@ function MarqueeSet() {
     <>
       {items.map((t) => (
         <span key={t} className="flex items-center gap-8">
-          <span className="font-display font-extrabold uppercase tracking-wide text-lg">
+          <span className="flex items-center gap-2.5 font-display font-extrabold uppercase tracking-wide text-lg">
+            {t === "Crown, Melbourne" && (
+              <img src="/Crown_Icon.png" alt="" aria-hidden className="h-6 w-auto -translate-y-1" />
+            )}
             {t}
           </span>
           <span className="opacity-40">✦</span>

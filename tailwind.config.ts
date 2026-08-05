@@ -16,13 +16,13 @@ const config: Config = {
           offwhite: "#F4F4F5",
           gray: "#86868B",
           border: "#E5E5E5",
-          // Neon accents — electric violet leads, neon green pops (site-wide)
+          // Gasolina red rebrand — red leads; lime kept for semantic success only
           lime: "#6CFB13",
-          accent: "#FF2E93",
-          pink: "#FF2E93",
-          blue: "#723CF4",
-          coral: "#FF6B4A",
-          purple: "#7C5CFF",
+          accent: "#B00010",
+          pink: "#B00010",
+          blue: "#FF2323",
+          coral: "#FF5A2E",
+          purple: "#B00010",
         },
         club: {
           purple: "#723CF4",

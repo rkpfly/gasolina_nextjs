@@ -56,7 +56,7 @@ export default function VIPForm({
             {/* Neon top accent */}
             <span
               aria-hidden
-              className="absolute top-0 left-0 h-1 w-full bg-[linear-gradient(90deg,#723CF4,#6CFB13,#723CF4)] bg-size-[200%_auto] animate-gradient"
+              className="absolute top-0 left-0 h-1 w-full bg-[linear-gradient(90deg,#FF2323,#B00010,#FF2323)] bg-size-[200%_auto] animate-gradient"
             />
 
             {/* Close */}

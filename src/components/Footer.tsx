@@ -68,19 +68,28 @@ export default async function Footer() {
 
           {/* Brand & Contact */}
           <div className="col-span-2 lg:col-span-1 flex flex-col gap-4 sm:gap-6">
-            <Link
-              href="/"
-              aria-label="Louder"
-              className="inline-flex items-center w-fit transition-opacity duration-300 hover:opacity-70"
-            >
-              <Image
-                src="/gasolina-neon.png"
-                alt="Gasolina"
-                width={1536}
-                height={1024}
-                className="h-16 sm:h-20 md:h-24 w-auto"
+            <div className="flex items-center gap-3 sm:gap-4">
+              <Link
+                href="/"
+                aria-label="Louder"
+                className="inline-flex items-center w-fit transition-opacity duration-300 hover:opacity-70"
+              >
+                <Image
+                  src="/gasolina-neon.png"
+                  alt="Gasolina"
+                  width={1536}
+                  height={1024}
+                  className="h-16 sm:h-20 md:h-24 w-auto"
+                />
+              </Link>
+              {/* Co-brand lockup: Gasolina × Crown */}
+              <span className="text-brand-white/40 text-lg sm:text-xl font-light select-none">×</span>
+              <img
+                src="/Crown-Bone-Spray.svg"
+                alt="Crown"
+                className="h-10 sm:h-12 md:h-14 w-auto"
               />
-            </Link>
+            </div>
             
             <div className="flex flex-col gap-1.5 sm:gap-2 text-brand-gray text-xs sm:text-sm">
               {contact?.phone1 && (

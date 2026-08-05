@@ -18,6 +18,50 @@ interface LeadFormProps {
   tone?: 'light' | 'dark';
 }
 
+// ─── Smart DOB mask (DD/MM/YYYY) ─────────────────────────────────────────────
+// Day  : first digit 4-9 auto-pads to 0X (no valid day 40+); 0-3 waits for a
+//        second digit (space pads it — see handleDobKeyDown).
+// Month: first digit 2-9 auto-pads to 0X (no valid month 20+); 0-1 waits.
+// Year : 4 digits. Slashes are inserted automatically as each part completes.
+function formatDobValue(raw: string): string {
+  const digits = raw.replace(/\D/g, '').slice(0, 8);
+  let i = 0;
+
+  let day = '';
+  if (digits.length > i) {
+    const d = digits[i];
+    if (d >= '4' && d <= '9') { day = '0' + d; i += 1; }
+    else { day = digits.slice(i, i + 2); i += day.length; }
+  }
+
+  let month = '';
+  if (day.length === 2 && digits.length > i) {
+    const m = digits[i];
+    if (m >= '2' && m <= '9') { month = '0' + m; i += 1; }
+    else { month = digits.slice(i, i + 2); i += month.length; }
+  }
+
+  let year = '';
+  if (day.length === 2 && month.length === 2 && digits.length > i) {
+    year = digits.slice(i, i + 4);
+  }
+
+  let out = day;
+  if (day.length === 2) out += '/';
+  out += month;
+  if (month.length === 2) out += '/';
+  out += year;
+  return out;
+}
+
+// DD/MM/YYYY (display) → YYYY-MM-DD (wire format, matches the old date input).
+function isoFromDob(v: string): string {
+  const m = v.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!m) return '';
+  const [, dd, mm, yyyy] = m;
+  return `${yyyy}-${mm}-${dd}`;
+}
+
 // ─── Main LeadForm ───────────────────────────────────────────────────────────
 export default function LeadForm({ formType, fields, buttonText = "Subscribe", tone = 'light' }: LeadFormProps) {
   const dark = tone === 'dark';
@@ -42,6 +86,28 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleDobChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+    const deleting = raw.length < formData.dob.length;
+    let next = formatDobValue(raw);
+    // While deleting, don't re-add a trailing slash the user just removed.
+    if (deleting && next.endsWith('/') && !raw.endsWith('/')) next = next.slice(0, -1);
+    setFormData({ ...formData, dob: next });
+  };
+
+  // Space "commits" an ambiguous single digit by padding it with a leading zero.
+  const handleDobKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== ' ') return;
+    e.preventDefault();
+    const v = formData.dob;
+    if (/^[1-3]$/.test(v)) {                    // day 1-3 → 0X/
+      setFormData({ ...formData, dob: `0${v}/` });
+      return;
+    }
+    const m = v.match(/^(\d{2})\/1$/);          // month 1 → 01/
+    if (m) setFormData({ ...formData, dob: `${m[1]}/01/` });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -60,6 +126,8 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
 
     const payload = {
       ...formData,
+      // Send the DB/CRM-friendly ISO date; the field displays DD/MM/YYYY.
+      dob: isoFromDob(formData.dob),
       phone: finalPhone,
       // Sent alongside the concatenated `phone` so the server can split the dial
       // code back off and build a correct E.164 number for the CRM. Not stored
@@ -186,7 +254,19 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
                   Date of Birth
                 </label>
                 <div className={wrapperClass}>
-                  <input type="date" id="dob" name="dob" placeholder="DATE OF BIRTH" value={formData.dob} onChange={handleChange} className={inputClass} />
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    id="dob"
+                    name="dob"
+                    placeholder="DD/MM/YYYY"
+                    value={formData.dob}
+                    onChange={handleDobChange}
+                    onKeyDown={handleDobKeyDown}
+                    maxLength={10}
+                    autoComplete="bday"
+                    className={inputClass}
+                  />
                 </div>
               </div>
             );

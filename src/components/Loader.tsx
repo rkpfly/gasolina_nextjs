@@ -9,15 +9,16 @@
  * All honour prefers-reduced-motion via the global rule in globals.css.
  */
 
-type Tone = "lime" | "pink" | "blue" | "coral" | "white" | "black";
+type Tone = "lime" | "pink" | "blue" | "coral" | "white" | "black" | "red";
 
 const TONE_HEX: Record<Tone, string> = {
   lime: "#6CFB13",
-  pink: "#FF2E93",
-  blue: "#723CF4",
-  coral: "#FF6B4A",
+  pink: "#B00010",
+  blue: "#FF2323",
+  coral: "#FF5A2E",
   white: "#FFFFFF",
   black: "#0A0A0A",
+  red: "#FF2323",
 };
 
 const TONE_TEXT: Record<Tone, string> = {
@@ -27,6 +28,7 @@ const TONE_TEXT: Record<Tone, string> = {
   coral: "text-brand-coral",
   white: "text-white",
   black: "text-brand-black",
+  red: "text-club-red",
 };
 
 /* ─── Equalizer bars ─────────────────────────────────────────────── */
@@ -84,30 +86,44 @@ export function RingLoader({
   );
 }
 
-/* ─── Full-screen branded loader ─────────────────────────────────── */
+/* ─── Full-screen branded loader ─────────────────────────────────────
+   Gasolina: gas-station-at-night meets Latin nightclub.
+   • Red neon ¡GASOLINA! wordmark (Latin flair + flicker)
+   • Equalizer beat (nightclub)
+   • Fuel-pump meter filling up (gasoline)                              */
 export default function FullScreenLoader({
   label = "Loading",
 }: {
   label?: string;
 }) {
   return (
-    <div className="fixed inset-0 z-[1000] flex flex-col items-center justify-center bg-brand-ink animate-backdrop">
-      {/* Ambient neon glow behind the mark */}
+    <div className="fixed inset-0 z-[1000] flex flex-col items-center justify-center bg-brand-ink animate-backdrop overflow-hidden">
+      {/* Red ambient glow — the sodium-light haze of a late-night forecourt */}
       <div
         aria-hidden
-        className="pointer-events-none absolute h-72 w-72 rounded-full blur-3xl animate-glow-pulse"
+        className="pointer-events-none absolute h-80 w-80 rounded-full blur-3xl animate-glow-pulse"
         style={{
           background:
-            "radial-gradient(circle, rgba(114,60,244,0.35) 0%, rgba(108,251,19,0.16) 45%, transparent 70%)",
+            "radial-gradient(circle, rgba(255,35,35,0.40) 0%, rgba(176,0,16,0.18) 45%, transparent 70%)",
         }}
       />
 
-      <div className="relative flex flex-col items-center gap-7">
-        <span className="font-display text-2xl font-extrabold uppercase tracking-tighter text-white">
-          Louder<span className="text-brand-blue text-glow-blue">.</span>
+      <div className="relative flex flex-col items-center gap-6">
+        {/* Latin neon wordmark */}
+        <span className="font-display text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-club-red text-glow-red animate-flicker flex items-center gap-1">
+          <span className="text-club-red/60">¡</span>Gasolina<span className="text-club-red/60">!</span>
         </span>
 
-        <EqLoader tone="blue" bars={6} className="text-3xl" />
+        {/* Nightclub equalizer beat */}
+        <EqLoader tone="red" bars={7} className="text-3xl" />
+
+        {/* Gasoline pump meter — fills, resets, repeats */}
+        <div className="relative h-1 w-52 sm:w-64 overflow-hidden rounded-full bg-white/10">
+          <div
+            className="absolute inset-y-0 left-0 w-full bg-club-red animate-fuel"
+            style={{ boxShadow: "0 0 12px rgba(255,35,35,0.7)" }}
+          />
+        </div>
 
         <span className="text-[10px] font-semibold uppercase tracking-[0.35em] text-brand-gray">
           {label}

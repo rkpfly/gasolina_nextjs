@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import HeaderWrapper from "@/components/HeaderWrapper"; // Note the new import
+import IntroLoader from "@/components/IntroLoader";
 import Footer from "../components/Footer";
 import FooterGate from "@/components/FooterGate";
 import { GoogleTagManager } from "@next/third-parties/google";
@@ -55,6 +56,9 @@ export default function RootLayout({
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
+
+        {/* First-visit splash (once per session); route changes use app/loading.tsx */}
+        <IntroLoader />
 
         {/* The Client Wrapper handles the logic of showing/hiding the header */}
         <HeaderWrapper />

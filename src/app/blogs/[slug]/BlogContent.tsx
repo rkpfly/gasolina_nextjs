@@ -7,6 +7,7 @@ import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
+import { TableKit } from '@tiptap/extension-table';
 import { RawHtml } from '@/lib/RawHtmlExtension';
 
 export default function BlogContent({ content }: { content: object }) {
@@ -24,6 +25,7 @@ export default function BlogContent({ content }: { content: object }) {
       Link.configure({ openOnClick: false }),
       Underline,
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      TableKit,
       RawHtml,
     ]);
 
@@ -62,6 +64,10 @@ export default function BlogContent({ content }: { content: object }) {
         [&_pre]:bg-[#1E1E1E] [&_pre]:text-gray-100 [&_pre]:p-5 [&_pre]:rounded-xl [&_pre]:overflow-x-auto [&_pre]:my-6 [&_pre]:whitespace-pre
         [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_pre_code]:text-sm [&_pre_code]:font-mono
         [&_p_code]:bg-gray-100 [&_p_code]:text-brand-accent [&_p_code]:px-1.5 [&_p_code]:py-0.5 [&_p_code]:rounded-md [&_p_code]:font-mono [&_p_code]:text-sm
+        [&_table]:w-full [&_table]:my-8 [&_table]:border-collapse [&_table]:text-base
+        [&_th]:border [&_th]:border-brand-border [&_th]:bg-black/5 [&_th]:p-3 [&_th]:text-left [&_th]:font-bold [&_th]:text-brand-black
+        [&_td]:border [&_td]:border-brand-border [&_td]:p-3 [&_td]:align-top [&_td]:text-brand-gray
+        [&_.tableWrapper]:overflow-x-auto
       "
     />
   );

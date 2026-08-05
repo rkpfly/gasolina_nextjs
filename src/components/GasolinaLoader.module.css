@@ -1,0 +1,205 @@
+/* ══════════════════════════════════════════════════════════════════
+   Gasolina Loader — retro Latin gas-station × nightclub neon
+   Scoped, CSS-only, GPU-friendly (transform/opacity).
+   ══════════════════════════════════════════════════════════════════ */
+
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 50% 8%, #14060a 0%, #07070b 55%, #050507 100%);
+  animation: backdropIn 0.4s ease both;
+}
+
+/* ── Ambient forecourt haze ─────────────────────────────────────── */
+.haze {
+  position: absolute;
+  width: 46rem;
+  height: 46rem;
+  border-radius: 9999px;
+  filter: blur(80px);
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    rgba(255, 35, 35, 0.34) 0%,
+    rgba(176, 0, 16, 0.16) 42%,
+    transparent 70%
+  );
+  animation: hazePulse 4.4s ease-in-out infinite;
+}
+.scanline {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0 3px,
+    rgba(0, 0, 0, 0.35) 3px 4px
+  );
+  mix-blend-mode: overlay;
+}
+
+/* ── Neon wordmark ──────────────────────────────────────────────── */
+.stack {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+}
+.word {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-syne), system-ui, sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: clamp(2.2rem, 8vw, 4.25rem);
+  line-height: 1;
+  color: #ff2f2f;
+}
+.bang {
+  color: rgba(255, 47, 47, 0.55);
+  transform: translateY(-0.04em);
+}
+.letter {
+  opacity: 0.07;
+  animation:
+    ignite 0.5s ease forwards,
+    flicker 4.5s steps(1, end) infinite;
+  /* delays are set inline per-letter via --i (ignite) */
+  animation-delay:
+    calc(var(--i) * 0.13s),
+    calc(1.5s + var(--i) * 0.06s);
+}
+
+/* ── Scene (SVG pump) ───────────────────────────────────────────── */
+.scene {
+  width: clamp(150px, 40vw, 210px);
+  height: auto;
+  overflow: visible;
+}
+.droplet {
+  animation: drip 2.3s cubic-bezier(0.55, 0, 0.5, 1) infinite;
+  filter: drop-shadow(0 0 4px rgba(255, 90, 46, 0.95));
+}
+.led {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ledPulse 1.4s ease-in-out infinite;
+}
+.sign {
+  animation: signBuzz 3.4s linear infinite;
+}
+.wheel {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: wheelTick 0.9s ease-in-out infinite;
+}
+
+/* ── Equalizer beat ─────────────────────────────────────────────── */
+.eq {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 26px;
+}
+.eq > span {
+  width: 4px;
+  height: 100%;
+  border-radius: 2px;
+  background: #ff2323;
+  transform-origin: bottom;
+  transform: scaleY(0.3);
+  animation: eqBar 0.9s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(255, 35, 35, 0.55);
+}
+
+.label {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.35em;
+  color: #86868b;
+}
+
+/* ── Keyframes ──────────────────────────────────────────────────── */
+@keyframes backdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes hazePulse {
+  0%, 100% { opacity: 0.65; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.08); }
+}
+@keyframes ignite {
+  0%   { opacity: 0.07; text-shadow: none; }
+  55%  { opacity: 1; }
+  62%  { opacity: 0.4; }
+  75%  { opacity: 1; }
+  100% {
+    opacity: 1;
+    text-shadow:
+      0 0 6px rgba(255, 70, 70, 0.85),
+      0 0 16px rgba(255, 35, 35, 0.7),
+      0 0 40px rgba(255, 20, 20, 0.5);
+  }
+}
+@keyframes flicker {
+  0%, 100%      { opacity: 1; }
+  41%, 43%      { opacity: 1; }
+  42%           { opacity: 0.55; }
+  62%, 66%      { opacity: 1; }
+  64%           { opacity: 0.7; }
+}
+/* Droplet travels from the nozzle, up the hose, into the pump/sign */
+@keyframes drip {
+  0%   { transform: translate(196px, 193px); opacity: 0; }
+  7%   { opacity: 1; }
+  25%  { transform: translate(201px, 166px); }
+  45%  { transform: translate(188px, 140px); }
+  62%  { transform: translate(156px, 122px); }
+  80%  { transform: translate(106px, 118px); opacity: 1; }
+  96%  { transform: translate(106px, 58px);  opacity: 1; }
+  100% { transform: translate(106px, 54px);  opacity: 0; }
+}
+@keyframes ledPulse {
+  0%, 100% { opacity: 0.5; transform: scale(0.9); }
+  50%      { opacity: 1;   transform: scale(1.15); }
+}
+@keyframes signBuzz {
+  0%, 96%, 100% { opacity: 1; }
+  97%           { opacity: 0.72; }
+  98%           { opacity: 1; }
+}
+@keyframes wheelTick {
+  0%, 100% { transform: scaleY(0.45); }
+  50%      { transform: scaleY(1); }
+}
+@keyframes eqBar {
+  0%, 100% { transform: scaleY(0.3); }
+  50%      { transform: scaleY(1); }
+}
+
+/* ── Respect reduced motion ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .haze, .droplet, .led, .sign, .wheel, .eq > span { animation: none; }
+  .letter {
+    opacity: 1;
+    animation: none;
+    text-shadow:
+      0 0 6px rgba(255, 70, 70, 0.85),
+      0 0 16px rgba(255, 35, 35, 0.7),
+      0 0 40px rgba(255, 20, 20, 0.5);
+  }
+  .eq > span { transform: scaleY(0.7); }
+}

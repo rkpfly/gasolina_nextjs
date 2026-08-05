@@ -21,7 +21,7 @@ export default function ThemePage() {
   const [isVipFormOpen, setIsVipFormOpen] = useState(false);
 
   useEffect(() => {
-    const slug = themeSlug || "louder-club";
+    const slug = themeSlug || "gasolina";
 
     const loadPageData = async () => {
       setIsLoading(true);
