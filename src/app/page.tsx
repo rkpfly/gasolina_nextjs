@@ -190,15 +190,21 @@ export default function HomePage() {
         {/* Hero visual — full section height */}
         <div
           aria-hidden
-          className="pointer-events-none absolute top-0 right-0 h-full w-full sm:w-[64%] md:w-[75%] max-w-[720px] md:max-w-none z-0 pt-11 md:pt-16"
+          className="pointer-events-none absolute top-0 right-0 h-full w-full sm:w-[64%] md:w-[75%] max-w-[720px] md:max-w-none z-0 pt-20 md:pt-24 bg-brand-black"
         >
           <video
-            src="/gasolina-hero-v2.mp4"
+            src="/pages/home-hero-v3.mp4"
             autoPlay
-            loop
             muted
             playsInline
-            className="w-full h-full object-cover object-right md:object-center"
+            onEnded={(e) => {
+              // Freeze on the last frame: pause and nudge just shy of the end
+              // so the final frame stays painted (avoids any reset flash).
+              const v = e.currentTarget;
+              v.pause();
+              if (v.duration) v.currentTime = Math.max(0, v.duration - 0.05);
+            }}
+            className="w-full h-full object-cover object-left md:object-center"
           />
           {/* Red theme tint over the hero video (masked + fades with it) */}
           <div className="absolute inset-0 bg-club-red/25 mix-blend-overlay" />
@@ -209,6 +215,12 @@ export default function HomePage() {
         <div
           className="pointer-events-none absolute inset-0 z-0 opacity-[0.1] mix-blend-overlay"
           style={{ backgroundImage: GRAIN }}
+        />
+
+        {/* Top scrim behind the Saturdays banner — black fading to transparent */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute top-0 left-0 right-0 h-48 sm:h-56 md:h-72 z-[5] bg-gradient-to-b from-brand-black from-30% via-brand-black/80 to-transparent"
         />
 
         {/* Kicker banner (top) — Saturdays wordmark image */}
@@ -242,7 +254,7 @@ export default function HomePage() {
           <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
             <button
               onClick={() => setVipModal(true)}
-              className="group self-end sm:self-start inline-flex items-center gap-2.5 border-b-2 border-club-red text-brand-white px-1 pb-2 text-base md:text-xl font-[900] tracking-[0.1em] uppercase text-center cursor-pointer hover:opacity-80 transition-opacity duration-300"
+              className="group self-end sm:self-start inline-flex items-center gap-2.5 bg-brand-black border-b-2 border-club-red text-brand-white px-4 py-2.5 text-base md:text-xl font-[900] tracking-[0.1em] uppercase text-center cursor-pointer hover:bg-brand-black/80 transition-colors duration-300"
             >
               <span>Reserve <span className="text-club-red">VIP</span></span>
               <svg

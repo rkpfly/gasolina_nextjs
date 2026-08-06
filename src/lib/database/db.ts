@@ -375,8 +375,8 @@ export async function getPageMetadata(slug: string): Promise<Metadata> {
 
   if (!seoData) {
     return { 
-      title: "Louder Club | Elevate Your Nightlife Experience",
-      description: "Curating Premium Party Experiences Worldwide.",
+      title: "Gasolina | Elevate Your Nightlife Experience",
+      description: "Gasolina — premium Latin nightlife, VIP tables, and the loudest Saturdays.",
      };
   }
 

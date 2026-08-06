@@ -25,8 +25,8 @@ const montserrat = Montserrat({
 
 // Because this is a Server Component again, we can safely export metadata!
 export const metadata: Metadata = {
-  title: "Louder Club | Elevate Your Nightlife Experience",
-  description: "Curating Premium Clubbing Experiences Worldwide.",
+  title: "Gasolina | Elevate Your Nightlife Experience",
+  description: "Gasolina — premium Latin nightlife, VIP tables, and the loudest Saturdays.",
 };
 
 export default function RootLayout({
