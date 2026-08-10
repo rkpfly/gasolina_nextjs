@@ -19,6 +19,17 @@ interface ContactData {
   is_active: boolean;
 }
 
+// Blank draft used when the FooterContact table has no row yet (id 0 = "new").
+// Saving it upserts the first row via the API.
+const EMPTY_CONTACT: ContactData = {
+  id: 0,
+  phone1: '',
+  phone2: '',
+  email: '',
+  copy_year: new Date().getFullYear(),
+  is_active: true,
+};
+
 interface Territory {
   id: number;
   city: string;
@@ -911,7 +922,13 @@ export default function AdminFooterPage() {
              <div className="text-center py-12 text-gray-500">Loading...</div>
           ) : (
             <>
-              {activeSection === 'contact' && contact && <ContactSection data={contact} onSaved={setContact} />}
+              {activeSection === 'contact' && (
+                <ContactSection
+                  key={contact?.id ?? 'new'}
+                  data={contact ?? EMPTY_CONTACT}
+                  onSaved={setContact}
+                />
+              )}
               {activeSection === 'territories' && <TerritoriesSection data={territories} onSaved={setTerritories} />}
               {activeSection === 'legal' && <LegalSection pages={legalPages} onPagesChange={setLegalPages} />}
               {activeSection === 'socials' && <SocialsSection data={socials} onSaved={setSocials} />}

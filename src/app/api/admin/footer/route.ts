@@ -48,13 +48,35 @@ export async function PATCH(request: NextRequest) {
     revalidatePath('/', 'layout');
 
     if (section === 'contact') {
-      const sql = `
-        UPDATE "FooterContact" 
-        SET phone1 = $1, phone2 = $2, email = $3, copy_year = $4, is_active = $5, updated_at = CURRENT_TIMESTAMP
-        WHERE id = $6 RETURNING *
-      `;
-      const values = [data.phone1, data.phone2, data.email, data.copy_year, data.is_active, data.id];
-      const result = await query(sql, values);
+      // Upsert — the table ships empty with no default row, and every content
+      // column is NOT NULL. Resolve the target row (client-supplied id, else the
+      // first existing row); if none exists, insert the first one so the admin
+      // form works from an empty table without any manual seeding.
+      let id = data.id;
+      if (!id) {
+        const existing = await query(`SELECT id FROM "FooterContact" ORDER BY id ASC LIMIT 1`, []);
+        id = existing.rows[0]?.id;
+      }
+
+      const year = Number.isFinite(data.copy_year) ? data.copy_year : new Date().getFullYear();
+      const active = data.is_active ?? true;
+      const vals = [data.phone1 ?? '', data.phone2 ?? '', data.email ?? '', year, active];
+
+      if (id) {
+        const result = await query(
+          `UPDATE "FooterContact"
+           SET phone1 = $1, phone2 = $2, email = $3, copy_year = $4, is_active = $5, updated_at = CURRENT_TIMESTAMP
+           WHERE id = $6 RETURNING *`,
+          [...vals, id]
+        );
+        return NextResponse.json(result.rows[0]);
+      }
+
+      const result = await query(
+        `INSERT INTO "FooterContact" (phone1, phone2, email, copy_year, is_active)
+         VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+        vals
+      );
       return NextResponse.json(result.rows[0]);
     }
 
