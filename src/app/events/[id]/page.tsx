@@ -59,7 +59,7 @@ export default async function EventTicketPage({ params }: EventPageProps) {
   const iframeSrc = `${process.env.NEXT_PUBLIC_TICKETING_FRONTEND_URL}/events/frame/detail/${eventId}`;
 
   return (
-    <main className="mt-14 md:mt-22 relative w-screen h-[100dvh] bg-brand-offwhite overflow-hidden">
+    <main className="mt-11 sm:mt-16 relative w-screen h-[100dvh] bg-brand-offwhite overflow-hidden">
       
       <div className="absolute inset-0 flex items-center justify-center -z-10 bg-brand-offwhite">
         <div className="flex flex-col items-center gap-3 text-brand-gray">
