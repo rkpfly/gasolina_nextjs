@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { CountryCodePicker } from "@/components/CountryCodePicker";
 import { EqLoader } from "@/components/Loader";
-import HtmlFlyer from "@/components/HtmlFlyer";
+import OfferFlyer from "@/components/OfferFlyer";
 
 const inputClass =
   "w-full bg-transparent text-[9px] sm:text-[10px] md:text-xs font-bold tracking-[0.15em] uppercase text-brand-white placeholder-brand-gray focus:outline-none [color-scheme:dark]";
@@ -25,11 +25,6 @@ export default function BirthdayOfferForm() {
   const [boothInterest, setBoothInterest] = useState(false);
   const [formStatus, setFormStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
-  const [currentUrl, setCurrentUrl] = useState("");
-
-  useEffect(() => {
-    setCurrentUrl(window.location.href);
-  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -52,7 +47,7 @@ export default function BirthdayOfferForm() {
       fd.append("guests", formData.guests);
       fd.append("celebration_date", formData.celebration_date);
       fd.append("booth_interest", boothInterest ? "Yes" : "No");
-      fd.append("source_url", currentUrl);
+      fd.append("source_url", window.location.href);
 
       const res = await fetch("/api/offers/submissions", {
         method: "POST",
@@ -115,12 +110,10 @@ export default function BirthdayOfferForm() {
           <div className="flex flex-col md:flex-row">
             {/* FLYER */}
             <div className="w-full md:w-1/2 relative order-2 md:order-1 border-t md:border-t-0 md:border-r border-white/10 bg-[#0b0b10] flex items-center justify-center">
-              {/* The flyer document is A4 at 96dpi: ~794 x 1123px */}
-              <HtmlFlyer
-                src="/offers/birthday-flyer.html"
-                baseWidth={794}
-                baseHeight={1123}
-                title="Birthday offer — entry for you + 4 friends complimentary"
+              <OfferFlyer
+                slug="birthday"
+                alt="Birthday offer — entry for you + 4 friends complimentary"
+                unavailableLabel="Birthday flyer unavailable"
               />
             </div>
 
