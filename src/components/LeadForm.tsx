@@ -1,15 +1,16 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { CountryCodePicker } from './CountryCodePicker';
 import { EqLoader } from './Loader';
 import SaturdayCalendar from './SaturdayCalendar';
 
 // Define the available fields as a type for strict checking
 export type FormField =
-  | 'f_name' | 'l_name' | 'email' | 'phone' | 'city'
+  | 'f_name' | 'l_name' | 'full_name' | 'email' | 'phone' | 'city'
   | 'region' | 'country' | 'dob' | 'total_guests'
-  | 'description' | 'company_name' | 'booking_date';
+  | 'description' | 'additional_info' | 'company_name' | 'booking_date'
+  | 'guest_names' | 'vip' | 'newsletter_consent';
 
 interface LeadFormProps {
   formType: string;
@@ -66,9 +67,10 @@ function isoFromDob(v: string): string {
 export default function LeadForm({ formType, fields, buttonText = "Subscribe", tone = 'light' }: LeadFormProps) {
   const dark = tone === 'dark';
   const [formData, setFormData] = useState<Record<string, string>>({
-    f_name: '', l_name: '', email: '', phone: '', city: '',
+    f_name: '', l_name: '', full_name: '', email: '', phone: '', city: '',
     region: '', country: '', dob: '', total_guests: '',
-    description: '', company_name: '', booking_date: ''
+    description: '', additional_info: '', company_name: '', booking_date: '',
+    guest_names: ''
   });
 
   const [citySelection, setCitySelection] = useState('');
@@ -76,11 +78,9 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
   const [countryCode, setCountryCode] = useState('+61');
   const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [bookingError, setBookingError] = useState(false);
-  const [currentUrl, setCurrentUrl] = useState('');
-
-  useEffect(() => {
-    setCurrentUrl(window.location.href);
-  }, []);
+  const [guestError, setGuestError] = useState(false);
+  const [vip, setVip] = useState(false);
+  const [newsletterConsent, setNewsletterConsent] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -117,6 +117,16 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
       return;
     }
 
+    if (
+      fields.includes('guest_names') &&
+      fields.includes('total_guests') &&
+      !formData.guest_names.trim() &&
+      !formData.total_guests
+    ) {
+      setGuestError(true);
+      return;
+    }
+
     setFormStatus('loading');
 
     const finalCity = citySelection === 'Other' ? customCity : citySelection;
@@ -124,8 +134,12 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
     // Phone format unchanged — still concatenates code + number
     const finalPhone = `${countryCode}${formData.phone}`;
 
+    const nameParts = formData.full_name.trim().split(/\s+/).filter(Boolean);
     const payload = {
       ...formData,
+      f_name: fields.includes('full_name') ? (nameParts.shift() || '') : formData.f_name,
+      l_name: fields.includes('full_name') ? (nameParts.join(' ') || '') : formData.l_name,
+      description: formData.additional_info || formData.description,
       // Send the DB/CRM-friendly ISO date; the field displays DD/MM/YYYY.
       dob: isoFromDob(formData.dob),
       phone: finalPhone,
@@ -135,7 +149,9 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
       country_code: countryCode,
       form_type: formType,
       city: finalCity,
-      source_url: currentUrl,
+      source_url: window.location.href,
+      vip,
+      newsletter_consent: newsletterConsent,
     };
 
     try {
@@ -177,6 +193,12 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
             return (
               <div key={field} className={wrapperClass}>
                 <input type="text" name="f_name" placeholder="FIRST NAME *" value={formData.f_name} onChange={handleChange} required className={inputClass} />
+              </div>
+            );
+          case 'full_name':
+            return (
+              <div key={field} className={wrapperClass}>
+                <input type="text" name="full_name" placeholder="FULL NAME *" value={formData.full_name} onChange={handleChange} autoComplete="name" required className={inputClass} />
               </div>
             );
           case 'l_name':
@@ -243,8 +265,42 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
             );
           case 'total_guests':
             return (
+              <div key={field} className="flex flex-col gap-2">
+                <div className={wrapperClass}>
+                  <input
+                    type="number"
+                    name="total_guests"
+                    min="1"
+                    placeholder={fields.includes('guest_names') ? "TOTAL GUESTS (OR ADD NAMES ABOVE)" : "TOTAL GUESTS"}
+                    value={formData.total_guests}
+                    onChange={(e) => {
+                      handleChange(e);
+                      setGuestError(false);
+                    }}
+                    className={inputClass}
+                  />
+                </div>
+                {guestError && (
+                  <p className="text-red-500 text-[8px] sm:text-[9px] md:text-xs font-bold uppercase tracking-widest">
+                    Add guest names or a total guest count.
+                  </p>
+                )}
+              </div>
+            );
+          case 'guest_names':
+            return (
               <div key={field} className={wrapperClass}>
-                <input type="number" name="total_guests" placeholder="TOTAL GUESTS" value={formData.total_guests} onChange={handleChange} className={inputClass} />
+                <textarea
+                  name="guest_names"
+                  placeholder="FULL NAMES OF GUESTS (ONE PER LINE)"
+                  value={formData.guest_names}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setGuestError(false);
+                  }}
+                  rows={3}
+                  className={`${inputClass} resize-none`}
+                />
               </div>
             );
           case 'dob':
@@ -296,6 +352,36 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
               <div key={field} className={wrapperClass}>
                 <textarea name="description" placeholder="DESCRIPTION" value={formData.description} onChange={handleChange} rows={3} className={`${inputClass} resize-none`} />
               </div>
+            );
+          case 'additional_info':
+            return (
+              <div key={field} className={wrapperClass}>
+                <textarea name="additional_info" placeholder="ADDITIONAL INFORMATION" value={formData.additional_info} onChange={handleChange} rows={3} className={`${inputClass} resize-none`} />
+              </div>
+            );
+          case 'vip':
+            return (
+              <label key={field} className={`flex items-center justify-between gap-4 border p-4 cursor-pointer transition-colors ${dark ? 'border-white/20 hover:border-white/40' : 'border-brand-black/20 hover:border-brand-black/40'}`}>
+                <span className={`text-[9px] sm:text-xs font-bold tracking-[0.15em] uppercase ${dark ? 'text-white' : 'text-brand-black'}`}>
+                  Interested in VIP?
+                </span>
+                <input type="checkbox" checked={vip} onChange={(e) => setVip(e.target.checked)} className="peer sr-only" />
+                <span aria-hidden="true" className={`relative h-6 w-11 shrink-0 rounded-full transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-brand-blue ${vip ? 'bg-brand-blue' : (dark ? 'bg-white/20' : 'bg-brand-black/20')}`}>
+                  <span className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-transform ${vip ? 'translate-x-6' : 'translate-x-1'}`} />
+                </span>
+              </label>
+            );
+          case 'newsletter_consent':
+            return (
+              <label key={field} className={`flex items-start gap-3 cursor-pointer text-[9px] sm:text-xs font-medium leading-relaxed ${dark ? 'text-white/70' : 'text-brand-black/70'}`}>
+                <input
+                  type="checkbox"
+                  checked={newsletterConsent}
+                  onChange={(e) => setNewsletterConsent(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-brand-blue"
+                />
+                <span>I agree to receive news, event updates and offers from Gasolina.</span>
+              </label>
             );
           default:
             return null;

@@ -56,6 +56,9 @@ export default function Header() {
           <Link href="/book" className={`${navHover} transition-colors`}>
             Book
           </Link>
+          <Link href="/guestlist" className={`${navHover} transition-colors`}>
+            Guestlist
+          </Link>
           <Link href="/gallery" className={`${navHover} transition-colors`}>
             Gallery
           </Link>
@@ -112,6 +115,7 @@ export default function Header() {
             {[
               { label: "Home", href: "/" },
               { label: "Book", href: "/book" },
+              { label: "Guestlist", href: "/guestlist" },
               { label: "Gallery", href: "/gallery" },
               { label: "Blogs", href: "/blogs" },
               // { label: "Party & Earn", href: "/careers#apply" },

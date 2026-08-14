@@ -16,6 +16,10 @@ export interface LeadSubmission {
   total_guests?: number | null;
   description?: string;
   company_name?: string;
+  booking_date?: string;
+  guest_names?: string;
+  vip?: boolean;
+  newsletter_consent?: boolean;
   source_url?: string;
   ip_address?: string;
   created_at?: string;
@@ -55,6 +59,7 @@ export const FORM_TYPE_META: Record<string, { label: string; color: keyof typeof
   corporate_inquiry: { label: "Corporate", color: "purple" },
   private_event_lead: { label: "Private Event", color: "pink" },
   offer_signup: { label: "Offer Signup", color: "lime" },
+  guestlist_request: { label: "Guestlist", color: "blue" },
 };
 
 export function formTypeLabel(formType: string): string {

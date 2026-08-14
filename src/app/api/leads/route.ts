@@ -28,12 +28,22 @@ export async function POST(request: Request) {
     const {
       form_type, f_name, l_name, email, phone, city, dob, booking_date,
       total_guests, description, company_name, source_url: body_source_url,
-      country_code
+      country_code, guest_names, vip, newsletter_consent
     } = body;
 
     // 2. Validate required fields (city is optional so newsletter/DOB forms work)
     if (!form_type || !f_name || !email) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
+    if (
+      form_type === 'guestlist_request' &&
+      (!phone || !booking_date || (!guest_names && !total_guests))
+    ) {
+      return NextResponse.json(
+        { error: 'Guestlist requests require a phone, booking date, and guest names or count' },
+        { status: 400 }
+      );
     }
 
     // 3. Extract IP and Source URL 
@@ -46,8 +56,8 @@ export async function POST(request: Request) {
     // 4. Insert into the database (city, dob + booking_date are optional/nullable)
     const sql = `
       INSERT INTO lead_submissions
-      (form_type, f_name, l_name, email, phone, city, region, country, ip_address, source_url, total_guests, description, company_name, dob, booking_date)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+      (form_type, f_name, l_name, email, phone, city, region, country, ip_address, source_url, total_guests, description, company_name, dob, booking_date, guest_names, vip, newsletter_consent)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
       RETURNING id;
     `;
 
@@ -66,7 +76,10 @@ export async function POST(request: Request) {
       description || null,
       company_name || null, // <--- Dedicated company name injection
       dob || null,          // 'YYYY-MM-DD' from the date input, or null
-      booking_date || null  // 'YYYY-MM-DD' chosen day (VIP = Saturdays only), or null
+      booking_date || null, // 'YYYY-MM-DD' chosen day (VIP = Saturdays only), or null
+      guest_names || null,
+      vip === true,
+      newsletter_consent === true
     ];
 
     await query(sql, values);
@@ -86,7 +99,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, message: 'Lead captured' }, { status: 200 });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Lead Submission Error:", error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }

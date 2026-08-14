@@ -58,6 +58,8 @@ export default function SubmissionsPage() {
   };
 
   useEffect(() => {
+    // The initial fetch intentionally owns the page's loading state.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     load();
   }, []);
 
@@ -86,7 +88,7 @@ export default function SubmissionsPage() {
       .filter((l) =>
         !q
           ? true
-          : [l.f_name, l.l_name, l.email, l.phone, l.city, l.company_name]
+          : [l.f_name, l.l_name, l.email, l.phone, l.city, l.company_name, l.guest_names]
               .filter(Boolean)
               .some((v) => String(v).toLowerCase().includes(q))
       );
@@ -133,7 +135,7 @@ export default function SubmissionsPage() {
     const known = new Set([
       "id", "form_type", "f_name", "l_name", "email", "phone", "city", "region",
       "country", "total_guests", "description", "company_name", "source_url",
-      "ip_address", "created_at",
+      "ip_address", "created_at", "booking_date", "guest_names", "vip", "newsletter_consent",
     ]);
     const extras = Object.fromEntries(
       Object.entries(r as unknown as Record<string, unknown>).filter(([k]) => !known.has(k))
@@ -149,6 +151,10 @@ export default function SubmissionsPage() {
       { label: "Country", value: r.country || "—" },
       { label: "Company", value: r.company_name || "—" },
       { label: "Guests", value: r.total_guests ?? "—" },
+      { label: "Booking Date", value: formatDate(r.booking_date) },
+      { label: "Guest Names", value: r.guest_names || "—", full: true },
+      { label: "VIP Interest", value: r.vip ? "Yes" : "No" },
+      { label: "Newsletter Consent", value: r.newsletter_consent ? "Yes" : "No" },
       { label: "Notes", value: r.description || "—", full: true },
       { label: "Source", value: <SourceCell url={r.source_url} />, full: true },
       { label: "IP Address", value: r.ip_address || "—" },
@@ -170,11 +176,11 @@ export default function SubmissionsPage() {
 
   // ─── CSV exports ──────────────────────────────────────────────────────────────
   const exportLeads = () => {
-    const headers = ["Date", "Type", "First Name", "Last Name", "Email", "Phone", "City", "Company", "Guests", "Notes", "Source"];
+    const headers = ["Date", "Type", "First Name", "Last Name", "Email", "Phone", "City", "Company", "Booking Date", "Guests", "Guest Names", "VIP", "Newsletter Consent", "Notes", "Source"];
     const rows = filteredLeads.map((l) => [
       formatDateTime(l.created_at),
       formTypeLabel(l.form_type),
-      l.f_name, l.l_name, l.email, l.phone, l.city, l.company_name, l.total_guests ?? "", l.description, l.source_url,
+      l.f_name, l.l_name, l.email, l.phone, l.city, l.company_name, formatDate(l.booking_date), l.total_guests ?? "", l.guest_names, l.vip ? "Yes" : "No", l.newsletter_consent ? "Yes" : "No", l.description, l.source_url,
     ]);
     downloadCsv(`submissions-${typeFilter}-${new Date().toISOString().slice(0, 10)}.csv`, headers, rows);
   };
