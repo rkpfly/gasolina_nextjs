@@ -17,6 +17,7 @@ interface LeadFormProps {
   fields: FormField[];
   buttonText?: string;
   tone?: 'light' | 'dark';
+  initialBookingDate?: string;
 }
 
 // ─── Smart DOB mask (DD/MM/YYYY) ─────────────────────────────────────────────
@@ -64,12 +65,12 @@ function isoFromDob(v: string): string {
 }
 
 // ─── Main LeadForm ───────────────────────────────────────────────────────────
-export default function LeadForm({ formType, fields, buttonText = "Subscribe", tone = 'light' }: LeadFormProps) {
+export default function LeadForm({ formType, fields, buttonText = "Subscribe", tone = 'light', initialBookingDate = '' }: LeadFormProps) {
   const dark = tone === 'dark';
   const [formData, setFormData] = useState<Record<string, string>>({
     f_name: '', l_name: '', full_name: '', email: '', phone: '', city: '',
     region: '', country: '', dob: '', total_guests: '',
-    description: '', additional_info: '', company_name: '', booking_date: '',
+    description: '', additional_info: '', company_name: '', booking_date: initialBookingDate,
     guest_names: ''
   });
 

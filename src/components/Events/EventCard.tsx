@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import type { Event } from '@/types/events';
 import SmartMarqueeTitle from '@/components/SmartMarqueeTitle';
+import GuestlistModal from '@/components/Events/GuestlistModal';
 
 interface EventCardProps {
   event: Event;
@@ -13,10 +14,11 @@ interface EventCardProps {
 
 export function EventCard({ event, isActive, imgSrc, delay, onReserve, onBookVIP }: EventCardProps) {
   const [tapActive, setTapActive] = useState(false);
+  const [guestlistOpen, setGuestlistOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   // Mobile tap: toggle the split overlay on image tap (not zone tap)
-  const handleImageTap = (e: React.MouseEvent) => {
+  const handleImageTap = () => {
     const isTouchDevice = window.matchMedia('(hover: none)').matches;
     if (!isTouchDevice || !isActive) return;
     setTapActive((prev) => !prev);
@@ -26,11 +28,13 @@ export function EventCard({ event, isActive, imgSrc, delay, onReserve, onBookVIP
   const handleBlur = () => setTapActive(false);
 
   return (
-    <div
-      className="group flex flex-col"
-      style={{ transitionDelay: delay }}
-      onBlur={handleBlur}
-    >
+    <>
+      {guestlistOpen && <GuestlistModal event={event} onClose={() => setGuestlistOpen(false)} />}
+      <div
+        className="group flex flex-col"
+        style={{ transitionDelay: delay }}
+        onBlur={handleBlur}
+      >
       {/* ── Image container ── */}
       <div
         ref={wrapperRef}
@@ -153,6 +157,12 @@ export function EventCard({ event, isActive, imgSrc, delay, onReserve, onBookVIP
               <span>Reserve Tickets</span>
             </button>
             <button
+              onClick={() => setGuestlistOpen(true)}
+              className="relative inline-flex items-center justify-center w-full py-3 text-xs font-bold tracking-[0.15em] uppercase text-center bg-brand-blue text-brand-white hover:bg-brand-white hover:text-brand-black transition-all duration-300"
+            >
+              Guestlist
+            </button>
+            <button
               onClick={onBookVIP}
               className="relative inline-flex items-center justify-center w-full py-3 text-xs font-bold tracking-[0.15em] uppercase text-center bg-transparent text-brand-white border border-brand-white hover:bg-brand-offwhite transition-all duration-300"
             >
@@ -168,6 +178,7 @@ export function EventCard({ event, isActive, imgSrc, delay, onReserve, onBookVIP
           </button>
         )}
       </div>
-    </div>
+      </div>
+    </>
   );
 }

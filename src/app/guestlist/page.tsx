@@ -18,6 +18,9 @@ export default function GuestlistPage() {
 
         <div className="relative mx-auto w-full max-w-3xl">
           <div className="border border-white/10 bg-white/[0.035] p-5 shadow-2xl backdrop-blur-sm sm:p-8 md:p-12">
+            <p className="mb-8 border border-brand-blue/40 bg-brand-blue/10 px-4 py-3 text-center text-[10px] font-bold uppercase tracking-[0.12em] text-brand-white sm:text-xs">
+              Free Entry B4 11PM, Discounted Entry After 11PM on Guestlist
+            </p>
             <div className="mb-10 border-b border-white/10 pb-8">
               <h1 className="font-display text-3xl font-bold uppercase tracking-tight sm:text-4xl">Join the guestlist</h1>
             </div>
