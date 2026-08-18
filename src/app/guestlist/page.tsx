@@ -8,21 +8,25 @@ export const metadata: Metadata = {
 
 export default function GuestlistPage() {
   return (
-    <main className="min-h-screen overflow-hidden bg-brand-black text-brand-white pt-16 md:pt-20">
-      <section className="relative px-4 py-14 sm:px-6 sm:py-20 md:px-12 md:py-28">
+    <main className="min-h-screen overflow-hidden bg-[#fffaf5] pt-16 text-brand-black md:pt-20">
+      <section className="relative px-4 py-12 sm:px-6 sm:py-16 md:px-12 md:py-24">
         <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-          <div className="absolute -right-32 top-8 h-80 w-80 rounded-full bg-brand-blue/25 blur-[110px] md:h-[32rem] md:w-[32rem]" />
-          <div className="absolute -left-32 bottom-0 h-72 w-72 rounded-full bg-brand-accent/15 blur-[120px]" />
-          <div className="absolute inset-0 opacity-[0.035] [background-image:linear-gradient(rgba(255,255,255,.8)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.8)_1px,transparent_1px)] [background-size:48px_48px]" />
+          <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-brand-blue/15 blur-3xl sm:h-[28rem] sm:w-[28rem]" />
+          <div className="absolute -left-32 top-1/3 h-80 w-80 rounded-full bg-brand-accent/15 blur-3xl" />
+          <div className="absolute -bottom-32 right-0 h-96 w-96 rounded-full bg-brand-lime/20 blur-3xl" />
+          <div className="absolute inset-0 opacity-[0.055] [background-image:radial-gradient(#0a0a0a_1px,transparent_1px)] [background-size:24px_24px]" />
         </div>
 
-        <div className="relative mx-auto w-full max-w-3xl">
-          <div className="border border-white/10 bg-white/[0.035] p-5 shadow-2xl backdrop-blur-sm sm:p-8 md:p-12">
-            <p className="mb-8 border border-brand-blue/40 bg-brand-blue/10 px-4 py-3 text-center text-[10px] font-bold uppercase tracking-[0.12em] text-brand-white sm:text-xs">
-              Free Entry B4 11PM, Discounted Entry After 11PM on Guestlist
-            </p>
-            <div className="mb-10 border-b border-white/10 pb-8">
-              <h1 className="font-display text-3xl font-bold uppercase tracking-tight sm:text-4xl">Join the guestlist</h1>
+        <div className="relative mx-auto w-full max-w-4xl">
+          <div className="relative border border-brand-black/10 bg-white/95 p-5 shadow-[10px_10px_0_0_#723CF4] backdrop-blur-sm sm:p-8 sm:shadow-[14px_14px_0_0_#723CF4] md:p-12">
+            <div className="mb-8 rounded-sm border border-brand-black/10 bg-brand-lime/20 px-4 py-4 text-center sm:px-6">
+              <p className="text-[10px] font-bold uppercase tracking-[0.12em] sm:text-xs">
+                Free Entry B4 11PM <span className="mx-2 text-brand-blue">•</span> Discounted Entry After 11PM on Guestlist
+              </p>
+            </div>
+            <div className="mb-10 border-b border-brand-black/10 pb-6 sm:pb-8">
+              <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-accent sm:text-xs">Save your spot</p>
+              <h2 className="font-display text-2xl font-bold uppercase tracking-tight sm:text-3xl">Join the guestlist</h2>
             </div>
 
             <LeadForm
@@ -39,7 +43,7 @@ export default function GuestlistPage() {
                 "newsletter_consent",
               ]}
               buttonText="Join Guestlist"
-              tone="dark"
+              tone="light"
             />
           </div>
         </div>
