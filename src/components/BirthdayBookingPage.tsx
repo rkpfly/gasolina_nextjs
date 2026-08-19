@@ -1,9 +1,9 @@
 import Image from "next/image";
-import { Bebas_Neue, Libre_Baskerville, Margarine } from "next/font/google";
+import { Bebas_Neue, Libre_Baskerville, Oswald } from "next/font/google";
 
-const margarine = Margarine({
+const oswald = Oswald({
   subsets: ["latin"],
-  weight: "400",
+  weight: ["500", "600", "700"],
   display: "swap",
 });
 
@@ -39,13 +39,22 @@ export default function BirthdayBookingPage({
           sizes="100vw"
           className="object-cover object-center"
         />
-        <div className="absolute inset-0 flex items-center justify-center px-5 text-center sm:px-8 md:px-12">
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden px-3 text-center sm:px-6 md:px-10">
           <h1
-            className={`${margarine.className} -rotate-2 bg-white px-5 py-4 text-4xl leading-[0.76] tracking-[0.025em] text-black sm:px-8 sm:py-5 sm:text-6xl md:text-7xl lg:text-8xl`}
+            className={`${oswald.className} flex w-full rotate-0 flex-col items-center bg-transparent uppercase`}
           >
-            <span className="block lowercase">{age}</span>
-            <span className="block uppercase">Happy</span>
-            <span className="block uppercase">Birthday</span>
+            <span className="block text-[clamp(9rem,24vw,18rem)] font-bold leading-[0.72] tracking-[-0.06em] text-[#f1f3c7]">
+              {age}
+            </span>
+            <span className="relative z-10 -mb-2 -mt-1 block bg-[#e00000] px-3 py-1 text-[clamp(1.35rem,3.2vw,2.4rem)] font-medium leading-none tracking-[0.03em] text-white sm:-mb-3 sm:px-4 sm:py-1.5">
+              Happy
+            </span>
+            <span
+              className="block whitespace-nowrap text-[clamp(4.15rem,14.5vw,11.5rem)] font-bold leading-[0.8] tracking-[-0.045em] text-transparent"
+              style={{ WebkitTextStroke: "clamp(1.5px, 0.22vw, 3px) #f1f3c7" }}
+            >
+              Birthday
+            </span>
           </h1>
         </div>
       </section>
@@ -54,7 +63,7 @@ export default function BirthdayBookingPage({
         className="bg-gradient-to-b from-[#05060b] via-[#060812] to-[#070a16] px-5 py-16 text-left text-white sm:px-8 sm:py-20 md:px-12 md:py-24"
       >
         <div className="mx-auto max-w-4xl">
-          <div className={`${bebasNeue.className} mb-12 text-center text-5xl font-bold uppercase leading-[0.9] tracking-[0.02em] sm:text-5xl md:mb-16 md:text-7xl [-webkit-text-stroke:2px_#ff0000]`}>
+          <div className={`${bebasNeue.className} tracking-tight leading-[0.1] mb-12 text-center text-[clamp(50px,12vw,150px)] font-bold uppercase leading-[0.9] tracking-[0.02em] md:mb-16 [-webkit-text-stroke:2px_#ff0000]`}>
             <p>Free entry</p>
             <p>Skip the line</p>
           </div>
