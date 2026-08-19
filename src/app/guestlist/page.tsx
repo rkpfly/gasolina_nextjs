@@ -19,9 +19,22 @@ export default function GuestlistPage() {
 
         <div className="relative mx-auto w-full max-w-4xl">
           <div className="relative border border-brand-black/10 bg-white/95 p-5 shadow-[10px_10px_0_0_#723CF4] backdrop-blur-sm sm:p-8 sm:shadow-[14px_14px_0_0_#723CF4] md:p-12">
-            <div className="mb-8 rounded-sm border border-brand-black/10 bg-brand-lime/20 px-4 py-4 text-center sm:px-6">
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] sm:text-xs">
-                Free Entry B4 11PM <span className="mx-2 text-brand-blue">•</span> Discounted Entry After 11PM on Guestlist
+            <div className="relative mb-10 overflow-hidden border-2 border-brand-black bg-gradient-to-br from-brand-coral to-[#ff3b1f] px-4 py-6 text-center shadow-[6px_6px_0_0_#0a0a0a] sm:px-8 sm:py-8 sm:shadow-[8px_8px_0_0_#0a0a0a]">
+              <div
+                className="pointer-events-none absolute -right-8 -top-10 h-28 w-28 rounded-full border-[18px] border-white/25"
+                aria-hidden="true"
+              />
+              <p className="relative mb-2 text-[10px] font-extrabold uppercase tracking-[0.24em] text-brand-black/70 sm:text-xs">
+                Guestlist perk
+              </p>
+              <p className="relative font-display text-3xl font-black uppercase leading-none tracking-tight sm:text-5xl md:text-6xl">
+                Free Entry{" "}
+                <span className="inline-block whitespace-nowrap bg-brand-black px-2 py-1 text-brand-white">
+                  Before 11 PM
+                </span>
+              </p>
+              <p className="relative mt-3 text-xs font-bold uppercase tracking-[0.1em] sm:mt-4 sm:text-sm">
+                Discounted entry after 11 PM on guestlist
               </p>
             </div>
             <div className="mb-10 border-b border-brand-black/10 pb-6 sm:pb-8">
