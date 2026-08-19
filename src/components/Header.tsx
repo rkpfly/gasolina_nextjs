@@ -138,6 +138,8 @@ export default function Header() {
             </span>
             {[
               { label: "Offers", href: "/offers", delay: "0.3s" },
+              { label: "18th", href: "/18th", delay: "0.35s" },
+              { label: "21st", href: "/21st", delay: "0.4s" },
               { label: "Private Events", href: "/private-events", delay: "0.45s" },
               { label: "VIP Reservations", href: "/vip", delay: "0.5s" },
               { label: "Corporate Galas", href: "/corporate", delay: "0.55s" },
