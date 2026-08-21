@@ -174,6 +174,36 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
   const inputClass = `w-full bg-transparent text-[8px] sm:text-[9px] md:text-xs font-bold tracking-[0.15em] uppercase placeholder-brand-gray focus:outline-none ${dark ? 'text-white' : 'text-brand-black'}`;
   const wrapperClass = `pb-2 border-b transition-colors duration-300 ${dark ? 'border-white/30 focus-within:border-brand-blue' : 'border-brand-black focus-within:border-brand-blue'}`;
 
+  if (formType === 'guestlist_request' && formStatus === 'success') {
+    return (
+      <div
+        className={`border p-6 text-center sm:p-8 ${dark ? 'border-brand-blue/50 bg-brand-blue/10 text-white' : 'border-brand-black bg-brand-lime/35 text-brand-black shadow-[6px_6px_0_0_#723CF4]'}`}
+        role="status"
+        aria-live="polite"
+      >
+        <span className={`mx-auto flex h-14 w-14 items-center justify-center rounded-full border-2 ${dark ? 'border-brand-blue bg-brand-blue/20 text-white' : 'border-brand-black bg-brand-lime text-brand-black'}`} aria-hidden="true">
+          <svg viewBox="0 0 24 24" className="h-7 w-7 fill-none stroke-current stroke-[2.5]" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m5 12 4 4L19 6" />
+          </svg>
+        </span>
+        <p className={`mt-5 text-[10px] font-bold uppercase tracking-[0.2em] ${dark ? 'text-brand-blue' : 'text-brand-accent'}`}>
+          Submission confirmed
+        </p>
+        <h3 className="mt-2 font-display text-2xl font-bold uppercase tracking-tight sm:text-3xl">
+          You&apos;ve been added to the guestlist
+        </h3>
+        <div className={`mx-auto mt-6 max-w-md border-t pt-5 text-left ${dark ? 'border-white/15' : 'border-brand-black/15'}`}>
+          <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.18em]">Entry conditions</p>
+          <ul className={`space-y-3 text-xs font-bold uppercase tracking-[0.1em] sm:text-sm ${dark ? 'text-white/80' : 'text-brand-black/75'}`}>
+            <li className="flex gap-3"><span aria-hidden="true">•</span><span>Upscale club attire</span></li>
+            <li className="flex gap-3"><span aria-hidden="true">•</span><span>Photo ID (physical photo ID compulsory)</span></li>
+            <li className="flex gap-3"><span aria-hidden="true">•</span><span>Mixed ratio applies</span></li>
+          </ul>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-6 md:gap-8">
       {formStatus === 'error' && (
