@@ -58,6 +58,14 @@ export default function GuestlistPage() {
               buttonText="Join Guestlist"
               tone="light"
             />
+            <div className="mt-10 border-t border-brand-black/10 pt-6 sm:pt-8">
+              <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.18em]">Entry conditions</p>
+              <ul className="space-y-3 text-xs font-bold uppercase tracking-[0.1em] text-brand-black/75 sm:text-sm">
+                <li>Upscale club attire</li>
+                <li>Photo ID (physical photo ID compulsory)</li>
+                <li>Mixed ratio applies</li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>

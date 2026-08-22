@@ -192,14 +192,6 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
         <h3 className="mt-2 font-display text-2xl font-bold uppercase tracking-tight sm:text-3xl">
           You&apos;ve been added to the guestlist
         </h3>
-        <div className={`mx-auto mt-6 max-w-md border-t pt-5 text-left ${dark ? 'border-white/15' : 'border-brand-black/15'}`}>
-          <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.18em]">Entry conditions</p>
-          <ul className={`space-y-3 text-xs font-bold uppercase tracking-[0.1em] sm:text-sm ${dark ? 'text-white/80' : 'text-brand-black/75'}`}>
-            <li className="flex gap-3"><span aria-hidden="true">•</span><span>Upscale club attire</span></li>
-            <li className="flex gap-3"><span aria-hidden="true">•</span><span>Photo ID (physical photo ID compulsory)</span></li>
-            <li className="flex gap-3"><span aria-hidden="true">•</span><span>Mixed ratio applies</span></li>
-          </ul>
-        </div>
       </div>
     );
   }
