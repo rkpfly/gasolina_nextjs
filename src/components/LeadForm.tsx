@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { CountryCodePicker } from './CountryCodePicker';
 import { EqLoader } from './Loader';
 import SaturdayCalendar from './SaturdayCalendar';
@@ -80,7 +80,7 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
   const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [bookingError, setBookingError] = useState(false);
   const [guestError, setGuestError] = useState(false);
-  const [vip, setVip] = useState(false);
+  const vipInterestInputRef = useRef<HTMLInputElement>(null);
   const [newsletterConsent, setNewsletterConsent] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -151,7 +151,7 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
       form_type: formType,
       city: finalCity,
       source_url: window.location.href,
-      vip,
+      vip: vipInterestInputRef.current?.checked ?? false,
       newsletter_consent: newsletterConsent,
     };
 
@@ -384,14 +384,20 @@ export default function LeadForm({ formType, fields, buttonText = "Subscribe", t
             );
           case 'vip':
             return (
-              <label key={field} className={`flex items-center justify-between gap-4 border p-4 cursor-pointer transition-colors ${dark ? 'border-white/20 hover:border-white/40' : 'border-brand-black/20 hover:border-brand-black/40'}`}>
+              <label
+                key={field}
+                onClick={(event) => event.stopPropagation()}
+                className={`flex items-center justify-between gap-4 border p-4 cursor-pointer transition-colors ${dark ? 'border-white/20 hover:border-white/40' : 'border-brand-black/20 hover:border-brand-black/40'}`}
+              >
                 <span className={`text-[9px] sm:text-xs font-bold tracking-[0.15em] uppercase ${dark ? 'text-white' : 'text-brand-black'}`}>
                   Interested in VIP?
                 </span>
-                <input type="checkbox" checked={vip} onChange={(e) => setVip(e.target.checked)} className="peer sr-only" />
-                <span aria-hidden="true" className={`relative h-6 w-11 shrink-0 rounded-full transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-brand-blue ${vip ? 'bg-brand-blue' : (dark ? 'bg-white/20' : 'bg-brand-black/20')}`}>
-                  <span className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-transform ${vip ? 'translate-x-6' : 'translate-x-1'}`} />
-                </span>
+                <input
+                  type="checkbox"
+                  name="vip_interest"
+                  ref={vipInterestInputRef}
+                  className="h-5 w-5 shrink-0 cursor-pointer accent-brand-blue"
+                />
               </label>
             );
           case 'newsletter_consent':

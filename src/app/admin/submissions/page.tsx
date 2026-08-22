@@ -175,7 +175,7 @@ export default function SubmissionsPage() {
   ];
 
   // ─── CSV exports ──────────────────────────────────────────────────────────────
-  const exportLeads = () => {
+  const exportFilteredLeads = () => {
     const headers = ["Date", "Type", "First Name", "Last Name", "Email", "Phone", "City", "Company", "Booking Date", "Guests", "Guest Names", "VIP", "Newsletter Consent", "Notes", "Source"];
     const rows = filteredLeads.map((l) => [
       formatDateTime(l.created_at),
@@ -185,13 +185,24 @@ export default function SubmissionsPage() {
     downloadCsv(`submissions-${typeFilter}-${new Date().toISOString().slice(0, 10)}.csv`, headers, rows);
   };
 
-  const exportVip = () => {
+  const exportFilteredVip = () => {
     const headers = ["Requested", "Name", "Email", "Phone", "Guests", "Event", "Event Date", "Location", "Status"];
     const rows = filteredVip.map((v) => [
       formatDateTime(v.created_at), v.full_name, v.email, v.phone, v.guests ?? "", v.event_name, formatDate(v.event_date), v.event_location, v.status,
     ]);
     downloadCsv(`vip-reservations-${new Date().toISOString().slice(0, 10)}.csv`, headers, rows);
   };
+
+  const exportSelectedFilter = () => {
+    if (tab === "vip") {
+      exportFilteredVip();
+      return;
+    }
+
+    exportFilteredLeads();
+  };
+
+  const selectedFilterCount = tab === "leads" ? filteredLeads.length : filteredVip.length;
 
   return (
     <div className="max-w-[1500px] w-full mx-auto">
@@ -235,8 +246,8 @@ export default function SubmissionsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
         <SearchInput value={search} onChange={setSearch} />
         <ExportButton
-          onClick={tab === "leads" ? exportLeads : exportVip}
-          disabled={tab === "leads" ? filteredLeads.length === 0 : filteredVip.length === 0}
+          onClick={exportSelectedFilter}
+          disabled={selectedFilterCount === 0}
         />
       </div>
 
